@@ -1,6 +1,6 @@
 ---
 name: Document
-about: Describe this issue template's purpose here.
+about: ドキュメントの作成と修正
 title: ドキュメント
 labels: documentation
 assignees: ''
