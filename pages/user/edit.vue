@@ -1,5 +1,5 @@
 <template>
-  <div>login/</div>
+  <div>user/edit</div>
 </template>
 
 <script>
