@@ -1,30 +1,16 @@
 <template>
-  <v-app></v-app>
+  <v-app>
+    <Header />
+    <Nuxt />
+  </v-app>
 </template>
 
 <script>
+import { Header } from '~/components/layouts/index';
 export default {
-  data() {
-    return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/',
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire',
-        },
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-    };
+  components: {
+    Header,
   },
+  data() {},
 };
 </script>
