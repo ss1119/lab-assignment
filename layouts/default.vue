@@ -8,11 +8,11 @@
 </template>
 
 <script>
-import { Header } from '~/components/layouts/index';
+import { Header } from '~/components/layouts/index'
 export default {
   components: {
     Header,
   },
   data() {},
-};
+}
 </script>
