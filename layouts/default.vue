@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <Header />
+    <NavDrawer />
     <v-main>
       <Nuxt />
     </v-main>
@@ -8,11 +9,14 @@
 </template>
 
 <script>
-import { Header } from '~/components/layouts/index';
+import { Header, NavDrawer } from '~/components/layouts/index'
 export default {
   components: {
     Header,
+    NavDrawer,
   },
-  data() {},
-};
+  data() {
+    return {}
+  },
+}
 </script>
