@@ -1,2 +1,6 @@
-	@import './_mixin.scss';
-  
+@import './_mixin.scss';
+.app {
+	&__height {
+		height: 700px;
+	}
+}
