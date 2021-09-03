@@ -1,9 +1,14 @@
 export const state = () => ({
-  drawer: false,
+  isOpen: false,
 })
 
 export const mutations = {
-  toggle(state, drawer) {
-    state.drawer = state
+  toggle(state) {
+    state.isOpen = !state.isOpen
+    console.log(state.isOpen)
+  },
+  close(state) {
+    state.isOpen = false
+    console.log(state.isOpen)
   },
 }
