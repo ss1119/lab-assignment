@@ -2,7 +2,7 @@ module.exports = {
   printWidth: 150, // Default 80
   // "tabWidth": 2,
   // "useTabs": false,
-  // "semi": true,
+  semi: false,
   singleQuote: true, // Default false
   // "quoteProps": "as-needed",
   // "jsxSingleQuote": false,
