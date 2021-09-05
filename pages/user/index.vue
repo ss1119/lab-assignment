@@ -1,5 +1,5 @@
 <template>
-  <v-row class="app__height" justify="center" align-content="center">
+  <v-row class="app__height my-3" justify="center" align-content="center">
     <v-card class="point__card">
       <CardTitle :title="title" :subtitle="subtitle" />
 
