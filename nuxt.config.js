@@ -50,7 +50,6 @@ export default {
       dark: false,
       themes: {
         light: {
-          background: colors.grey.lighten4,
           base: colors.white,
           headerFont: colors.white,
           primary: colors.blueGrey.darken4,
