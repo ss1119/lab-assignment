@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="bg">
     <Header />
     <NavDrawer />
     <v-main>
@@ -20,3 +20,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.bg {
+  background-color: #f5f5f5;
+}
+</style>
