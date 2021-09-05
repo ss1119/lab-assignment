@@ -1,2 +1,12 @@
-	@import './_mixin.scss';
-  
+@import './_mixin.scss';
+
+html {
+	height: 100%;
+}
+
+.app {
+	&__height {
+		height: 100%;
+	}
+}
+
