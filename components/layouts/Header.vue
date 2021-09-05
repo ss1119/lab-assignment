@@ -34,10 +34,6 @@ export default {
           url: '/user',
         },
         {
-          name: '得点の編集',
-          url: '/user/edit',
-        },
-        {
           name: 'お問い合わせ',
           url: '/form',
         },
