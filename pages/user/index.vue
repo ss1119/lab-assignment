@@ -1,23 +1,30 @@
 <template>
   <v-row class="app__height" justify="center" align-content="center">
     <v-card class="point__card">
-      <div class="ma-3">
-        <v-card-title>
-          <h4>得点状況の確認</h4>
-        </v-card-title>
+      <CardTitle :title="title" :subtitle="subtitle" />
+
+      <v-data-table :headers="headers" :items="data" class="my-8 mx-4" hide-default-footer />
+
+      <div class="pb-8 pt-2 text-center">
+        <v-btn color="accent" depressed height="48" nuxt @click.stop="redirectEditPage">
+          <v-icon left> mdi-pencil </v-icon>
+          得点を編集する
+        </v-btn>
       </div>
-
-      <v-divider class="mx-auto" />
-
-      <v-data-table :headers="headers" :items="data" class="ma-8" />
     </v-card>
   </v-row>
 </template>
 
 <script>
+import { CardTitle } from '~/components/cards/index'
 export default {
+  components: {
+    CardTitle,
+  },
   data() {
     return {
+      title: '得点状況の確認',
+      subtitle: 'ご自身得点状況の確認と編集ができます',
       headers: [
         {
           text: '教授名',
@@ -58,14 +65,20 @@ export default {
       ],
     }
   },
+  methods: {
+    redirectEditPage() {
+      this.$router.push('/user/edit')
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
 .point {
   &__card {
-    max-width: 800px;
-    min-width: 500px;
+    max-width: 900px;
+    width: 70%;
+    min-width: 400px;
   }
   &__wrap {
     max-width: 344px;
