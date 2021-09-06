@@ -16,11 +16,11 @@
         <v-col v-for="(item, index) in items" :key="index" cols="12" lg="6" xl="6">
           <v-row>
             <v-col cols="7">
-              <v-header>
+              <v-subheader class="black--text">
                 {{ item.laboratory }} / <br />
                 {{ item.teacher }}
-              </v-header>
-              <v-subheader>以前の得点: {{ oldPoints[index] }}</v-subheader>
+              </v-subheader>
+              <v-subheader>以前の得点: {{ oldPoints[index] }}点</v-subheader>
             </v-col>
             <v-col cols="5">
               <v-text-field
