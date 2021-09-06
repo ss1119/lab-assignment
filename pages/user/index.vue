@@ -5,27 +5,25 @@
 
       <v-data-table :headers="headers" :items="data" class="my-8 mx-4" hide-default-footer />
 
-      <div class="pb-8 pt-2 text-center">
-        <v-btn color="accent" depressed height="48" nuxt @click.stop="redirectEditPage">
-          <v-icon left> mdi-pencil </v-icon>
-          得点を編集する
-        </v-btn>
-      </div>
+      <CardButton :title="btnTitle" :icon="btnIcon" :submit="redirectEditPage" />
     </v-card>
   </v-row>
 </template>
 
 <script>
-import { CardTitle } from '~/components/cards/index'
+import { CardTitle, CardButton } from '~/components/cards/index'
 export default {
   name: 'UserIndex',
   components: {
     CardTitle,
+    CardButton,
   },
   data() {
     return {
       title: '得点状況の確認',
       subtitle: 'ご自身得点状況の確認と編集ができます',
+      btnTitle: '得点を編集する',
+      btnIcon: 'mdi-pencil',
       headers: [
         {
           text: '教授名',

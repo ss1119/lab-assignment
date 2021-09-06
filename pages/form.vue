@@ -18,12 +18,7 @@
           <v-text-field ref="subject" v-model="subject" dense outlined name="subject" label="件名" :rules="[subjectRules.required]" />
           <v-textarea ref="message" v-model="message" dense outlined name="message" label="本文" :rules="[messageRules.required]" />
 
-          <div class="pb-8 pt-2 text-center">
-            <v-btn color="accent" depressed height="48" nuxt @click.stop="sendForm">
-              <v-icon left> mdi-send </v-icon>
-              フォームを送信する
-            </v-btn>
-          </div>
+          <CardButton :title="btnTitle" :icon="btnIcon" :submit="sendForm" />
         </v-form>
       </v-row>
     </v-card>
@@ -31,16 +26,19 @@
 </template>
 
 <script>
-import { CardTitle } from '~/components/cards/index'
+import { CardTitle, CardButton } from '~/components/cards/index'
 export default {
   name: 'Form',
   components: {
     CardTitle,
+    CardButton,
   },
   data() {
     return {
       title: 'お問い合わせフォーム',
       subtitle: 'ログインできない等の問題がある場合はこちらから問い合わせてください',
+      btnTitle: 'フォームを送信する',
+      btnIcon: 'mdi-send',
       email: '',
       name: '',
       subject: '',
