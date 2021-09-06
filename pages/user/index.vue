@@ -18,6 +18,7 @@
 <script>
 import { CardTitle } from '~/components/cards/index'
 export default {
+  name: 'UserIndex',
   components: {
     CardTitle,
   },
