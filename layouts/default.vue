@@ -11,6 +11,7 @@
 <script>
 import { Header, NavDrawer } from '~/components/layouts/index'
 export default {
+  name: 'Defalut',
   components: {
     Header,
     NavDrawer,
