@@ -34,28 +34,26 @@
         </v-col>
       </v-row>
 
-      <v-row class="mb-8 mt-2" justify="center">
-        <v-btn color="accent" depressed height="48" nuxt @click.stop="postPoints">
-          <v-icon left> mdi-pencil </v-icon>
-          得点を保存する
-        </v-btn>
-      </v-row>
+      <CardButton :title="btnTitle" :icon="btnIcon" :submit="postPoints" />
     </v-card>
   </v-row>
 </template>
 
 <script>
 // TODO 得点のValidationの設定とエラーメッセージ
-import { CardTitle } from '~/components/cards/index'
+import { CardTitle, CardButton } from '~/components/cards/index'
 export default {
   name: 'UserEdit',
   components: {
     CardTitle,
+    CardButton,
   },
   data() {
     return {
       title: '得点の編集',
       subtitle: '希望研究室への得点を設定できます',
+      btnTitle: '得点を保存する',
+      btnIcon: 'mdi-pencil',
       hasExceptVal: false, // 入力フォームに与えられた数値が入力されているか
       isNotMatched: false, // 合計点と一致しているか
       hasTwoZeros: false, // 0点が2つ以上存在していないか
