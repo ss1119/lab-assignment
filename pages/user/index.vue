@@ -1,5 +1,5 @@
 <template>
-  <v-row class="app__height" justify="center" align-content="center">
+  <v-row class="app__height my-3" justify="center" align-content="center">
     <v-card class="point__card">
       <CardTitle :title="title" :subtitle="subtitle" />
 
@@ -45,22 +45,22 @@ export default {
         {
           teacher: '先生1',
           laboratory: '研究室1',
-          point: '0',
+          point: '1',
         },
         {
           teacher: '先生2',
           laboratory: '研究室1',
-          point: '0',
+          point: '1',
         },
         {
           teacher: '先生3',
           laboratory: '研究室2',
-          point: '0',
+          point: '1',
         },
         {
           teacher: '先生4',
           laboratory: '研究室2',
-          point: '0',
+          point: '1',
         },
       ],
     }
@@ -79,12 +79,6 @@ export default {
     max-width: 900px;
     width: 70%;
     min-width: 400px;
-  }
-  &__wrap {
-    max-width: 344px;
-  }
-  &__divider {
-    width: 80%;
   }
 }
 </style>
