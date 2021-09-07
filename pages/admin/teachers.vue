@@ -1,9 +1,18 @@
 <template>
-  <div>admin/teachers</div>
+  <AdminMenu />
 </template>
 
 <script>
-export default {}
+import { AdminMenu } from '~/components/admin/index'
+export default {
+  name: 'AdminTeachers',
+  components: {
+    AdminMenu,
+  },
+  data() {
+    return {}
+  },
+}
 </script>
 
 <style></style>
