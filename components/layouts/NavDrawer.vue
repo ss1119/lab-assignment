@@ -66,9 +66,6 @@ export default {
         return val
       },
     },
-    // drawer() {
-    //   return this.$store.state.drawer.isOpen
-    // },
   },
   methods: {
     ...mapMutations({

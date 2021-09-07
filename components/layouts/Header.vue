@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app dark color="primary" height="70">
+  <v-app-bar app dark color="primary" height="70" class="elevation-0">
     <v-app-bar-nav-icon class="appbar__icon" @click="toggle" />
     <v-toolbar-title class="toolbar__title">
       <NuxtLink to="/" class="toolbar__text">研究室希望配属調査</NuxtLink>
