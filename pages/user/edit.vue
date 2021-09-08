@@ -3,7 +3,7 @@
     <v-card class="point__card" outlined>
       <CardTitle :title="title" :subtitle="subtitle" />
 
-      <v-row class="my-2 mx-10">
+      <v-row class="mt-2 my-6 mx-10">
         <v-col cols="12">
           <v-alert v-if="hasExceptVal || isNotMatched || hasTwoZeros" prominent type="error" outlined dense border="left" class="mx-auto">
             <ul>
