@@ -8,6 +8,23 @@
 
       <v-spacer />
 
+      <div class="menubar_searchbox">
+        <v-text-field
+          append-icon="mdi-magnify"
+          label="検索"
+          outlined
+          dense
+          single-line
+          hide-details
+          color="accent"
+          class="menubar_searchbox__width"
+          :value="searchValue"
+          @input="updateValue"
+        />
+      </div>
+
+      <v-spacer />
+
       <div class="menubar_items">
         <div v-if="selects.isDisplay" class="mx-2 menubar_items__selects">
           <v-select label="年度" :items="selects.items" item-text="state" item-value="abbr" dense outlined color="accent" hide-details />
@@ -35,6 +52,11 @@ export default {
     title: {
       type: String,
       required: true,
+    },
+    searchValue: {
+      type: String,
+      default: '',
+      required: false,
     },
     selects: {
       type: Object,
@@ -69,6 +91,11 @@ export default {
   data() {
     return {}
   },
+  methods: {
+    updateValue(e) {
+      this.$emit('input', e)
+    },
+  },
 }
 </script>
 
@@ -78,6 +105,16 @@ export default {
     height: 60px;
     border-bottom: #dfdddb solid 1px;
     background-color: #ffffff;
+  }
+  &_searchbox {
+    display: none;
+
+    @include display_pc {
+      display: flex;
+    }
+    &__width {
+      width: 320px;
+    }
   }
   &_items {
     display: none;
