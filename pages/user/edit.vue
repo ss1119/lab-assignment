@@ -1,6 +1,6 @@
 <template>
   <v-row class="app__height my-3" justify="center" align-content="center">
-    <v-card class="point__card">
+    <v-card class="point__card" outlined>
       <CardTitle :title="title" :subtitle="subtitle" />
 
       <v-row class="my-2 mx-10">
@@ -13,7 +13,7 @@
             </ul>
           </v-alert>
         </v-col>
-        <v-col v-for="(item, index) in items" :key="index" cols="12" lg="6" xl="6">
+        <v-col v-for="(item, index) in items" :key="index" cols="12" lg="6">
           <v-row>
             <v-col cols="7">
               <v-subheader class="black--text">
@@ -26,6 +26,7 @@
               <v-text-field
                 v-model="item.point"
                 suffix="点"
+                color="accent"
                 :rules="[pointRules.required, pointRules.degit, pointRules.over]"
                 :value="item.point"
               ></v-text-field>
