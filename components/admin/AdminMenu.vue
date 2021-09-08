@@ -10,7 +10,7 @@
 
       <div class="menubar_items">
         <div v-if="selects.isDisplay" class="mx-2 menubar_items__selects">
-          <v-select label="年度" :items="selects.data" item-text="state" item-value="abbr" dense outlined color="accent" hide-details />
+          <v-select label="年度" :items="selects.items" item-text="state" item-value="abbr" dense outlined color="accent" hide-details />
         </div>
 
         <div v-for="(btn, index) in buttons" :key="index" class="mx-2 menubar_items__buttons">
@@ -41,14 +41,10 @@ export default {
       default() {
         return {
           isDisplay: false,
-          data: [
+          items: [
             {
               state: '全て',
               abbr: 'all',
-            },
-            {
-              state: '2020',
-              abbr: '2020',
             },
           ],
         }
@@ -56,16 +52,16 @@ export default {
       required: false,
     },
     buttons: {
-      type: Array,
+      type: Object,
       default() {
-        return [
-          {
+        return {
+          default: {
             icon: 'mdi-pencil',
             color: 'accent',
             title: '新規作成',
             disabled: false,
           },
-        ]
+        }
       },
       required: true,
     },
