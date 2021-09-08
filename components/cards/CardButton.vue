@@ -13,18 +13,15 @@ export default {
   props: {
     icon: {
       type: String,
-      default: 'mdi-account',
       required: true,
     },
     title: {
       type: String,
-      default: 'デフォルト',
       required: true,
     },
     submit: {
       type: Function,
-      default() {},
-      required: false,
+      required: true,
     },
   },
   data() {

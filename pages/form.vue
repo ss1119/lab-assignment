@@ -1,6 +1,6 @@
 <template>
   <v-row class="app__height my-3" justify="center" align-content="center">
-    <v-card class="form__card">
+    <v-card class="form__card" outlined>
       <CardTitle :title="title" :subtitle="subtitle" />
 
       <v-row class="my-2">
@@ -12,11 +12,12 @@
             outlined
             name="email"
             label="ご自身のメールアドレス"
+            color="accent"
             :rules="[emailRules.required, emailRules.matched]"
           />
-          <v-text-field ref="name" v-model="name" dense outlined name="name" label="姓名" :rules="[nameRules.required]" />
-          <v-text-field ref="subject" v-model="subject" dense outlined name="subject" label="件名" :rules="[subjectRules.required]" />
-          <v-textarea ref="message" v-model="message" dense outlined name="message" label="本文" :rules="[messageRules.required]" />
+          <v-text-field ref="name" v-model="name" dense outlined name="name" label="姓名" color="accent" :rules="[nameRules.required]" />
+          <v-text-field ref="subject" v-model="subject" dense outlined name="subject" label="件名" color="accent" :rules="[subjectRules.required]" />
+          <v-textarea ref="message" v-model="message" dense outlined name="message" label="本文" color="accent" :rules="[messageRules.required]" />
 
           <CardButton :title="btnTitle" :icon="btnIcon" :submit="sendForm" />
         </v-form>

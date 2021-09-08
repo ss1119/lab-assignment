@@ -15,12 +15,10 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'デフォルトタイトル',
       required: true,
     },
     subtitle: {
       type: String,
-      default: 'デフォルトサブタイトル',
       required: true,
     },
   },
