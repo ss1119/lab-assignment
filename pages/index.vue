@@ -1,6 +1,6 @@
 <template>
   <v-row class="app__height" justify="center" align-content="center">
-    <v-card class="login__card">
+    <v-card class="login__card" outlined>
       <CardTitle :title="title" :subtitle="subtitle" />
 
       <div class="px-6 py-3">
@@ -14,6 +14,7 @@
                 autofocus
                 dense
                 height="48px"
+                color="accent"
                 class="py-2"
                 placeholder="メールアドレス"
               ></v-text-field>
@@ -26,6 +27,7 @@
                 :type="passwordShow ? 'text' : 'password'"
                 dense
                 height="48px"
+                color="accent"
                 placeholder="パスワード"
                 class="py-2"
                 @click:append="passwordShow = !passwordShow"

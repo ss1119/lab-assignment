@@ -1,9 +1,18 @@
 <template>
-  <div>admin/users</div>
+  <AdminMenu />
 </template>
 
 <script>
-export default {}
+import { AdminMenu } from '~/components/admin/index'
+export default {
+  name: 'AdminUsers',
+  components: {
+    AdminMenu,
+  },
+  data() {
+    return {}
+  },
+}
 </script>
 
 <style></style>

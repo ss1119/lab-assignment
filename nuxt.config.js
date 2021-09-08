@@ -53,7 +53,7 @@ export default {
           headerFont: colors.white,
           primary: colors.blueGrey.darken4,
           accent: colors.blue.accent3,
-          secondary: colors.grey.lighten3,
+          secondary: colors.grey.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,

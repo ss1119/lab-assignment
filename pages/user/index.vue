@@ -1,6 +1,6 @@
 <template>
   <v-row class="app__height my-3" justify="center" align-content="center">
-    <v-card class="point__card">
+    <v-card class="point__card" outlined>
       <CardTitle :title="title" :subtitle="subtitle" />
 
       <v-data-table :headers="headers" :items="data" class="my-8 mx-4" hide-default-footer />
