@@ -1,20 +1,22 @@
 <template>
   <div>
-    <AdminMenu v-model="searchValue" :icon="menuIcon" :title="menuTitle" :selects="selectsItems" :buttons="btnItems" />
+    <AdminMenu v-model="search.value" :icon="menuIcon" :title="menuTitle" :search="search" :buttons="btnItems" />
     <v-container class="my-3" fluid>
       <v-row justify="center">
         <v-card class="table__card" outlined>
           <CardTitle :title="cardTitle" :subtitle="cardSubtitle" />
 
           <v-data-table
-            v-model="selected"
-            :search="searchValue"
+            v-model="checked"
+            :search="search.value"
             :headers="headers"
             :items="items"
             :single-select="singleSelect"
             item-key="id"
             show-select
+            locale="ja-jp"
             class="elevation-0"
+            @item-selected="btnCheck"
           />
         </v-card>
       </v-row>
@@ -35,20 +37,23 @@ export default {
     return {
       menuTitle: '学生一覧',
       menuIcon: 'mdi-account-multiple',
-      searchValue: '',
-      selectsItems: {
+      search: {
         isDisplay: true,
-        items: [
-          {
-            state: '全て',
-            abbr: 'all',
-          },
-          {
-            state: '2020',
-            abbr: '2020',
-          },
-        ],
+        value: '',
       },
+      // selectsItems: {
+      //   isDisplay: true,
+      //   items: [
+      //     {
+      //       state: '全て',
+      //       abbr: 'all',
+      //     },
+      //     {
+      //       state: '2020',
+      //       abbr: '2020',
+      //     },
+      //   ],
+      // },
       btnItems: {
         accountPlus: {
           icon: 'mdi-account-plus',
@@ -60,13 +65,13 @@ export default {
           icon: 'mdi-file-export',
           color: 'accent',
           title: 'csv出力',
-          disabled: true,
+          disabled: false,
         },
         email: {
           icon: 'mdi-email',
-          color: 'warning',
+          color: 'accent',
           title: 'メール配信',
-          disabled: true,
+          disabled: false,
         },
         accountOff: {
           icon: 'mdi-account-off',
@@ -78,7 +83,7 @@ export default {
       cardTitle: 'ユーザの管理',
       cardSubtitle: 'ユーザに対して、メールの送信やログイン権限の変更ができます',
       singleSelect: false,
-      selected: [],
+      checked: [],
       headers: [
         {
           text: '学籍番号',
@@ -155,6 +160,16 @@ export default {
         },
       ],
     }
+  },
+  methods: {
+    btnCheck() {
+      console.log(this.checked)
+      if (this.checked.length > 0) {
+        this.btnItems.accountOff.disabled = false
+      } else {
+        this.btnItems.accountOff.disabled = true
+      }
+    },
   },
 }
 </script>

@@ -6,19 +6,19 @@
         {{ title }}
       </div>
 
-      <v-spacer />
+      <v-spacer v-if="search.isDisplay" />
 
-      <div class="menubar_searchbox">
+      <div v-if="search.isDisplay" class="menubar_searchbox">
         <v-text-field
           append-icon="mdi-magnify"
-          label="検索"
+          label="テーブルの要素で検索"
           outlined
           dense
           single-line
           hide-details
           color="accent"
           class="menubar_searchbox__width"
-          :value="searchValue"
+          :value="search.value"
           @input="updateValue"
         />
       </div>
@@ -26,9 +26,20 @@
       <v-spacer />
 
       <div class="menubar_items">
-        <div v-if="selects.isDisplay" class="mx-2 menubar_items__selects">
-          <v-select label="年度" :items="selects.items" item-text="state" item-value="abbr" dense outlined color="accent" hide-details />
-        </div>
+        <!-- <div v-if="selects.isDisplay" class="mx-2 menubar_items__selects">
+          <v-select
+            label="年度"
+            :items="selects.items"
+            item-text="state"
+            item-value="abbr"
+            dense
+            outlined
+            color="accent"
+            hide-details
+            :value="search.value"
+            @change="changeValue"
+          />
+        </div> -->
 
         <div v-for="(btn, index) in buttons" :key="index" class="mx-2 menubar_items__buttons">
           <v-btn :color="btn.color" depressed nuxt height="40px" :disabled="btn.disabled">
@@ -53,26 +64,31 @@ export default {
       type: String,
       required: true,
     },
-    searchValue: {
-      type: String,
-      default: '',
-      required: false,
-    },
-    selects: {
+    search: {
       type: Object,
       default() {
         return {
           isDisplay: false,
-          items: [
-            {
-              state: '全て',
-              abbr: 'all',
-            },
-          ],
+          value: '',
         }
       },
       required: false,
     },
+    // selects: {
+    //   type: Object,
+    //   default() {
+    //     return {
+    //       isDisplay: false,
+    //       items: [
+    //         {
+    //           state: '全て',
+    //           abbr: 'all',
+    //         },
+    //       ],
+    //     }
+    //   },
+    //   required: false,
+    // },
     buttons: {
       type: Object,
       default() {
@@ -95,6 +111,14 @@ export default {
     updateValue(e) {
       this.$emit('input', e)
     },
+    // changeValue(e) {
+    //   if (e === 'all') {
+    //     this.$emit('input', '')
+    //   }
+    //   if (this.$checkYear(e)) {
+    //     this.$emit('input', e)
+    //   }
+    // },
   },
 }
 </script>
@@ -112,16 +136,22 @@ export default {
     @include display_pc {
       display: flex;
     }
+
     &__width {
-      width: 320px;
+      width: 600px;
     }
   }
   &_items {
     display: none;
 
+    @include display_tab {
+      display: flex;
+    }
+
     @include display_pc {
       display: flex;
     }
+
     &__selects {
       width: 100px;
     }

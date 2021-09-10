@@ -1,11 +1,11 @@
 /* メディアクエリブレークポイント */
 $xs: 600;
 $sm: 960;
-$md: 1264;
+$md: 1400;
 $lg: 1904;
 
-$sp-max: calc($xs - 1)px;
-$tb-min: $xs+px;
+$sp-max: calc($sm - 1)px;
+$tb-min: $sm+px;
 $tb-max: calc($md - 1)px;
 $pc-min: $md+px;
 
@@ -18,7 +18,7 @@ $pc-min: $md+px;
 
 /* タブレット */
 @mixin display_tab {
-  @media screen and (min-width: $tb-min) and (max-width: $tb-max) {
+  @media screen and (min-width: $tb-min) {
     @content;
   }
 }
