@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AdminMenu v-model="search.value" :icon="menuIcon" :title="menuTitle" :search="search" :buttons="btnItems" />
+    <Menu v-model="search.value" :icon="menuIcon" :title="menuTitle" :search="search" :buttons="btnItems" />
     <v-container class="my-3" fluid>
       <v-row justify="center">
         <v-card class="table__card" outlined>
@@ -28,12 +28,12 @@
 
 <script>
 import { CardTitle } from '~/components/card/index'
-import { AdminMenu } from '~/components/admin/index'
+import { Menu } from '~/components/admin/index'
 export default {
   name: 'AdminUsers',
   components: {
     CardTitle,
-    AdminMenu,
+    Menu,
   },
   data() {
     return {

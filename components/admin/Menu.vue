@@ -46,6 +46,10 @@
             <v-icon left> {{ btn.icon }} </v-icon>
             {{ btn.title }}
           </v-btn>
+
+          <DialogIndex>
+            <template #[btn.slotName] />
+          </DialogIndex>
         </div>
       </div>
     </v-row>
@@ -98,6 +102,8 @@ export default {
             color: 'accent',
             title: '新規作成',
             disabled: false,
+            displayDialog: false,
+            slotName: 'none',
           },
         }
       },
