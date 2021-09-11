@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { CardTitle, CardButton } from '~/components/cards/index'
+import { CardTitle, CardButton } from '~/components/card/index'
 export default {
   name: 'Form',
   components: {
