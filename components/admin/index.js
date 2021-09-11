@@ -1,3 +1,4 @@
-import AdminMenu from './AdminMenu'
+import Menu from './Menu'
+import Dialog from './Dialog'
 
-export { AdminMenu }
+export { Menu, Dialog }

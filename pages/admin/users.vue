@@ -79,7 +79,7 @@ export default {
           title: 'メール配信',
           disabled: false,
           displayDialog: true,
-          slotName: 'mdi-email',
+          slotName: 'email',
         },
         accountOff: {
           icon: 'mdi-account-off',
