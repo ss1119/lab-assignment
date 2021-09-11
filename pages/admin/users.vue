@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AdminMenu v-model="search.value" :icon="menuIcon" :title="menuTitle" :search="search" :buttons="btnItems" />
+    <Menu v-model="search.value" :icon="menuIcon" :title="menuTitle" :search="search" :buttons="btnItems" />
     <v-container class="my-3" fluid>
       <v-row justify="center">
         <v-card class="table__card" outlined>
@@ -27,13 +27,13 @@
 </template>
 
 <script>
-import { CardTitle } from '~/components/cards/index'
-import { AdminMenu } from '~/components/admin/index'
+import { CardTitle } from '~/components/card/index'
+import { Menu } from '~/components/admin/index'
 export default {
   name: 'AdminUsers',
   components: {
     CardTitle,
-    AdminMenu,
+    Menu,
   },
   data() {
     return {
@@ -62,24 +62,32 @@ export default {
           color: 'accent',
           title: '新規追加',
           disabled: false,
+          displayDialog: true,
+          slotName: 'account-plus',
         },
         fileExport: {
           icon: 'mdi-file-export',
           color: 'accent',
           title: 'csv出力',
           disabled: false,
+          displayDialog: true,
+          slotName: 'file-export',
         },
         email: {
           icon: 'mdi-email',
           color: 'accent',
           title: 'メール配信',
           disabled: false,
+          displayDialog: true,
+          slotName: 'email',
         },
         accountOff: {
           icon: 'mdi-account-off',
           color: 'error',
           title: '権限変更',
           disabled: true,
+          displayDialog: true,
+          slotName: 'account-off',
         },
       },
       cardTitle: 'ユーザの管理',

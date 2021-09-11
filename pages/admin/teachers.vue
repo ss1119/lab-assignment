@@ -1,13 +1,13 @@
 <template>
-  <AdminMenu />
+  <Menu />
 </template>
 
 <script>
-import { AdminMenu } from '~/components/admin/index'
+import { Menu } from '~/components/admin/index'
 export default {
   name: 'AdminTeachers',
   components: {
-    AdminMenu,
+    Menu,
   },
   data() {
     return {}
