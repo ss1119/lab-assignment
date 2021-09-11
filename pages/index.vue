@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { CardTitle } from '~/components/cards/index'
+import { CardTitle } from '~/components/card/index'
 export default {
   name: 'Index',
   components: {

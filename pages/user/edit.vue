@@ -42,7 +42,7 @@
 
 <script>
 // TODO 得点のValidationの設定とエラーメッセージ
-import { CardTitle, CardButton } from '~/components/cards/index'
+import { CardTitle, CardButton } from '~/components/card/index'
 export default {
   name: 'UserEdit',
   components: {
