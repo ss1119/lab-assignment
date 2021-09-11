@@ -14,9 +14,11 @@
             :single-select="singleSelect"
             item-key="id"
             show-select
+            logding-text="loading-text"
             locale="ja-jp"
             class="elevation-0"
-            @item-selected="btnCheck"
+            @toggle-select-all="selectAllCheck($event)"
+            @item-selected="selectCheck($event)"
           />
         </v-card>
       </v-row>
@@ -121,6 +123,7 @@ export default {
           value: 'year',
         },
       ],
+      loadingText: '現在データを取得中です。しばらくお待ちください。',
       items: [
         {
           id: 'ctwf0127',
@@ -162,11 +165,18 @@ export default {
     }
   },
   methods: {
-    btnCheck() {
-      console.log(this.checked)
-      if (this.checked.length > 0) {
+    selectAllCheck(event) {
+      if (event.value) {
         this.btnItems.accountOff.disabled = false
       } else {
+        this.btnItems.accountOff.disabled = true
+      }
+    },
+    selectCheck(event) {
+      if (event.value) {
+        this.btnItems.accountOff.disabled = false
+      }
+      if (!event.value && this.checked.length === 1) {
         this.btnItems.accountOff.disabled = true
       }
     },
