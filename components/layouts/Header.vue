@@ -79,6 +79,7 @@ export default {
       display: none;
     }
   }
+
   &__tabs {
     display: none;
 
@@ -86,6 +87,7 @@ export default {
       display: flex;
     }
   }
+
   &__profile {
     display: none;
 

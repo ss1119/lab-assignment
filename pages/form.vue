@@ -46,7 +46,7 @@ export default {
       message: '',
       emailRules: {
         required: (value) => !!value || 'メールアドレスは必須です',
-        matched: (value) => /^[a-zA-Z]+\d{4}@mail4.doshisha.ac.jp$/.test(value) || '正しいメールアドレスを入力してください',
+        matched: (value) => this.$checkEmail(value) || '正しいメールアドレスを入力してください',
       },
       nameRules: {
         required: (value) => !!value || '姓名は必須です',
