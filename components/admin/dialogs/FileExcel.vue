@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: 'Email',
+  name: 'FileExcel',
   props: {
     open: {
       type: Boolean,
