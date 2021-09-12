@@ -27,6 +27,7 @@
                 v-model="item.point"
                 suffix="点"
                 color="accent"
+                prepend-icon="mdi-calculator"
                 :rules="[pointRules.required, pointRules.degit, pointRules.over]"
                 :value="item.point"
               ></v-text-field>
