@@ -65,14 +65,6 @@ export default {
           displayDialog: true,
           slotName: 'account-plus',
         },
-        fileExport: {
-          icon: 'mdi-file-export',
-          color: 'accent',
-          title: 'csv出力',
-          disabled: false,
-          displayDialog: true,
-          slotName: 'file-export',
-        },
         email: {
           icon: 'mdi-email',
           color: 'accent',
@@ -80,6 +72,14 @@ export default {
           disabled: false,
           displayDialog: true,
           slotName: 'email',
+        },
+        fileExcel: {
+          icon: 'mdi-file-excel',
+          color: 'accent',
+          title: 'Excel出力',
+          disabled: false,
+          displayDialog: true,
+          slotName: 'file-excel',
         },
         accountOff: {
           icon: 'mdi-account-off',
