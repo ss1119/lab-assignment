@@ -1,17 +1,17 @@
 <template>
-  <v-dialog :value="open" @input="close">
-    <v-card v-if="name === accountOff">
-      <AccountOff />
-    </v-card>
-    <v-card v-else-if="name === accountPlus">
-      <AccountPlus />
-    </v-card>
-    <v-card v-else-if="name === email">
-      <Email />
-    </v-card>
-    <v-card v-else-if="name === fileExport">
-      <FileExport />
-    </v-card>
+  <v-dialog :value="open" scrollable max-width="600px" @input="close">
+    <div v-if="name === accountOff">
+      <AccountOff :open="open" @close="close" />
+    </div>
+    <div v-else-if="name === accountPlus">
+      <AccountPlus :open="open" @close="close" />
+    </div>
+    <div v-else-if="name === email">
+      <Email :open="open" @close="close" />
+    </div>
+    <div v-else-if="name === fileExport">
+      <FileExport :open="open" @close="close" />
+    </div>
   </v-dialog>
 </template>
 

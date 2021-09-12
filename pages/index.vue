@@ -10,7 +10,7 @@
               <v-text-field
                 v-model="email"
                 aria-label="email"
-                :rules="[emailRules.required]"
+                :rules="[emailRules.required, emailRules.checked]"
                 autofocus
                 dense
                 height="48px"
@@ -60,6 +60,7 @@ export default {
       email: '',
       emailRules: {
         required: (value) => !!value || 'メールアドレスは必須です',
+        checked: (value) => this.$checkEmail(value) || '適切なメールアドレスを入力してください',
       },
       password: '',
       passwordShow: false,
