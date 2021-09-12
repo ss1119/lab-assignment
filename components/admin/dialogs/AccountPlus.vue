@@ -24,8 +24,8 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="blue darken-1" text @click.stop="close"> 閉じる </v-btn>
-      <v-btn color="blue darken-1" text @click.stop="save"> 保存する </v-btn>
+      <v-btn text @click.stop="close"> 閉じる </v-btn>
+      <v-btn color="accent" text @click.stop="save"> 保存する </v-btn>
     </v-card-actions>
   </v-card>
 </template>

@@ -9,21 +9,21 @@
     <div v-else-if="name === email">
       <Email :open="open" @close="close" />
     </div>
-    <div v-else-if="name === fileExport">
-      <FileExport :open="open" @close="close" />
+    <div v-else-if="name === fileExcel">
+      <FileExcel :open="open" @close="close" />
     </div>
   </v-dialog>
 </template>
 
 <script>
-import { AccountOff, AccountPlus, Email, FileExport } from './dialogs/index'
+import { AccountOff, AccountPlus, Email, FileExcel } from './dialogs/index'
 export default {
   name: 'Dialog',
   components: {
     AccountOff,
     AccountPlus,
     Email,
-    FileExport,
+    FileExcel,
   },
   props: {
     open: {
@@ -42,7 +42,7 @@ export default {
       accountOff: 'account-off',
       accountPlus: 'account-plus',
       email: 'email',
-      fileExport: 'file-export',
+      fileExcel: 'file-excel',
     }
   },
   methods: {
