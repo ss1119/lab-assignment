@@ -28,20 +28,6 @@
       <v-spacer />
 
       <div class="menubar_items">
-        <!-- <div v-if="selects.isDisplay" class="mx-2 menubar_items__selects">
-          <v-select
-            label="年度"
-            :items="selects.items"
-            item-text="state"
-            item-value="abbr"
-            dense
-            outlined
-            color="accent"
-            hide-details
-            :value="search.value"
-            @change="changeValue"
-          />
-        </div> -->
         <div v-for="(btn, index) in buttons" :key="index" class="mx-2 menubar_items__buttons">
           <v-btn :color="btn.color" depressed nuxt height="40px" :disabled="btn.disabled" @click.stop="openDialog(btn.displayDialog, btn.slotName)">
             <v-icon left> {{ btn.icon }} </v-icon>
@@ -79,21 +65,6 @@ export default {
       },
       required: false,
     },
-    // selects: {
-    //   type: Object,
-    //   default() {
-    //     return {
-    //       isDisplay: false,
-    //       items: [
-    //         {
-    //           state: '全て',
-    //           abbr: 'all',
-    //         },
-    //       ],
-    //     }
-    //   },
-    //   required: false,
-    // },
     buttons: {
       type: Object,
       default() {
@@ -121,14 +92,6 @@ export default {
     updateValue(e) {
       this.$emit('input', e)
     },
-    // changeValue(e) {
-    //   if (e === 'all') {
-    //     this.$emit('input', '')
-    //   }
-    //   if (this.$checkYear(e)) {
-    //     this.$emit('input', e)
-    //   }
-    // },
     openDialog(dialog, name) {
       if (dialog) {
         this.open = true

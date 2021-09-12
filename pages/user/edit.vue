@@ -175,6 +175,8 @@ export default {
 
       if (!this.hasExceptVal && !this.isNotMatched && !this.hasTwoZeros) {
         this.$router.push('/user')
+      } else {
+        window.scrollTo(0, 0)
       }
     },
     validDigit(value) {

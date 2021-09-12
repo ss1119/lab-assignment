@@ -1,6 +1,6 @@
 import AccountOff from './AccountOff'
 import AccountPlus from './AccountPlus'
 import Email from './Email'
-import FileExport from './FileExport'
+import FileExcel from './FileExcel'
 
-export { AccountOff, AccountPlus, Email, FileExport }
+export { AccountOff, AccountPlus, Email, FileExcel }
