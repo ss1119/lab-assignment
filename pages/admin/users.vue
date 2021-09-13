@@ -1,6 +1,7 @@
 <template>
   <div>
     <Menu v-model="search.value" :icon="menuIcon" :title="menuTitle" :search="search" :buttons="btnItems" />
+
     <v-container class="my-3" fluid>
       <v-row justify="center">
         <v-card class="table__card" outlined>
@@ -23,17 +24,20 @@
         </v-card>
       </v-row>
     </v-container>
+
+    <DangerPanel />
   </div>
 </template>
 
 <script>
 import { CardTitle } from '~/components/card/index'
-import { Menu } from '~/components/admin/index'
+import { Menu, DangerPanel } from '~/components/admin/index'
 export default {
   name: 'AdminUsers',
   components: {
     CardTitle,
     Menu,
+    DangerPanel,
   },
   data() {
     return {
@@ -43,19 +47,6 @@ export default {
         isDisplay: true,
         value: '',
       },
-      // selectsItems: {
-      //   isDisplay: true,
-      //   items: [
-      //     {
-      //       state: '全て',
-      //       abbr: 'all',
-      //     },
-      //     {
-      //       state: '2020',
-      //       abbr: '2020',
-      //     },
-      //   ],
-      // },
       btnItems: {
         accountPlus: {
           icon: 'mdi-account-plus',
