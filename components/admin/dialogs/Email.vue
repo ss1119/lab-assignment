@@ -1,6 +1,7 @@
 <template>
   <v-card>
-    <v-container class="form__scroll">
+    <v-card-title>一斉メール送信</v-card-title>
+    <v-container>
       <v-subheader>パスワードを配信する学生の年度を選択</v-subheader>
       <v-form ref="select" class="form__wrap">
         <v-select
@@ -24,10 +25,10 @@
 
     <v-dialog v-model="confirmDialog" max-width="600px" @input="closeConfirm">
       <v-card>
-        <v-container class="pa-8">
+        <v-card-text class="pa-8">
           {{ confirmText }} <br />
           本当によろしいですか？
-        </v-container>
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click.stop="closeConfirm"> 閉じる </v-btn>
@@ -118,9 +119,6 @@ export default {
 
 <style lang="scss" scoped>
 .form {
-  &__scroll {
-    max-height: 500px;
-  }
   &__wrap {
     width: 90%;
     margin: 0 auto;
