@@ -12,11 +12,14 @@
     <div v-else-if="name === fileExcel">
       <FileExcel :open="open" @close="close" />
     </div>
+    <div v-else-if="name === teacherPlus">
+      <TeacherPlus :open="open" @close="close" />
+    </div>
   </v-dialog>
 </template>
 
 <script>
-import { AccountOff, AccountPlus, Email, FileExcel } from './dialogs/index'
+import { AccountOff, AccountPlus, Email, FileExcel, TeacherPlus } from './dialogs/index'
 export default {
   name: 'Dialog',
   components: {
@@ -24,6 +27,7 @@ export default {
     AccountPlus,
     Email,
     FileExcel,
+    TeacherPlus,
   },
   props: {
     open: {
@@ -43,6 +47,7 @@ export default {
       accountPlus: 'account-plus',
       email: 'email',
       fileExcel: 'file-excel',
+      teacherPlus: 'teacher-plus',
     }
   },
   methods: {
