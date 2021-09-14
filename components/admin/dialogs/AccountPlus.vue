@@ -1,5 +1,6 @@
 <template>
   <v-card>
+    <v-card-title>学生の新規追加</v-card-title>
     <v-container class="form__scroll">
       <v-subheader> 共通 </v-subheader>
       <v-form class="form__wrap">
