@@ -1,17 +1,27 @@
 <template>
-  <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/"> Home page </NuxtLink>
+  <v-app class="bg">
+    <v-row class="app__height" justify="center" align-content="center">
+      <v-card class="card" outlined>
+        <CardTitle :title="cardTitle" />
+        <v-container>
+          <v-row class="mt-5" justify="center">
+            <img src="~/assets/images/404.svg" width="40%" />
+          </v-row>
+          <v-row class="my-10" justify="center">
+            <NuxtLink to="/"> トップページへ戻る </NuxtLink>
+          </v-row>
+        </v-container>
+      </v-card>
+    </v-row>
   </v-app>
 </template>
 
 <script>
+import { CardTitle } from '~/components/card/index'
 export default {
+  components: {
+    CardTitle,
+  },
   layout: 'empty',
   props: {
     error: {
@@ -21,8 +31,8 @@ export default {
   },
   data() {
     return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred',
+      pageNotFound: 'ページが見つかりません',
+      otherError: 'エラーが発生しました',
     }
   },
   head() {
@@ -31,11 +41,24 @@ export default {
       title,
     }
   },
+  computed: {
+    cardTitle() {
+      return this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+    },
+  },
 }
 </script>
 
-<style scoped>
-h1 {
-  font-size: 20px;
+<style lang="scss" scoped>
+.bg {
+  background-color: #f5f5f5;
+}
+
+.card {
+  width: 90%;
+
+  @include display_tab {
+    width: 60%;
+  }
 }
 </style>
