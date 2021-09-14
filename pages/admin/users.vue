@@ -17,7 +17,7 @@
             show-select
             logding-text="loading-text"
             locale="ja-jp"
-            class="elevation-0"
+            class="elevation-0 ma-4"
             @toggle-select-all="selectAllCheck($event)"
             @item-selected="selectCheck($event)"
           />
