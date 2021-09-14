@@ -1,7 +1,8 @@
 <template>
   <v-card>
-    <v-container class="form__scroll">
-      <v-subheader>Excelファイルを出力</v-subheader>
+    <v-card-title>Excelファイルを出力</v-card-title>
+    <v-container>
+      <v-subheader>出力する学生の年度</v-subheader>
       <v-form class="form__wrap">
         <v-select label="年度" :items="items" item-text="state" item-value="abbr" color="accent" :value="year" />
       </v-form>
@@ -65,9 +66,6 @@ export default {
 
 <style lang="scss" scoped>
 .form {
-  &__scroll {
-    max-height: 500px;
-  }
   &__wrap {
     width: 90%;
     margin: 0 auto;

@@ -11,7 +11,7 @@
               </div>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="panel__alert">
-              <v-alert outlined border="left" color="error">
+              <v-alert outlined color="error">
                 <v-header>選択した年度の学生を削除する</v-header>
                 <v-container>
                   <v-row>
