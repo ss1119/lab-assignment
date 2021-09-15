@@ -4,6 +4,17 @@ We have created a new website for the survey of lab assignment preferences.
 
 ## For Developer
 
+### Routing
+
+|  Resource  |  HTTP Method  |  Notes  |
+| ---- | ---- | ---- |
+|  /  |  GET  |  Top and Login Page  |
+|  /form  |  GET  |  Contact Page  |
+|  /user  |  GET  |  Confirm Score Page  |
+|  /user/edit  |  GET  |  Score Edit Page  |
+|  /admin/users  |  GET  |  Admin User Management Page  |
+|  /admin/teachers  |  GET  |  Admin Label Management Page |
+
 ### How To Use Repository
 
 1. Fork and Clone the repository
