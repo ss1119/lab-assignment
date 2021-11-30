@@ -3,7 +3,7 @@
 
 name: Deploy to Develop Env on merge
 
-on:
+'on':
   pull_request:
     branches:
       - develop
