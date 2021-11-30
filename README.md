@@ -19,7 +19,7 @@ We have created a new website for the survey of lab assignment preferences.
 6.14.15
 
 ❯ node -v
-v14.18.1
+v12.22.17
 ```
 
 ### Routing
