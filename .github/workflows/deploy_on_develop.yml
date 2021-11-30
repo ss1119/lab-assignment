@@ -2,6 +2,7 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Develop Env on merge
+
 on:
   pull_request:
     branches:
