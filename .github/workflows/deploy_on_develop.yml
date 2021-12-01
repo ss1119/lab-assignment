@@ -28,15 +28,11 @@ jobs:
           projectId: lab-assignment-dev
   delete_preview_env:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - run: npm install -g firebase-tools
       - name: delete preview
-        run: firebase hosting:channel:delete ${{ github.event.number }} --project=${{ env.PROJECT_ID }} -f
+        uses: w9jds/firebase-action@master
+        with:
+          args: hosting:channel:delete ${{ github.event.number }} --project=${{ env.PROJECT_ID }} -f
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN_TEST }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LAB_ASSIGNMENT_DEV }}
           PROJECT_ID: lab-assignment-dev
