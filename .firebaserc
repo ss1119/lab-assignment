@@ -2,7 +2,7 @@
   "projects": {
     "dev": "lab-assignment-dev",
     "prod": "lab-assignment-prod",
-    "default": "lab-assignment-prod"
+    "default": "lab-assignment-dev"
   },
   "targets": {}
 }
