@@ -6,6 +6,19 @@ We have created a new website for the survey of lab assignment preferences.
 
 ## For Developer
 
+### URL
+
+> This is a temporary URL and the domain will be changed upon release.
+
+- Develop env
+  
+  <https://lab-assignment-dev.web.app/>
+
+- Production env
+
+  <https://lab-assignment-prod.web.app/>
+
+
 ### Tool Version
 
 ```zsh
@@ -14,9 +27,6 @@ We have created a new website for the survey of lab assignment preferences.
 
 ❯ yarn  -v
 1.22.10
-
-❯ npm -v
-6.14.15
 
 ❯ node -v
 v12.22.17
