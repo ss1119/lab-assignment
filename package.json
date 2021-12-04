@@ -1,6 +1,9 @@
 {
   "name": "lab-assignment",
   "version": "1.0.0",
+  "engines": {
+    "node": "12.x",
+  },
   "private": true,
   "scripts": {
     "dev": "nuxt",
