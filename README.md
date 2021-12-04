@@ -18,8 +18,9 @@ We have created a new website for the survey of lab assignment preferences.
 
   <https://lab-assignment-prod.web.app/>
 
-
 ### Tool Version
+
+> NOT use npm.
 
 ```zsh
 ❯ firebase --version
