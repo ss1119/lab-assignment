@@ -1,6 +1,9 @@
 {
   "name": "lab-assignment",
   "version": "1.0.0",
+  "engines": {
+    "node": "12.x"
+  },
   "private": true,
   "scripts": {
     "dev": "nuxt",
@@ -11,7 +14,7 @@
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
-    "core-js": "^3.15.1",
+    "core-js": "^3.19.2",
     "firebase": "^9.5.0",
     "firebase-tools": "^9.23.0",
     "nuxt": "^2.15.8",
@@ -31,7 +34,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-prettier-vue": "^3.1.0",
     "eslint-plugin-vue": "^7.15.1",
-    "node-sass": "5.0.0",
+    "node-sass": "^4.12.0",
     "prettier": "^2.3.2",
     "sass-loader": "^10.1.1"
   }
