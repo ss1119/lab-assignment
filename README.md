@@ -6,6 +6,22 @@ We have created a new website for the survey of lab assignment preferences.
 
 ## For Developer
 
+### Tool Version
+
+```zsh
+❯ firebase --version
+9.22.0
+
+❯ yarn  -v
+1.22.10
+
+❯ npm -v
+6.14.15
+
+❯ node -v
+v12.22.17
+```
+
 ### Routing
 
 |  Resource  |  HTTP Method  |  Notes  |
