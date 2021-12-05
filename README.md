@@ -10,13 +10,13 @@ We have created a new website for the survey of lab assignment preferences.
 
 > This is a temporary URL and the domain will be changed upon release.
 
-- Develop env
+- **Develop env**
+  - <https://lab-assignment-dev.web.app/>
+  - Deployed when the pull request for **develop** branch is closed
   
-  <https://lab-assignment-dev.web.app/>
-
-- Production env
-
-  <https://lab-assignment-prod.web.app/>
+- **Production env**
+  - <https://lab-assignment-prod.web.app/>
+  - Deployed when the pull request for **main** branch is closed
 
 ### Tool Version
 
