@@ -24,6 +24,9 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           check-latest: true
+      
+      - name: Create .env file
+        run: echo "${{ secrets.ENV_DEV }}" > .env
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
