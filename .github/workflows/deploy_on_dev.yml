@@ -24,10 +24,13 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           check-latest: true
+      
+      - name: Create .env file
+        run: echo '${{ secrets.ENV_DEV }}' > .env
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo '::set-output name=dir::$(yarn cache dir)'
 
       - name: Cache node_modules
         uses: actions/cache@v2.1.4
