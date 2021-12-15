@@ -8,7 +8,8 @@ const config = {
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.FIREBASE_MESSAGE_SENDER_ID,
   appId: process.env.FIREBASE_APP_ID,
-  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+  // eslint-disable-next-line no-template-curly-in-string
+  measurementId: '${config.measurementId}',
 }
 
 if (!firebase.apps.length) {
