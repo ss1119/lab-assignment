@@ -39,6 +39,7 @@ export default {
     Menu,
     DangerPanel,
   },
+  middleware: 'auth',
   data() {
     return {
       menuTitle: '学生一覧',

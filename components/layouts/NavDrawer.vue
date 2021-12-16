@@ -7,7 +7,7 @@
           閉じる
         </v-btn>
       </v-list-item>
-      <v-list-item>
+      <v-list-item v-if="isLoggined">
         <v-list-content>
           <v-list-item-title>ようこそ、{{ firstName }}さん</v-list-item-title>
           <v-list-item-subtitle class="grey--text">{{ mail }}</v-list-item-subtitle>
@@ -17,7 +17,7 @@
 
     <v-divider />
 
-    <v-list nav>
+    <v-list v-if="isLoggined" nav>
       <v-list-item-group>
         <v-list-item v-for="(menuItem, index) in menuItems" :key="index" @click="close">
           <v-list-item-title>
@@ -30,40 +30,31 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapGetters } from 'vuex'
 export default {
   name: 'NavDrawer',
   data() {
     return {
       firstName: 'Nakai',
       mail: 'ctwf0127@mail4.doshisha.ac.jp',
-      menuItems: [
-        {
-          name: '得点確認',
-          url: '/user',
-        },
-        {
-          name: '得点の編集',
-          url: '/user/edit',
-        },
-        {
-          name: 'お問い合わせ',
-          url: '/form',
-        },
-        {
-          name: 'ログアウト',
-          url: '/',
-        },
-      ],
     }
   },
   computed: {
+    ...mapGetters({
+      isLoggined: 'auth/isLoggined',
+    }),
     drawer: {
       get() {
         return this.$store.state.drawer.isOpen
       },
       set(val) {
         return val
+      },
+      loginMenu() {
+        return this.$store.state.auth.loginMenu
+      },
+      logoutMenu() {
+        return this.$store.state.auth.logoutMenu
       },
     },
   },

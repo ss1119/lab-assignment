@@ -47,6 +47,7 @@
 </template>
 
 <script>
+// import { mapMutations } from 'vuex'
 import { CardTitle } from '~/components/card/index'
 export default {
   name: 'Index',

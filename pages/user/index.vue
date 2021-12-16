@@ -18,6 +18,7 @@ export default {
     CardTitle,
     CardButton,
   },
+  middleware: 'auth',
   data() {
     return {
       title: '得点状況の確認',
