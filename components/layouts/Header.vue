@@ -11,6 +11,12 @@
       </v-tab>
     </v-tabs>
 
+    <v-tabs v-else-if="isAdmin" class="appbar__tabs">
+      <v-tab v-for="(menuItem, index) in adminMenu" :key="index" nuxt @click="redirectPage(menuItem.url)">
+        {{ menuItem.name }}
+      </v-tab>
+    </v-tabs>
+
     <v-tabs v-else class="appbar__tabs">
       <v-tab v-for="(menuItem, index) in logoutMenu" :key="index" nuxt @click="redirectPage(menuItem.url)">
         {{ menuItem.name }}
@@ -19,7 +25,7 @@
 
     <v-spacer />
 
-    <div v-if="isLoggined" class="appbar__profile mr-3">
+    <div v-if="isLoggined || isAdmin" class="appbar__profile mr-3">
       <v-list-item-title>ようこそ、{{ firstName }}さん</v-list-item-title>
       <v-list-item-subtitle class="grey--text">{{ userEmail }}</v-list-item-subtitle>
     </div>
@@ -39,6 +45,7 @@ export default {
   computed: {
     ...mapGetters({
       isLoggined: 'auth/isLoggined',
+      isAdmin: 'auth/isAdmin',
       userEmail: 'auth/userEmail',
     }),
     drawer() {
@@ -46,6 +53,9 @@ export default {
     },
     loginMenu() {
       return this.$store.state.menu.loginMenu
+    },
+    adminMenu() {
+      return this.$store.state.menu.adminMenu
     },
     logoutMenu() {
       return this.$store.state.menu.logoutMenu
