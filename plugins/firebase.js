@@ -1,5 +1,6 @@
-import firebase from 'firebase/app'
-import 'firebase/analytics'
+import { initializeApp } from 'firebase/app'
+import { getAnalytics } from 'firebase/analytics'
+import { getAuth, setPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth'
 
 const config = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -12,10 +13,35 @@ const config = {
   measurementId: '${config.measurementId}',
 }
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(config)
-  firebase.analytics()
+// Firebase初期化
+const app = initializeApp(config)
+// eslint-disable-next-line no-unused-vars
+const analytics = getAnalytics(app)
+
+// ログイン時のセッションをブラウザ(タブ)を消すまでに変更
+const auth = getAuth()
+setPersistence(auth, browserSessionPersistence)
+
+// 認証状態を取得
+const initFirebaseAuth = () => {
+  return new Promise((resolve) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      // userオブジェクトをresolve
+      resolve(user)
+      // 登録解除
+      unsubscribe()
+    })
+  })
 }
 
-export const auth = firebase.auth
-export default firebase
+// 認証状態を取得した後に、ユーザのロールを取得
+export const getUserClaims = async () => {
+  const user = await initFirebaseAuth()
+  return new Promise((resolve) => {
+    if (user) {
+      resolve(user.getIdTokenResult(true))
+    } else {
+      resolve(null)
+    }
+  })
+}

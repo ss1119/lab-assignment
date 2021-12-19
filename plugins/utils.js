@@ -8,7 +8,7 @@ const checkStudentID = (value) => {
 }
 
 const checkEmail = (value) => {
-  return /^[0-9a-zA-Z]+@mail4.doshisha.ac.jp$/.test(value)
+  return /^[0-9a-zA-Z]+@mail4.doshisha.ac.jp$/.test(value) || value === process.env.ADMIN_EMAIL
 }
 
 const checkExcel = (value) => {

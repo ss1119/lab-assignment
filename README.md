@@ -41,8 +41,6 @@ v12.22.17
 |  /form  |  GET  |  Contact Page  |
 |  /user  |  GET  |  Confirm Score Page  |
 |  /user/edit  |  GET  |  Score Edit Page  |
-|  /admin/users  |  GET  |  Admin User Management Page  |
-|  /admin/teachers  |  GET  |  Admin Label Management Page |
 
 ### How To Use Repository
 

@@ -2,7 +2,7 @@
   <v-app class="bg">
     <v-row class="app__height" justify="center" align-content="center">
       <v-card class="card" outlined>
-        <CardTitle :title="cardTitle" />
+        <CardTitle :title="cardTitle" :subtitle="subtitle" />
         <v-container>
           <v-row class="mt-5" justify="center">
             <img src="~/assets/images/404.svg" width="40%" />
@@ -33,6 +33,7 @@ export default {
     return {
       pageNotFound: 'ページが見つかりません',
       otherError: 'エラーが発生しました',
+      subtitle: '下記のリンクからトップページに遷移してください',
     }
   },
   head() {

@@ -7,19 +7,39 @@
           閉じる
         </v-btn>
       </v-list-item>
-      <v-list-item>
+      <v-list-item v-if="isLoggined || isAdmin">
         <v-list-content>
           <v-list-item-title>ようこそ、{{ firstName }}さん</v-list-item-title>
-          <v-list-item-subtitle class="grey--text">{{ mail }}</v-list-item-subtitle>
+          <v-list-item-subtitle class="grey--text">{{ userEmail }}</v-list-item-subtitle>
         </v-list-content>
       </v-list-item>
     </v-list>
 
     <v-divider />
 
-    <v-list nav>
+    <v-list v-if="isLoggined" nav>
       <v-list-item-group>
-        <v-list-item v-for="(menuItem, index) in menuItems" :key="index" @click="close">
+        <v-list-item v-for="(menuItem, index) in loginMenu" :key="index" @click="redirectPage(menuItem.url)">
+          <v-list-item-title>
+            {{ menuItem.name }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+
+    <v-list v-else-if="isAdmin" nav>
+      <v-list-item-group>
+        <v-list-item v-for="(menuItem, index) in adminMenu" :key="index" @click="redirectPage(menuItem.url)">
+          <v-list-item-title>
+            {{ menuItem.name }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+
+    <v-list v-else nav>
+      <v-list-item-group>
+        <v-list-item v-for="(menuItem, index) in logoutMenu" :key="index" @click="redirectPage(menuItem.url)">
           <v-list-item-title>
             {{ menuItem.name }}
           </v-list-item-title>
@@ -30,34 +50,21 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'NavDrawer',
   data() {
     return {
       firstName: 'Nakai',
-      mail: 'ctwf0127@mail4.doshisha.ac.jp',
-      menuItems: [
-        {
-          name: '得点確認',
-          url: '/user',
-        },
-        {
-          name: '得点の編集',
-          url: '/user/edit',
-        },
-        {
-          name: 'お問い合わせ',
-          url: '/form',
-        },
-        {
-          name: 'ログアウト',
-          url: '/',
-        },
-      ],
     }
   },
   computed: {
+    ...mapGetters({
+      isLoggined: 'auth/isLoggined',
+      isAdmin: 'auth/isAdmin',
+      userEmail: 'auth/userEmail',
+    }),
     drawer: {
       get() {
         return this.$store.state.drawer.isOpen
@@ -66,11 +73,28 @@ export default {
         return val
       },
     },
+    loginMenu() {
+      return this.$store.state.menu.loginMenu
+    },
+    adminMenu() {
+      return this.$store.state.menu.adminMenu
+    },
+    logoutMenu() {
+      return this.$store.state.menu.logoutMenu
+    },
   },
   methods: {
-    ...mapMutations({
-      close: 'drawer/close',
-    }),
+    redirectPage(path) {
+      if (path === '/signout') {
+        this.$store.dispatch('auth/signOut')
+      } else {
+        this.$router.push({ path })
+      }
+      this.close()
+    },
+    close() {
+      this.$store.commit('drawer/close')
+    },
   },
 }
 </script>
