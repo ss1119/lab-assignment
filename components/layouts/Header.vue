@@ -5,53 +5,59 @@
       <NuxtLink to="/" class="toolbar__text">研究室希望配属調査</NuxtLink>
     </v-toolbar-title>
 
-    <v-tabs class="appbar__tabs">
-      <v-tab v-for="(menuItem, index) in menuItems" :key="index" nuxt @click="redirectPage(menuItem.url)">
+    <v-tabs v-if="isLoggined" class="appbar__tabs">
+      <v-tab v-for="(menuItem, index) in loginMenu" :key="index" nuxt @click="redirectPage(menuItem.url)">
+        {{ menuItem.name }}
+      </v-tab>
+    </v-tabs>
+
+    <v-tabs v-else class="appbar__tabs">
+      <v-tab v-for="(menuItem, index) in logoutMenu" :key="index" nuxt @click="redirectPage(menuItem.url)">
         {{ menuItem.name }}
       </v-tab>
     </v-tabs>
 
     <v-spacer />
 
-    <div class="appbar__profile mr-3">
+    <div v-if="isLoggined" class="appbar__profile mr-3">
       <v-list-item-title>ようこそ、{{ firstName }}さん</v-list-item-title>
-      <v-list-item-subtitle class="grey--text">{{ mail }}</v-list-item-subtitle>
+      <v-list-item-subtitle class="grey--text">{{ userEmail }}</v-list-item-subtitle>
     </div>
   </v-app-bar>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapGetters } from 'vuex'
+
 export default {
   name: 'Header',
   data() {
     return {
       firstName: 'Nakai',
-      mail: 'ctwf0127@mail4.doshisha.ac.jp',
-      menuItems: [
-        {
-          name: '得点確認',
-          url: '/user',
-        },
-        {
-          name: 'お問い合わせ',
-          url: '/form',
-        },
-        {
-          name: 'ログアウト',
-          url: '/',
-        },
-      ],
     }
   },
   computed: {
+    ...mapGetters({
+      isLoggined: 'auth/isLoggined',
+      userEmail: 'auth/userEmail',
+    }),
     drawer() {
       return this.$store.state.drawer.isOpen
+    },
+    loginMenu() {
+      return this.$store.state.menu.loginMenu
+    },
+    logoutMenu() {
+      return this.$store.state.menu.logoutMenu
     },
   },
   methods: {
     redirectPage(path) {
-      this.$router.push({ path })
+      if (path === '/signout') {
+        this.$store.dispatch('auth/signOut')
+      } else {
+        this.$router.push({ path })
+      }
     },
     ...mapMutations({
       toggle: 'drawer/toggle',
