@@ -19,7 +19,7 @@
 
     <v-spacer />
 
-    <div v-if="isLoggined" class="appbar__profile mr-3">
+    <div v-if="isLoggined || isAdmin" class="appbar__profile mr-3">
       <v-list-item-title>ようこそ、{{ firstName }}さん</v-list-item-title>
       <v-list-item-subtitle class="grey--text">{{ userEmail }}</v-list-item-subtitle>
     </div>
@@ -39,6 +39,7 @@ export default {
   computed: {
     ...mapGetters({
       isLoggined: 'auth/isLoggined',
+      isAdmin: 'auth/isAdmin',
       userEmail: 'auth/userEmail',
     }),
     drawer() {
@@ -46,6 +47,9 @@ export default {
     },
     loginMenu() {
       return this.$store.state.menu.loginMenu
+    },
+    adminMenu() {
+      return this.$store.state.menu.adminMenu
     },
     logoutMenu() {
       return this.$store.state.menu.logoutMenu

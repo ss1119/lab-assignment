@@ -23,14 +23,25 @@ const auth = getAuth()
 setPersistence(auth, browserSessionPersistence)
 
 // 認証状態を取得
-export const initFirebaseAuth = () => {
+const initFirebaseAuth = () => {
   return new Promise((resolve) => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       // userオブジェクトをresolve
       resolve(user)
-
       // 登録解除
       unsubscribe()
     })
+  })
+}
+
+// 認証状態を取得した後に、ユーザのロールを取得
+export const getUserClaims = async () => {
+  const user = await initFirebaseAuth()
+  return new Promise((resolve) => {
+    if (user) {
+      resolve(user.getIdTokenResult(true))
+    } else {
+      resolve(null)
+    }
   })
 }
