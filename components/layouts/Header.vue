@@ -11,6 +11,12 @@
       </v-tab>
     </v-tabs>
 
+    <v-tabs v-else-if="isAdmin" class="appbar__tabs">
+      <v-tab v-for="(menuItem, index) in adminMenu" :key="index" nuxt @click="redirectPage(menuItem.url)">
+        {{ menuItem.name }}
+      </v-tab>
+    </v-tabs>
+
     <v-tabs v-else class="appbar__tabs">
       <v-tab v-for="(menuItem, index) in logoutMenu" :key="index" nuxt @click="redirectPage(menuItem.url)">
         {{ menuItem.name }}
