@@ -24,7 +24,6 @@ setPersistence(auth, browserSessionPersistence)
 
 // 認証状態を取得
 export const initFirebaseAuth = () => {
-  const auth = getAuth()
   return new Promise((resolve) => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       // userオブジェクトをresolve
