@@ -10,7 +10,7 @@ export default async ({ store }) => {
       })
     } else {
       store.commit('auth/setLoginState', {
-        uid: user.claim.user_id,
+        uid: user.claims.user_id,
         email: user.claims.email,
       })
     }
