@@ -19,7 +19,17 @@
 
     <v-list v-if="isLoggined" nav>
       <v-list-item-group>
-        <v-list-item v-for="(menuItem, index) in menuItems" :key="index" @click="close">
+        <v-list-item v-for="(menuItem, index) in loginMenu" :key="index" @click="redirectPage(menuItem.url)">
+          <v-list-item-title>
+            {{ menuItem.name }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+
+    <v-list v-else nav>
+      <v-list-item-group>
+        <v-list-item v-for="(menuItem, index) in logoutMenu" :key="index" @click="redirectPage(menuItem.url)">
           <v-list-item-title>
             {{ menuItem.name }}
           </v-list-item-title>
@@ -30,7 +40,8 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'NavDrawer',
   data() {
@@ -50,18 +61,26 @@ export default {
       set(val) {
         return val
       },
-      loginMenu() {
-        return this.$store.state.auth.loginMenu
-      },
-      logoutMenu() {
-        return this.$store.state.auth.logoutMenu
-      },
+    },
+    loginMenu() {
+      return this.$store.state.menu.loginMenu
+    },
+    logoutMenu() {
+      return this.$store.state.menu.logoutMenu
     },
   },
   methods: {
-    ...mapMutations({
-      close: 'drawer/close',
-    }),
+    redirectPage(path) {
+      if (path === '/signout') {
+        this.$store.dispatch('auth/signOut')
+      } else {
+        this.$router.push({ path })
+      }
+      this.close()
+    },
+    close() {
+      this.$store.commit('drawer/close')
+    },
   },
 }
 </script>

@@ -34,7 +34,7 @@
               ></v-text-field>
             </div>
             <div class="pb-8 pt-4">
-              <v-btn color="accent" depressed height="48">
+              <v-btn color="accent" depressed height="48" @click="signIn">
                 <v-icon left> mdi-login </v-icon>
                 ログイン
               </v-btn>
@@ -47,8 +47,8 @@
 </template>
 
 <script>
-// import { mapMutations } from 'vuex'
 import { CardTitle } from '~/components/card/index'
+
 export default {
   name: 'Index',
   components: {
@@ -69,6 +69,14 @@ export default {
         required: (value) => !!value || 'パスワードは必須です',
       },
     }
+  },
+  methods: {
+    signIn() {
+      this.$store.dispatch('auth/signIn', {
+        email: this.email,
+        password: this.password,
+      })
+    },
   },
 }
 </script>

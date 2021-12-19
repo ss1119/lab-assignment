@@ -21,24 +21,25 @@
 
     <div v-if="isLoggined" class="appbar__profile mr-3">
       <v-list-item-title>ようこそ、{{ firstName }}さん</v-list-item-title>
-      <v-list-item-subtitle class="grey--text">{{ mail }}</v-list-item-subtitle>
+      <v-list-item-subtitle class="grey--text">{{ userEmail }}</v-list-item-subtitle>
     </div>
   </v-app-bar>
 </template>
 
 <script>
 import { mapMutations, mapGetters } from 'vuex'
+
 export default {
   name: 'Header',
   data() {
     return {
       firstName: 'Nakai',
-      mail: 'ctwf0127@mail4.doshisha.ac.jp',
     }
   },
   computed: {
     ...mapGetters({
       isLoggined: 'auth/isLoggined',
+      userEmail: 'auth/userEmail',
     }),
     drawer() {
       return this.$store.state.drawer.isOpen
@@ -52,7 +53,11 @@ export default {
   },
   methods: {
     redirectPage(path) {
-      this.$router.push({ path })
+      if (path === '/signout') {
+        this.$store.dispatch('auth/signOut')
+      } else {
+        this.$router.push({ path })
+      }
     },
     ...mapMutations({
       toggle: 'drawer/toggle',

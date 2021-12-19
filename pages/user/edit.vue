@@ -50,7 +50,6 @@ export default {
     CardTitle,
     CardButton,
   },
-  middleware: 'auth',
   data() {
     return {
       title: '得点の編集',

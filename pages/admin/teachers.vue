@@ -67,7 +67,6 @@ export default {
     CardTitle,
     Menu,
   },
-  middleware: 'auth',
   data() {
     return {
       menuTitle: '教授一覧',

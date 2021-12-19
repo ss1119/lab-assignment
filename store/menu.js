@@ -9,7 +9,7 @@ const loginMenu = [
   },
   {
     name: 'ログアウト',
-    url: '/',
+    url: '/signout',
   },
 ]
 
