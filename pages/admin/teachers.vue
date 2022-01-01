@@ -10,7 +10,7 @@
           <v-data-table
             :search="search.value"
             :headers="headers"
-            :items="items"
+            :items="teachers"
             hide-default-footer
             logding-text="loading-text"
             locale="ja-jp"
@@ -59,8 +59,10 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import { CardTitle } from '~/components/card/index'
 import { Menu } from '~/components/admin/index'
+
 export default {
   name: 'AdminTeachers',
   components: {
@@ -96,7 +98,7 @@ export default {
         {
           text: '研究室名',
           sortable: true,
-          value: 'lab_name',
+          value: 'lab',
         },
         {
           text: '編集/削除',
@@ -105,41 +107,47 @@ export default {
           sortable: false,
         },
       ],
+      // teachers: [],
       loadingText: '現在データを取得中です。しばらくお待ちください。',
-      items: [
-        {
-          name: '教授1',
-          lab_name: '研究室名1',
-        },
-        {
-          name: '教授2',
-          lab_name: '研究室名1',
-        },
-        {
-          name: '教授3',
-          lab_name: '研究室名2',
-        },
-        {
-          name: '教授4',
-          lab_name: '研究室名4',
-        },
-      ],
       dialogDelete: false,
       dialogEdit: false,
       editedItem: {
         name: '',
-        lab_name: '',
+        lab: '',
       },
     }
   },
+  computed: {
+    ...mapGetters({
+      teachers: 'teachers/data',
+    }),
+  },
+  // created() {
+  //   this.$store.dispatch('teachers/get').then((teachers) => {
+  //     this.teachers = teachers
+  //   })
+  // },
+  created() {
+    this.$store.dispatch('teachers/get')
+  },
+  mounted() {
+    this.startListener()
+  },
+  beforeDestroy() {
+    this.stopListener()
+  },
   methods: {
+    ...mapActions({
+      startListener: 'teachers/startListener',
+      stopListener: 'teachers/stopListener',
+    }),
     editItem(item) {
-      this.editedIndex = this.items.indexOf(item)
+      this.editedIndex = this.teachers.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogEdit = true
     },
     deleteItem(item) {
-      this.editedIndex = this.items.indexOf(item)
+      this.editedIndex = this.teachers.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
