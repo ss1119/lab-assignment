@@ -29,10 +29,23 @@
     <v-dialog v-model="dialogEdit" max-width="600px">
       <v-card>
         <v-card-title>研究室の編集</v-card-title>
+        <v-alert v-if="isNotUpdated" type="error" outlined dense border="left" class="mx-10">
+          <div class="error__text">
+            データを更新できませんでした。 <br />
+            もう一度試してみてください。
+          </div>
+        </v-alert>
         <v-container class="form__scroll">
           <v-form class="form__wrap">
-            <v-text-field label="教授名（半角スペースあり）" color="accent" prepend-icon="mdi-account" />
-            <v-text-field label="研究室名" color="accent" prepend-icon="mdi-label" />
+            <v-text-field
+              ref="name"
+              v-model="updatedName"
+              label="教授名（半角スペースあり）"
+              color="accent"
+              prepend-icon="mdi-account"
+              :rules="[nameRule.required, nameRule.checked]"
+            />
+            <v-text-field ref="lab" v-model="updatedLab" label="研究室名" color="accent" prepend-icon="mdi-label" :rules="[labRule.required]" />
           </v-form>
         </v-container>
 
@@ -107,26 +120,36 @@ export default {
           sortable: false,
         },
       ],
-      // teachers: [],
       loadingText: '現在データを取得中です。しばらくお待ちください。',
       dialogDelete: false,
       dialogEdit: false,
+      isNotUpdated: false,
       editedItem: {
         name: '',
         lab: '',
+      },
+      updatedName: '',
+      updatedLab: '',
+      nameRule: {
+        required: (value) => !!value || '入力してください',
+        checked: (value) => this.$checkName(value) || '姓と名の間に半角スペースを1つ入力してください',
+      },
+      labRule: {
+        required: (value) => !!value || '入力してください',
       },
     }
   },
   computed: {
     ...mapGetters({
-      teachers: 'teachers/data',
+      teachers: 'teachers/items',
     }),
+    form() {
+      return {
+        name: this.updatedName,
+        lab: this.updatedLab,
+      }
+    },
   },
-  // created() {
-  //   this.$store.dispatch('teachers/get').then((teachers) => {
-  //     this.teachers = teachers
-  //   })
-  // },
   created() {
     this.$store.dispatch('teachers/get')
   },
@@ -141,9 +164,16 @@ export default {
       startListener: 'teachers/startListener',
       stopListener: 'teachers/stopListener',
     }),
+    reset() {
+      Object.keys(this.form).forEach((f) => {
+        this.$refs[f].reset()
+      })
+    },
     editItem(item) {
       this.editedIndex = this.teachers.indexOf(item)
       this.editedItem = Object.assign({}, item)
+      this.updatedName = this.editedItem.name
+      this.updatedLab = this.editedItem.lab
       this.dialogEdit = true
     },
     deleteItem(item) {
@@ -152,15 +182,45 @@ export default {
       this.dialogDelete = true
     },
     closeEdit() {
+      this.reset()
+      this.isNotUpdated = false
       this.dialogEdit = false
     },
     closeDelete() {
       this.dialogDelete = false
     },
     saveEdit() {
-      this.dialogEdit = false
+      this.validate = false
+      Object.keys(this.form).forEach((f) => {
+        this.$refs[f].validate(true)
+        if (!this.$refs[f].valid) {
+          this.validate = true
+        }
+      })
+      if (!this.validate) {
+        this.dialogEdit = false
+        this.$store
+          .dispatch('teachers/update', {
+            oldName: this.editedItem.name,
+            oldLab: this.editedItem.lab,
+            newName: this.form.name,
+            newLab: this.form.lab,
+          })
+          .then(() => {
+            this.closeEdit()
+          })
+          .catch((err) => {
+            this.isNotUpdated = true
+            // eslint-disable-next-line no-console
+            console.error(err.message)
+          })
+      }
     },
     saveDelete() {
+      this.$store.dispatch('teachers/delete', {
+        name: this.editedItem.name,
+        lab: this.editedItem.lab,
+      })
       this.dialogDelete = false
     },
   },
@@ -176,6 +236,12 @@ export default {
 .table {
   &__card {
     width: 60%;
+  }
+}
+
+.error {
+  &__text {
+    font-size: 14px;
   }
 }
 </style>

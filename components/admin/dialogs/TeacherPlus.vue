@@ -26,7 +26,7 @@
           suffix="研究室"
           color="accent"
           prepend-icon="mdi-label"
-          :rules="[nameRule.required]"
+          :rules="[labRule.required]"
         />
       </v-form>
     </v-container>
@@ -93,6 +93,7 @@ export default {
       this.globalEscape()
     },
     save() {
+      this.validate = false
       Object.keys(this.form).forEach((f) => {
         this.$refs[f].validate(true)
         if (!this.$refs[f].valid) {

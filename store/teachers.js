@@ -1,8 +1,7 @@
-import { collection, addDoc, getDocs, onSnapshot, query, orderBy } from 'firebase/firestore'
+import { collection, doc, addDoc, getDocs, updateDoc, deleteDoc, onSnapshot, query, orderBy, where } from 'firebase/firestore'
 import { db } from '~/plugins/firebase'
 
 const teachersRef = collection(db, 'teachers')
-const q = query(teachersRef, orderBy('lab'))
 
 export const state = () => ({
   teachers: [],
@@ -34,14 +33,37 @@ export const actions = {
   },
 
   async get({ commit }) {
-    const teachers = await getDocs(q)
+    const indexQuery = query(teachersRef, orderBy('lab'))
+    const teachers = await getDocs(indexQuery)
     commit('setTeachers', { teachers })
   },
 
-  // todo update deleteの実装
+  async update({ commit }, { oldName, oldLab, newName, newLab }) {
+    const updateQuery = query(teachersRef, where('name', '==', oldName), where('lab', '==', oldLab))
+    const docRef = await getDocs(updateQuery)
+    return new Promise((resolve, reject) => {
+      updateDoc(doc(db, 'teachers', docRef.docs[0].id), {
+        name: newName,
+        lab: newLab,
+      })
+        .then(() => {
+          resolve()
+        })
+        .catch((err) => {
+          reject(err)
+        })
+    })
+  },
+
+  async delete({ commit }, { name, lab }) {
+    const deleteQuery = query(teachersRef, where('name', '==', name), where('lab', '==', lab))
+    const docRef = await getDocs(deleteQuery)
+    await deleteDoc(doc(db, 'teachers', docRef.docs[0].id))
+  },
 
   startListener({ commit }) {
-    this.unsubscribe = onSnapshot(q, (teachers) => {
+    const indexQuery = query(teachersRef, orderBy('lab'))
+    this.unsubscribe = onSnapshot(indexQuery, (teachers) => {
       commit('setTeachers', { teachers })
     })
   },
@@ -52,7 +74,7 @@ export const actions = {
 }
 
 export const getters = {
-  data(state) {
+  items(state) {
     return state.teachers
   },
 }
