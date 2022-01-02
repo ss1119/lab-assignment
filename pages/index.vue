@@ -8,6 +8,7 @@
           <div class="pt-3">
             <div>
               <v-text-field
+                ref="email"
                 v-model="email"
                 aria-label="email"
                 :rules="[emailRules.required, emailRules.checked]"
@@ -20,6 +21,7 @@
               ></v-text-field>
 
               <v-text-field
+                ref="password"
                 v-model="password"
                 aria-label="password"
                 :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
@@ -56,6 +58,7 @@ export default {
   },
   data() {
     return {
+      validate: false,
       title: '研究室希望配属調査',
       subtitle: 'ご自身のメールアドレスと配布されたパスワードを入力してください',
       email: '',
@@ -70,12 +73,29 @@ export default {
       },
     }
   },
-  methods: {
-    signIn() {
-      this.$store.dispatch('auth/signIn', {
+  computed: {
+    form() {
+      return {
         email: this.email,
         password: this.password,
+      }
+    },
+  },
+  methods: {
+    signIn() {
+      this.validate = false
+      Object.keys(this.form).forEach((f) => {
+        this.$refs[f].validate(true)
+        if (!this.$refs[f].valid) {
+          this.validate = true
+        }
       })
+      if (!this.validate) {
+        this.$store.dispatch('auth/signIn', {
+          email: this.email,
+          password: this.password,
+        })
+      }
     },
   },
 }

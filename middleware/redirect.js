@@ -7,10 +7,11 @@ export default ({ store, redirect, route }) => {
   const adminUrl = adminMenu.map((item) => item.url)
 
   // ログアウト状態かつログインしている状態でしか見れないURLの場合
-  if (!isLoggined && !isAdmin && (loginUrl.includes(route.path) || adminUrl.includes(route.path))) {
+  if (!isLoggined && !isAdmin && (loginUrl.includes(route.path) || adminUrl.includes(route.path)) && route.path !== '/form') {
     // ログイン画面に遷移
     redirect('/')
   }
+
   // ログイン状態の場合
   if (isLoggined && !isAdmin && route.path === '/') {
     redirect('/user')
