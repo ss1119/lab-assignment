@@ -4,19 +4,21 @@
     <v-container>
       <v-subheader>出力する学生の年度</v-subheader>
       <v-form class="form__wrap">
-        <v-select label="年度" :items="items" item-text="state" item-value="abbr" color="accent" :value="year" />
+        <v-select label="年度" :items="items" item-text="state" item-value="abbr" color="accent" :value="year" @change="fetchYear" />
       </v-form>
     </v-container>
 
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn text @click.stop="close"> 閉じる </v-btn>
-      <v-btn color="accent" text @click.stop="save"> ダウンロード </v-btn>
+      <v-btn color="accent" text @click.stop="downloadExcel"> ダウンロード </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+import XLSX from 'xlsx'
+
 export default {
   name: 'FileExcel',
   props: {
@@ -44,6 +46,48 @@ export default {
           abbr: '2022',
         },
       ],
+      studentData: [
+        {
+          id: '123456789',
+          name: '中井凌一',
+          order: 10,
+          group: 1,
+          pass: 'hoge',
+          mail: 'nislabA@mail/com',
+          sato: 1,
+          koita: 2,
+          tsuchiya: 3,
+          ohkubo: 4,
+          imoto: 5,
+          katagiri: 6,
+          ohsaki: 7,
+          takahashi: 8,
+          shimohara: 9,
+          tanev: 10,
+          tamura: 11,
+          continue: '希望する',
+        },
+        {
+          id: '234567890',
+          name: '奥西理貴',
+          order: 50,
+          group: 2,
+          pass: 'fuga',
+          mail: 'nislabB@mail/com',
+          sato: 2,
+          koita: 4,
+          tsuchiya: 6,
+          ohkubo: 8,
+          imoto: 10,
+          katagiri: 12,
+          ohsaki: 14,
+          takahashi: 16,
+          shimohara: 18,
+          tanev: 20,
+          tamura: 22,
+          continue: '希望しない',
+        },
+      ],
     }
   },
   mounted() {
@@ -57,7 +101,15 @@ export default {
     close() {
       this.globalEscape()
     },
-    save() {
+    fetchYear(e) {
+      this.$data.year = e
+    },
+    downloadExcel() {
+      const wb = XLSX.utils.book_new()
+      const sheet = XLSX.utils.json_to_sheet(this.$data.studentData)
+      const filename = this.$data.year + '年度.xlsx'
+      XLSX.utils.book_append_sheet(wb, sheet, this.$data.year + '年度')
+      XLSX.writeFile(wb, filename)
       this.globalEscape()
     },
   },
