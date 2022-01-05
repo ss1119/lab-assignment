@@ -102,13 +102,13 @@ export default {
       this.globalEscape()
     },
     fetchYear(e) {
-      this.$data.year = e
+      this.year = e
     },
     downloadExcel() {
       const wb = XLSX.utils.book_new()
       const sheet = XLSX.utils.json_to_sheet(this.$data.studentData)
-      const filename = this.$data.year + '年度.xlsx'
-      XLSX.utils.book_append_sheet(wb, sheet, this.$data.year + '年度')
+      const filename = this.year + '年度.xlsx'
+      XLSX.utils.book_append_sheet(wb, sheet, this.year + '年度')
       XLSX.writeFile(wb, filename)
       this.globalEscape()
     },

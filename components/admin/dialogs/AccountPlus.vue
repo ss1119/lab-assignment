@@ -70,15 +70,17 @@ export default {
       this.globalEscape()
     },
     loadFile(e) {
-      this.$data.file = e
+      this.file = e
     },
     importExcel() {
       const reader = new FileReader()
       reader.onload = (e) => {
         const workbook = XLSX.read(e.target.result)
-        this.$data.studentData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
+        this.studentData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
+        // eslint-disable-next-line no-console
+        console.log(this.studentData)
       }
-      reader.readAsArrayBuffer(this.$data.file)
+      reader.readAsArrayBuffer(this.file)
       this.globalEscape()
     },
   },
