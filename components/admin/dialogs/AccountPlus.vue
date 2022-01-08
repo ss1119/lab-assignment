@@ -34,6 +34,7 @@
 
 <script>
 import XLSX from 'xlsx'
+import crypto from 'crypto-js'
 
 export default {
   name: 'AccountPlus',
@@ -76,12 +77,29 @@ export default {
       const reader = new FileReader()
       reader.onload = (e) => {
         const workbook = XLSX.read(e.target.result)
-        this.studentData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
+        const excelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
+        this.studentData = []
+        for (let i = 0; i < excelData.length; i++) {
+          const s = { point: {}, is_test: 'test', is_active: true, is_point_assigned: false }
+          this.$appendDataByMapInversely(s, excelData[i], this.$excelKeyMap)
+          this.$appendDataByMapInversely(s.point, excelData[i], this.$teacherUidMap)
+          if (s.shingaku === '希望する') {
+            s.shingaku = true
+          } else {
+            s.shingaku = false
+          }
+          s.password = this.generatePassword('abcdefghij')
+          console.log(s.password)
+          this.studentData.push(s)
+        }
         // eslint-disable-next-line no-console
         console.log(this.studentData)
       }
       reader.readAsArrayBuffer(this.file)
       this.globalEscape()
+    },
+    generatePassword(message) {
+      return crypto.AES.encrypt(message, process.env.CRYPT_JS_PASSPHRASE).toString()
     },
   },
 }

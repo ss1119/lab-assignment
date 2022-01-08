@@ -46,48 +46,62 @@ export default {
           abbr: '2022',
         },
       ],
-      studentData: [
-        {
-          id: '123456789',
-          name: '中井凌一',
-          order: 10,
-          group: 1,
-          pass: 'hoge',
-          mail: 'nislabA@mail/com',
-          sato: 1,
-          koita: 2,
-          tsuchiya: 3,
-          ohkubo: 4,
-          imoto: 5,
-          katagiri: 6,
-          ohsaki: 7,
-          takahashi: 8,
-          shimohara: 9,
-          tanev: 10,
-          tamura: 11,
-          continue: '希望する',
-        },
-        {
-          id: '234567890',
-          name: '奥西理貴',
-          order: 50,
-          group: 2,
-          pass: 'fuga',
-          mail: 'nislabB@mail/com',
-          sato: 2,
-          koita: 4,
-          tsuchiya: 6,
-          ohkubo: 8,
-          imoto: 10,
-          katagiri: 12,
-          ohsaki: 14,
-          takahashi: 16,
-          shimohara: 18,
-          tanev: 20,
-          tamura: 22,
-          continue: '希望しない',
-        },
-      ],
+      studentData: {
+        2022: [
+          {
+            id: '1316200127',
+            name: '中井綾一',
+            mail: 'ctwf0127@mail4.doshisha.ac.jp',
+            password: 'pass',
+            is_test: 'test',
+            is_active: true,
+            is_point_assigned: false,
+            group: 1,
+            rank: 39,
+            shingaku: true,
+            point: {
+              0: 1,
+              1: 2,
+              2: 3,
+              3: 4,
+              4: 5,
+              5: 6,
+              6: 7,
+              7: 8,
+              8: 9,
+              9: 10,
+              10: 11,
+            },
+          },
+        ],
+        2021: [
+          {
+            id: '1316200127',
+            name: '中井綾一',
+            mail: 'ctwf0127@mail4.doshisha.ac.jp',
+            password: 'pass',
+            is_test: 'test',
+            is_active: true,
+            is_point_assigned: false,
+            group: 1,
+            rank: 39,
+            shingaku: false,
+            point: {
+              0: 2,
+              1: 4,
+              2: 6,
+              3: 8,
+              4: 10,
+              5: 12,
+              6: 14,
+              7: 16,
+              8: 18,
+              9: 20,
+              10: 22,
+            },
+          },
+        ],
+      },
     }
   },
   mounted() {
@@ -103,10 +117,28 @@ export default {
     },
     fetchYear(e) {
       this.year = e
+      console.log(this.year)
     },
     downloadExcel() {
       const wb = XLSX.utils.book_new()
-      const sheet = XLSX.utils.json_to_sheet(this.$data.studentData)
+      const studentData = []
+      let i = 0
+      while (i < this.$data.studentData[this.year].length) {
+        const s = {}
+        this.$appendDataByMap(s, this.$data.studentData[this.year][i], this.$excelKeyMap)
+        this.$appendDataByMap(s, this.$data.studentData[this.year][i].point, this.$teacherUidMap)
+        if (s['進学希望の確認'] === true) {
+          delete s['進学希望の確認']
+          s['進学希望の確認'] = '希望する'
+        } else {
+          delete s['進学希望の確認']
+          s['進学希望の確認'] = '希望しない'
+        }
+        console.log(s)
+        studentData.push(s)
+        i = (i + 1) | 0
+      }
+      const sheet = XLSX.utils.json_to_sheet(studentData)
       const filename = this.year + '年度.xlsx'
       XLSX.utils.book_append_sheet(wb, sheet, this.year + '年度')
       XLSX.writeFile(wb, filename)
