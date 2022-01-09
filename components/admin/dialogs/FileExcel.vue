@@ -18,6 +18,7 @@
 
 <script>
 import XLSX from 'xlsx'
+import crypto from 'crypto-js'
 
 export default {
   name: 'FileExcel',
@@ -52,7 +53,7 @@ export default {
             id: '1316200127',
             name: '中井綾一',
             mail: 'ctwf0127@mail4.doshisha.ac.jp',
-            password: 'pass',
+            password: 'U2FsdGVkX1+tx56qGBkqZ0nq4LM2xL96j+qUPVV9c/s=',
             is_test: 'test',
             is_active: true,
             is_point_assigned: false,
@@ -79,7 +80,7 @@ export default {
             id: '1316200127',
             name: '中井綾一',
             mail: 'ctwf0127@mail4.doshisha.ac.jp',
-            password: 'pass',
+            password: 'U2FsdGVkX1+tx56qGBkqZ0nq4LM2xL96j+qUPVV9c/s=',
             is_test: 'test',
             is_active: true,
             is_point_assigned: false,
@@ -117,16 +118,16 @@ export default {
     },
     fetchYear(e) {
       this.year = e
-      console.log(this.year)
     },
     downloadExcel() {
       const wb = XLSX.utils.book_new()
-      const studentData = []
-      let i = 0
-      while (i < this.$data.studentData[this.year].length) {
+      const selectedYearData = this.$data.studentData[this.year]
+      const excelData = []
+      for (let i = 0; i < selectedYearData.length; i = i + 1) {
         const s = {}
-        this.$appendDataByMap(s, this.$data.studentData[this.year][i], this.$excelKeyMap)
-        this.$appendDataByMap(s, this.$data.studentData[this.year][i].point, this.$teacherUidMap)
+        selectedYearData[i].password = this.decryptPassword(selectedYearData[i].password)
+        this.appendDataAsExcelByMap(s, selectedYearData[i], this.$excelKeyMap)
+        this.appendDataAsExcelByMap(s, selectedYearData[i].point, this.$teacherUidMap)
         if (s['進学希望の確認'] === true) {
           delete s['進学希望の確認']
           s['進学希望の確認'] = '希望する'
@@ -134,15 +135,21 @@ export default {
           delete s['進学希望の確認']
           s['進学希望の確認'] = '希望しない'
         }
-        console.log(s)
-        studentData.push(s)
-        i = (i + 1) | 0
+        excelData.push(s)
       }
-      const sheet = XLSX.utils.json_to_sheet(studentData)
+      const sheet = XLSX.utils.json_to_sheet(excelData)
       const filename = this.year + '年度.xlsx'
       XLSX.utils.book_append_sheet(wb, sheet, this.year + '年度')
       XLSX.writeFile(wb, filename)
       this.globalEscape()
+    },
+    appendDataAsExcelByMap(obj, data, map) {
+      for (const key in map) {
+        obj[map[key]] = data[key]
+      }
+    },
+    decryptPassword(password) {
+      return crypto.AES.decrypt(password, process.env.CRYPT_JS_PASSPHRASE).toString(crypto.enc.Utf8)
     },
   },
 }

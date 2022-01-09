@@ -43,22 +43,6 @@ const teacherUidMap = {
   10: '田村',
 }
 
-const appendDataByMap = (obj, data, map) => {
-  for (const key in map) {
-    if (key in data) {
-      obj[map[key]] = data[key]
-    }
-  }
-}
-
-const appendDataByMapInversely = (obj, data, map) => {
-  for (const key in map) {
-    if (map[key] in data) {
-      obj[key] = data[map[key]]
-    }
-  }
-}
-
 export default ({ value }, inject) => {
   inject('checkYear', checkYear)
   inject('checkStudentID', checkStudentID)
@@ -67,6 +51,4 @@ export default ({ value }, inject) => {
   inject('checkExcel', checkExcel)
   inject('excelKeyMap', excelKeyMap)
   inject('teacherUidMap', teacherUidMap)
-  inject('appendDataByMap', appendDataByMap)
-  inject('appendDataByMapInversely', appendDataByMapInversely)
 }
