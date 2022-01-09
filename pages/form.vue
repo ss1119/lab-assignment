@@ -5,7 +5,7 @@
 
       <v-row class="my-2">
         <v-col cols="12">
-          <v-alert v-if="isNotSent" prominent type="error" outlined dense border="left" class="mx-10">
+          <v-alert v-if="isNotSent" type="error" outlined dense border="left" class="mx-10">
             <div>
               メッセージの送信に失敗しました。<br />
               もう一度試してみてください。
@@ -67,7 +67,8 @@
 </template>
 
 <script>
-import { getFunctions, httpsCallable } from 'firebase/functions'
+import { httpsCallable } from 'firebase/functions'
+import { functions } from '~/plugins/firebase'
 import { CardTitle, CardButton } from '~/components/card/index'
 
 export default {
@@ -130,10 +131,10 @@ export default {
       }
     },
     sendForm() {
+      console.log(this.form.email)
       this.dialogConfirm = false
-      const functions = getFunctions()
       const sendInqueries = httpsCallable(functions, 'sendInqueries')
-      sendInqueries({ data: this.form })
+      sendInqueries(this.form)
         .then(() => {
           this.dialogDone = true
         })
@@ -141,7 +142,6 @@ export default {
           // eslint-disable-next-line no-console
           console.error(err.message)
           this.close()
-          this.isNotSent = true
         })
     },
     close() {

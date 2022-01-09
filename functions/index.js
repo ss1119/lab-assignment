@@ -77,7 +77,7 @@ ${data.message}
 }
 
 // ユーザから問い合わせの実行
-exports.sendInqueries = functions.region('asia-northeast1').https.onCall(async (data, context) => {
+exports.sendInqueries = functions.https.onCall(async (data, context) => {
   const admin = {
     from: gmailEmail,
     to: adminEmail,
