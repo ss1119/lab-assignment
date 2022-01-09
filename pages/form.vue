@@ -31,7 +31,7 @@
             name="name"
             label="お名前（半角スペースあり）"
             color="accent"
-            :rules="[nameRules.required]"
+            :rules="[nameRules.required, nameRules.checked]"
           />
           <v-text-field ref="subject" v-model="subject" dense outlined name="subject" label="件名" color="accent" :rules="[subjectRules.required]" />
           <v-textarea ref="message" v-model="message" dense outlined name="message" label="本文" color="accent" :rules="[messageRules.required]" />

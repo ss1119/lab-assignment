@@ -40,12 +40,21 @@
             <v-text-field
               ref="name"
               v-model="updatedName"
+              name="name"
               label="教授名（半角スペースあり）"
               color="accent"
               prepend-icon="mdi-account"
               :rules="[nameRule.required, nameRule.checked]"
             />
-            <v-text-field ref="lab" v-model="updatedLab" label="研究室名" color="accent" prepend-icon="mdi-label" :rules="[labRule.required]" />
+            <v-text-field
+              ref="lab"
+              v-model="updatedLab"
+              name="lab"
+              label="研究室名"
+              color="accent"
+              prepend-icon="mdi-label"
+              :rules="[labRule.required]"
+            />
           </v-form>
         </v-container>
 
@@ -101,8 +110,13 @@ export default {
         },
       },
       cardTitle: '研究室の管理',
-      cardSubtitle: '研究室の新規作成や削除を行うことができます',
+      cardSubtitle: '研究室の新規作成や削除を行うことができます。研究室IDに関しては運用ルールに従って保存してください。',
       headers: [
+        {
+          text: '研究室ID',
+          sortable: true,
+          value: 'id',
+        },
         {
           text: '教授名',
           sortable: true,
@@ -125,6 +139,7 @@ export default {
       dialogEdit: false,
       isNotUpdated: false,
       editedItem: {
+        id: '',
         name: '',
         lab: '',
       },
@@ -201,10 +216,9 @@ export default {
         this.dialogEdit = false
         this.$store
           .dispatch('teachers/update', {
-            oldName: this.editedItem.name,
-            oldLab: this.editedItem.lab,
-            newName: this.form.name,
-            newLab: this.form.lab,
+            id: this.editedItem.id,
+            name: this.form.name,
+            lab: this.form.lab,
           })
           .then(() => {
             this.closeEdit()
@@ -218,8 +232,7 @@ export default {
     },
     saveDelete() {
       this.$store.dispatch('teachers/delete', {
-        name: this.editedItem.name,
-        lab: this.editedItem.lab,
+        id: this.editedItem.id,
       })
       this.dialogDelete = false
     },
