@@ -131,7 +131,6 @@ export default {
       }
     },
     sendForm() {
-      console.log(this.form.email)
       this.dialogConfirm = false
       const sendInqueries = httpsCallable(functions, 'sendInqueries')
       sendInqueries(this.form)
