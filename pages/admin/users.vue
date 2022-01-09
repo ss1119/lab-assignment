@@ -14,12 +14,9 @@
             :items="items"
             :single-select="singleSelect"
             item-key="id"
-            show-select
             logding-text="loading-text"
             locale="ja-jp"
             class="elevation-0 ma-4"
-            @toggle-select-all="selectAllCheck($event)"
-            @item-selected="selectCheck($event)"
           />
         </v-card>
       </v-row>
@@ -56,14 +53,6 @@ export default {
           displayDialog: true,
           slotName: 'account-plus',
         },
-        email: {
-          icon: 'mdi-email',
-          color: 'accent',
-          title: 'メール配信',
-          disabled: false,
-          displayDialog: true,
-          slotName: 'email',
-        },
         fileExcel: {
           icon: 'mdi-file-excel',
           color: 'accent',
@@ -72,17 +61,28 @@ export default {
           displayDialog: true,
           slotName: 'file-excel',
         },
-        accountOff: {
-          icon: 'mdi-account-off',
-          color: 'error',
-          title: '権限変更',
-          disabled: true,
+        email: {
+          icon: 'mdi-email',
+          color: 'accent',
+          title: 'メール配信',
+          disabled: false,
           displayDialog: true,
-          slotName: 'account-off',
+          slotName: 'email',
         },
+        // 権限変更機能
+        // とりあえず消しておく
+        // 必要になったら、復活
+        // accountOff: {
+        //   icon: 'mdi-account-off',
+        //   color: 'error',
+        //   title: '権限変更',
+        //   disabled: true,
+        //   displayDialog: true,
+        //   slotName: 'account-off',
+        // },
       },
       cardTitle: 'ユーザの管理',
-      cardSubtitle: 'ユーザに対して、メールの送信やログイン権限の変更ができます',
+      cardSubtitle: 'ユーザを追加したり、ユーザに対して、パスワードを配信することができます',
       singleSelect: false,
       checked: [],
       headers: [
@@ -105,17 +105,17 @@ export default {
         {
           text: '希望設定済み',
           filterable: false,
-          value: 'is_point_assigned',
+          value: 'isPointAssigned',
         },
         {
           text: 'テスト/本番',
           filterable: false,
-          value: 'is_test',
+          value: 'status',
         },
         {
           text: 'ログイン可',
           filterable: false,
-          value: 'is_active',
+          value: 'isActive',
         },
         {
           text: '年度',
@@ -164,21 +164,26 @@ export default {
     }
   },
   methods: {
-    selectAllCheck(event) {
-      if (event.value) {
-        this.btnItems.accountOff.disabled = false
-      } else {
-        this.btnItems.accountOff.disabled = true
-      }
-    },
-    selectCheck(event) {
-      if (event.value) {
-        this.btnItems.accountOff.disabled = false
-      }
-      if (!event.value && this.checked.length === 1) {
-        this.btnItems.accountOff.disabled = true
-      }
-    },
+    // チェックボックスの機能を追加するなら以下のプロパティを追加する必要がある
+    // show-select
+    // @toggle-select-all="selectAllCheck($event)"
+    // @item-selected="selectCheck($event)"
+    // 権限設定が必要か分からないので、メソッドもコメントアウトしておく
+    // selectAllCheck(event) {
+    //   if (event.value) {
+    //     this.btnItems.accountOff.disabled = false
+    //   } else {
+    //     this.btnItems.accountOff.disabled = true
+    //   }
+    // },
+    // selectCheck(event) {
+    //   if (event.value) {
+    //     this.btnItems.accountOff.disabled = false
+    //   }
+    //   if (!event.value && this.checked.length === 1) {
+    //     this.btnItems.accountOff.disabled = true
+    //   }
+    // },
   },
 }
 </script>

@@ -3,16 +3,12 @@ const checkYear = (value) => {
   return /^(20[2-9][0-9])$/.test(value)
 }
 
-const checkStudentID = (value) => {
-  return /^[0-9a-zA-Z]/.test(value)
+const checkID = (value) => {
+  return /^[0-9a-z]+$/.test(value)
 }
 
 const checkEmail = (value) => {
   return /^[0-9a-zA-Z]+@mail4.doshisha.ac.jp$/.test(value) || value === process.env.ADMIN_EMAIL
-}
-
-const checkLabID = (value) => {
-  return /^[0-9a-z]+$/.test(value)
 }
 
 const checkName = (value) => {
@@ -20,40 +16,18 @@ const checkName = (value) => {
 }
 
 const checkExcel = (value) => {
-  return /.+\.xlsx$/.test(value)
+  return /^.+\.xlsx$/.test(value)
 }
 
-const excelKeyMap = {
-  id: '学生ID',
-  name: '氏名',
-  rank: '順位',
-  group: 'グループ',
-  password: 'パスワード',
-  mail: 'メールアドレス',
-  isGraduate: '進学希望の確認',
-}
-
-const teacherUidMap = {
-  0: '土屋',
-  1: '大久保',
-  2: '井本',
-  3: '佐藤',
-  4: '小板',
-  5: '片桐',
-  6: '大崎',
-  7: '高橋',
-  8: '下原',
-  9: 'タネブ',
-  10: '田村',
+const checkRank = (value) => {
+  return /^[1-9][0-9]?$/.test(value)
 }
 
 export default ({ value }, inject) => {
   inject('checkYear', checkYear)
-  inject('checkStudentID', checkStudentID)
+  inject('checkID', checkID)
   inject('checkEmail', checkEmail)
-  inject('checkLabID', checkLabID)
   inject('checkName', checkName)
   inject('checkExcel', checkExcel)
-  inject('excelKeyMap', excelKeyMap)
-  inject('teacherUidMap', teacherUidMap)
+  inject('checkRank', checkRank)
 }

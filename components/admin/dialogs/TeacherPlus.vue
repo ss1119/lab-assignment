@@ -67,7 +67,7 @@ export default {
       lab: '',
       idRule: {
         required: (value) => !!value || '入力してください',
-        checked: (value) => this.$checkLabID(value) || '半角英数字で記入してください（大文字不可）',
+        checked: (value) => this.$checkID(value) || '半角英数字で記入してください（大文字不可）',
       },
       nameRule: {
         required: (value) => !!value || '入力してください',
