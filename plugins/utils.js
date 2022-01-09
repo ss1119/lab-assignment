@@ -26,7 +26,7 @@ const excelKeyMap = {
   group: 'グループ',
   password: 'パスワード',
   mail: 'メールアドレス',
-  shingaku: '進学希望の確認',
+  isGraduate: '進学希望の確認',
 }
 
 const teacherUidMap = {

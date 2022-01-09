@@ -80,13 +80,13 @@ export default {
         const excelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
         this.studentData = []
         for (let i = 0; i < excelData.length; i = i + 1) {
-          const s = { point: {}, is_test: 'test', is_active: true, is_point_assigned: false }
+          const s = { point: {}, status: 'test', isActive: true, isPointAssigned: false }
           this.appendDataAsJsonByMap(s, excelData[i], this.$excelKeyMap)
           this.appendDataAsJsonByMap(s.point, excelData[i], this.$teacherUidMap)
-          if (s.shingaku === '希望する') {
-            s.shingaku = true
+          if (s.isGraduate === '希望する') {
+            s.isGraduate = true
           } else {
-            s.shingaku = false
+            s.isGraduate = false
           }
           s.password = this.encryptPassword(this.generatePassword())
           this.studentData.push(s)
