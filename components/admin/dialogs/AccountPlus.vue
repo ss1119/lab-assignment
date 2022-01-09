@@ -34,6 +34,7 @@
 
 <script>
 import XLSX from 'xlsx'
+import crypto from 'crypto-js'
 
 export default {
   name: 'AccountPlus',
@@ -76,12 +77,41 @@ export default {
       const reader = new FileReader()
       reader.onload = (e) => {
         const workbook = XLSX.read(e.target.result)
-        this.studentData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
+        const excelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
+        this.studentData = []
+        for (let i = 0; i < excelData.length; i = i + 1) {
+          const s = { point: {}, status: 'test', isActive: true, isPointAssigned: false }
+          this.appendDataAsJsonByMap(s, excelData[i], this.$excelKeyMap)
+          this.appendDataAsJsonByMap(s.point, excelData[i], this.$teacherUidMap)
+          if (s.isGraduate === '希望する') {
+            s.isGraduate = true
+          } else {
+            s.isGraduate = false
+          }
+          s.password = this.encryptPassword(this.generatePassword())
+          this.studentData.push(s)
+        }
         // eslint-disable-next-line no-console
         console.log(this.studentData)
       }
       reader.readAsArrayBuffer(this.file)
       this.globalEscape()
+    },
+    appendDataAsJsonByMap(obj, data, map) {
+      for (const key in map) {
+        obj[key] = data[map[key]]
+      }
+    },
+    generatePassword() {
+      const passwordLength = 10
+      const S = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+      const password = Array.from(window.crypto.getRandomValues(new Uint32Array(passwordLength)))
+        .map((n) => S[n % S.length])
+        .join('')
+      return password
+    },
+    encryptPassword(password) {
+      return crypto.AES.encrypt(password, process.env.CRYPT_JS_PASSPHRASE).toString()
     },
   },
 }

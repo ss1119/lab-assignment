@@ -20,9 +20,9 @@ export const mutations = {
 }
 
 export const actions = {
-  add({ commit }, { name, lab }) {
+  add({ commit }, { id, name, lab }) {
     return new Promise((resolve, reject) => {
-      addDoc(teachersRef, { name, lab })
+      addDoc(teachersRef, { id, name, lab })
         .then(() => {
           resolve()
         })
@@ -33,18 +33,19 @@ export const actions = {
   },
 
   async get({ commit }) {
-    const indexQuery = query(teachersRef, orderBy('lab'))
+    const indexQuery = query(teachersRef, orderBy('id'))
     const teachers = await getDocs(indexQuery)
     commit('setTeachers', { teachers })
   },
 
-  async update({ commit }, { oldName, oldLab, newName, newLab }) {
-    const updateQuery = query(teachersRef, where('name', '==', oldName), where('lab', '==', oldLab))
+  async update({ commit }, { id, name, lab }) {
+    const updateQuery = query(teachersRef, where('id', '==', id))
     const docRef = await getDocs(updateQuery)
     return new Promise((resolve, reject) => {
       updateDoc(doc(db, 'teachers', docRef.docs[0].id), {
-        name: newName,
-        lab: newLab,
+        id,
+        name,
+        lab,
       })
         .then(() => {
           resolve()
@@ -55,14 +56,14 @@ export const actions = {
     })
   },
 
-  async delete({ commit }, { name, lab }) {
-    const deleteQuery = query(teachersRef, where('name', '==', name), where('lab', '==', lab))
+  async delete({ commit }, { id }) {
+    const deleteQuery = query(teachersRef, where('id', '==', id))
     const docRef = await getDocs(deleteQuery)
     await deleteDoc(doc(db, 'teachers', docRef.docs[0].id))
   },
 
   startListener({ commit }) {
-    const indexQuery = query(teachersRef, orderBy('lab'))
+    const indexQuery = query(teachersRef, orderBy('id'))
     this.unsubscribe = onSnapshot(indexQuery, (teachers) => {
       commit('setTeachers', { teachers })
     })

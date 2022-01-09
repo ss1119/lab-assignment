@@ -10,6 +10,15 @@
     <v-container class="form__scroll">
       <v-form class="form__wrap">
         <v-text-field
+          ref="id"
+          v-model="id"
+          name="id"
+          label="ID"
+          color="accent"
+          prepend-icon="mdi-badge-account-horizontal-outline"
+          :rules="[idRule.required, idRule.checked]"
+        />
+        <v-text-field
           ref="name"
           v-model="name"
           name="name"
@@ -56,6 +65,10 @@ export default {
       isNotAdded: false,
       name: '',
       lab: '',
+      idRule: {
+        required: (value) => !!value || '入力してください',
+        checked: (value) => this.$checkLabID(value) || '半角英数字で記入してください（大文字不可）',
+      },
       nameRule: {
         required: (value) => !!value || '入力してください',
         checked: (value) => this.$checkName(value) || '姓と名の間に半角スペースを1つ入力してください',
@@ -68,6 +81,7 @@ export default {
   computed: {
     form() {
       return {
+        id: this.id,
         name: this.name,
         lab: this.lab,
       }
@@ -104,6 +118,7 @@ export default {
         this.form.lab += '研究室'
         this.$store
           .dispatch('teachers/add', {
+            id: this.form.id,
             name: this.form.name,
             lab: this.form.lab,
           })

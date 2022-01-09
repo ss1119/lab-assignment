@@ -18,6 +18,7 @@
 
 <script>
 import XLSX from 'xlsx'
+import crypto from 'crypto-js'
 
 export default {
   name: 'FileExcel',
@@ -46,48 +47,62 @@ export default {
           abbr: '2022',
         },
       ],
-      studentData: [
-        {
-          id: '123456789',
-          name: '中井凌一',
-          order: 10,
-          group: 1,
-          pass: 'hoge',
-          mail: 'nislabA@mail/com',
-          sato: 1,
-          koita: 2,
-          tsuchiya: 3,
-          ohkubo: 4,
-          imoto: 5,
-          katagiri: 6,
-          ohsaki: 7,
-          takahashi: 8,
-          shimohara: 9,
-          tanev: 10,
-          tamura: 11,
-          continue: '希望する',
-        },
-        {
-          id: '234567890',
-          name: '奥西理貴',
-          order: 50,
-          group: 2,
-          pass: 'fuga',
-          mail: 'nislabB@mail/com',
-          sato: 2,
-          koita: 4,
-          tsuchiya: 6,
-          ohkubo: 8,
-          imoto: 10,
-          katagiri: 12,
-          ohsaki: 14,
-          takahashi: 16,
-          shimohara: 18,
-          tanev: 20,
-          tamura: 22,
-          continue: '希望しない',
-        },
-      ],
+      studentData: {
+        2022: [
+          {
+            id: '1316200127',
+            name: '中井綾一',
+            mail: 'ctwf0127@mail4.doshisha.ac.jp',
+            password: 'U2FsdGVkX1+tx56qGBkqZ0nq4LM2xL96j+qUPVV9c/s=',
+            status: 'test',
+            isActive: true,
+            isPointAssigned: false,
+            group: 1,
+            rank: 39,
+            isGraduate: true,
+            point: {
+              0: 1,
+              1: 2,
+              2: 3,
+              3: 4,
+              4: 5,
+              5: 6,
+              6: 7,
+              7: 8,
+              8: 9,
+              9: 10,
+              10: 11,
+            },
+          },
+        ],
+        2021: [
+          {
+            id: '1316200127',
+            name: '中井綾一',
+            mail: 'ctwf0127@mail4.doshisha.ac.jp',
+            password: 'U2FsdGVkX1+tx56qGBkqZ0nq4LM2xL96j+qUPVV9c/s=',
+            status: 'test',
+            isActive: true,
+            isPointAssigned: false,
+            group: 1,
+            rank: 39,
+            isGraduate: false,
+            point: {
+              0: 2,
+              1: 4,
+              2: 6,
+              3: 8,
+              4: 10,
+              5: 12,
+              6: 14,
+              7: 16,
+              8: 18,
+              9: 20,
+              10: 22,
+            },
+          },
+        ],
+      },
     }
   },
   mounted() {
@@ -106,11 +121,35 @@ export default {
     },
     downloadExcel() {
       const wb = XLSX.utils.book_new()
-      const sheet = XLSX.utils.json_to_sheet(this.$data.studentData)
+      const selectedYearData = this.$data.studentData[this.year]
+      const excelData = []
+      for (let i = 0; i < selectedYearData.length; i = i + 1) {
+        const s = {}
+        selectedYearData[i].password = this.decryptPassword(selectedYearData[i].password)
+        this.appendDataAsExcelByMap(s, selectedYearData[i], this.$excelKeyMap)
+        this.appendDataAsExcelByMap(s, selectedYearData[i].point, this.$teacherUidMap)
+        if (s['進学希望の確認'] === true) {
+          delete s['進学希望の確認']
+          s['進学希望の確認'] = '希望する'
+        } else {
+          delete s['進学希望の確認']
+          s['進学希望の確認'] = '希望しない'
+        }
+        excelData.push(s)
+      }
+      const sheet = XLSX.utils.json_to_sheet(excelData)
       const filename = this.year + '年度.xlsx'
       XLSX.utils.book_append_sheet(wb, sheet, this.year + '年度')
       XLSX.writeFile(wb, filename)
       this.globalEscape()
+    },
+    appendDataAsExcelByMap(obj, data, map) {
+      for (const key in map) {
+        obj[map[key]] = data[key]
+      }
+    },
+    decryptPassword(password) {
+      return crypto.AES.decrypt(password, process.env.CRYPT_JS_PASSPHRASE).toString(crypto.enc.Utf8)
     },
   },
 }
