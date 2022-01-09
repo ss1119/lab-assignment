@@ -11,6 +11,10 @@ const checkEmail = (value) => {
   return /^[0-9a-zA-Z]+@mail4.doshisha.ac.jp$/.test(value) || value === process.env.ADMIN_EMAIL
 }
 
+const checkLabID = (value) => {
+  return /^[0-9a-z]+$/.test(value)
+}
+
 const checkName = (value) => {
   return /^(\S+?)( \S+)$/.test(value)
 }
@@ -23,6 +27,7 @@ export default ({ value }, inject) => {
   inject('checkYear', checkYear)
   inject('checkStudentID', checkStudentID)
   inject('checkEmail', checkEmail)
+  inject('checkLabID', checkLabID)
   inject('checkName', checkName)
   inject('checkExcel', checkExcel)
 }
