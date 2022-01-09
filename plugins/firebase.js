@@ -1,6 +1,8 @@
 import { initializeApp } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
 import { getAuth, setPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth'
+import { getFirestore } from 'firebase/firestore'
+import { getFunctions } from 'firebase/functions'
 
 const config = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -15,8 +17,15 @@ const config = {
 
 // Firebase初期化
 const app = initializeApp(config)
+
 // eslint-disable-next-line no-unused-vars
 const analytics = getAnalytics(app)
+
+// Could Firestoreと接続
+export const db = getFirestore()
+
+// Cloud Functionとの接続
+export const functions = getFunctions()
 
 // ログイン時のセッションをブラウザ(タブ)を消すまでに変更
 const auth = getAuth()

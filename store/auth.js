@@ -51,8 +51,6 @@ export const actions = {
       })
       .catch((err) => {
         // eslint-disable-next-line no-console
-        console.log(email, password)
-        // eslint-disable-next-line no-console
         console.log(err.message)
         alert('ログイン認証に失敗しました。\n入力したメールアドレスとパスワードが正しいかを確認してください。')
       })

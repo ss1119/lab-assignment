@@ -12,7 +12,7 @@
 
       <v-subheader> Excelファイルから読み込む </v-subheader>
       <v-form class="form__wrap">
-        <v-file-input label="ファイルを選択" color="accent" :rules="[fileRule.checked]"></v-file-input>
+        <v-file-input v-model="file" label="ファイルを選択" color="accent" :rules="[fileRule.checked]" @change="loadFile"></v-file-input>
       </v-form>
 
       <v-divider class="mt-3" />
@@ -27,12 +27,14 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn text @click.stop="close"> 閉じる </v-btn>
-      <v-btn color="accent" text @click.stop="save"> 保存する </v-btn>
+      <v-btn color="accent" text @click.stop="importExcel"> 保存する </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+import XLSX from 'xlsx'
+
 export default {
   name: 'AccountPlus',
   props: {
@@ -52,6 +54,8 @@ export default {
       fileRule: {
         checked: (value) => this.$checkExcel(value) || '.xlsxのみ有効です',
       },
+      file: null,
+      studentData: null,
     }
   },
   mounted() {
@@ -65,7 +69,18 @@ export default {
     close() {
       this.globalEscape()
     },
-    save() {
+    loadFile(e) {
+      this.file = e
+    },
+    importExcel() {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const workbook = XLSX.read(e.target.result)
+        this.studentData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
+        // eslint-disable-next-line no-console
+        console.log(this.studentData)
+      }
+      reader.readAsArrayBuffer(this.file)
       this.globalEscape()
     },
   },

@@ -91,7 +91,7 @@ export default {
 
 .appbar {
   &__icon {
-    @include display_pc {
+    @include display_tab {
       display: none;
     }
   }
@@ -99,7 +99,7 @@ export default {
   &__tabs {
     display: none;
 
-    @include display_pc {
+    @include display_tab {
       display: flex;
     }
   }
@@ -107,7 +107,7 @@ export default {
   &__profile {
     display: none;
 
-    @include display_pc {
+    @include display_tab {
       display: block;
     }
   }

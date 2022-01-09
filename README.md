@@ -23,9 +23,6 @@ We have created a new website for the survey of lab assignment preferences.
 > NOT use npm.
 
 ```zsh
-❯ firebase --version
-9.22.0
-
 ❯ yarn  -v
 1.22.10
 
