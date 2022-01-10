@@ -15,18 +15,7 @@
                 <v-header>選択した年度の学生を削除する</v-header>
                 <v-container>
                   <v-row>
-                    <v-select
-                      ref="year"
-                      v-model="year"
-                      label="年度"
-                      outlined
-                      dense
-                      :items="selectItems"
-                      item-text="state"
-                      item-value="abbr"
-                      hide-details
-                      class="mr-auto mt-3 ml-1"
-                    />
+                    <v-select ref="year" v-model="year" label="年度" outlined dense :items="years" hide-details class="mr-auto mt-3 ml-1" />
                     <v-spacer />
                     <v-btn color="error" depressed height="40px" class="ml-auto mt-3 mr-1">
                       <v-icon left> mdi-delete </v-icon>
@@ -44,27 +33,20 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'DangerPanel',
   data() {
     return {
-      selectItems: [
-        {
-          state: '2020',
-          abbr: '2020',
-        },
-        {
-          state: '2021',
-          abbr: '2021',
-        },
-        {
-          state: '2022',
-          abbr: '2022',
-        },
-      ],
       year: '',
       confirmDialog: false,
     }
+  },
+  computed: {
+    ...mapGetters({
+      years: 'users/years',
+    }),
   },
 }
 </script>

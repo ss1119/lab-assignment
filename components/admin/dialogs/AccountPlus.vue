@@ -293,13 +293,13 @@ export default {
               isPointAssigned: false,
               isGraduate: false,
               point: {},
+              year: this.excelForm.year,
             }
             this.appendDataAsJsonByMap(student, excelData[i], this.$store.state.excel.keyMap)
             this.appendPointAsJsonByList(
               student.point,
               this.teachers.map((obj) => obj.id)
             )
-            student.year = this.excelForm.year
             createUser(student).then((result) => {
               if (result.statusCode === 400) {
                 alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)

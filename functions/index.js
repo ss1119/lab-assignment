@@ -117,7 +117,7 @@ const generatePassword = () => {
 }
 
 // Excelから認証情報を追加
-// year: String, studentData: List
+// data: Object
 exports.createUserToAuthAndDB = functions.https.onCall((data, context) => {
   const db = admin.firestore()
   const getAuth = admin.auth()
@@ -137,12 +137,12 @@ exports.createUserToAuthAndDB = functions.https.onCall((data, context) => {
   getAuth
     .createUser(authUser)
     .then((userRecord) => {
-      const yearsRef = db.collection('years').doc(data.year)
-      const usersRef = db.collection('users').doc(data.id)
+      const usersRef = db.collection('users').doc(userRecord.uid)
       const encrypt = encryptPassword(pass)
-      yearsRef.set({ [data.id]: userRecord.uid }, { merge: true })
+      // コールドスリープが原因かわからないが、一定時間経過後に、Cloudunctionを実行すると
+      // 追加ができないユーザが存在するため、ユーザが追加できない場合は、authUserを削除する処置が必要
       usersRef.set({
-        uid: userRecord.uid,
+        id: data.id,
         name: data.name,
         rank: data.rank,
         group: data.group,
@@ -153,6 +153,7 @@ exports.createUserToAuthAndDB = functions.https.onCall((data, context) => {
         isPointAssigned: data.isPointAssigned,
         isGraduate: data.isGraduate,
         point: data.point,
+        year: data.year,
       })
       res.statusCode = 200
       return res

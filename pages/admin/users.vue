@@ -11,7 +11,7 @@
             v-model="checked"
             :search="search.value"
             :headers="headers"
-            :items="items"
+            :items="users"
             :single-select="singleSelect"
             item-key="id"
             logding-text="loading-text"
@@ -27,8 +27,10 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import { CardTitle } from '~/components/card/index'
 import { Menu, DangerPanel } from '~/components/admin/index'
+
 export default {
   name: 'AdminUsers',
   components: {
@@ -100,7 +102,7 @@ export default {
           text: 'メールアドレス',
           sortable: false,
           filterable: false,
-          value: 'mail',
+          value: 'email',
         },
         {
           text: '希望設定済み',
@@ -123,47 +125,27 @@ export default {
         },
       ],
       loadingText: '現在データを取得中です。しばらくお待ちください。',
-      items: [
-        {
-          id: 'ctwf0127',
-          name: '中井 綾一',
-          mail: 'aaaa@mail4.doshisha.ac.jp',
-          is_point_assigned: 'Yes',
-          is_test: '本番',
-          is_active: '可',
-          year: '2021',
-        },
-        {
-          id: 'ctwf0133',
-          name: '竹内 一馬',
-          mail: 'aaaa@mail4.doshisha.ac.jp',
-          is_point_assigned: 'Yes',
-          is_test: '本番',
-          is_active: '可',
-          year: '2022',
-        },
-        {
-          id: 'ctwf0135',
-          name: '細野 航平',
-          mail: 'aaaa@mail4.doshisha.ac.jp',
-          is_point_assigned: 'Yes',
-          is_test: '本番',
-          is_active: '可',
-          year: '2021',
-        },
-        {
-          id: 'ctwf0125',
-          name: '中田 輝',
-          mail: 'aaaa@mail4.doshisha.ac.jp',
-          is_point_assigned: 'Yes',
-          is_test: '本番',
-          is_active: '可',
-          year: '2021',
-        },
-      ],
     }
   },
+  computed: {
+    ...mapGetters({
+      users: 'users/items',
+    }),
+  },
+  created() {
+    this.$store.dispatch('users/getAll')
+  },
+  mounted() {
+    this.startListener()
+  },
+  beforeDestroy() {
+    this.stopListener()
+  },
   methods: {
+    ...mapActions({
+      startListener: 'users/startListener',
+      stopListener: 'users/stopListener',
+    }),
     // チェックボックスの機能を追加するなら以下のプロパティを追加する必要がある
     // show-select
     // @toggle-select-all="selectAllCheck($event)"
