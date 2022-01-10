@@ -23,6 +23,7 @@
     <v-dialog v-model="isExcelDialogOpen" max-width="600px">
       <v-card>
         <v-card-title>{{ cardTitle }}</v-card-title>
+        <v-card-subtitle>{{ authSubTitle }}</v-card-subtitle>
         <v-container class="form__scroll">
           <v-subheader> 年度 </v-subheader>
           <v-form class="form__wrap">
@@ -58,13 +59,15 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click.stop="excelDialogClose"> 閉じる </v-btn>
-          <v-btn color="accent" text @click.stop="createUsersByExcel"> 保存する </v-btn>
+          <v-btn color="accent" :loading="loading" :disabled="loading" text @click.stop="createUsersByExcel"> 保存する </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
     <v-dialog v-model="isManualDialogOpen" max-width="600px">
       <v-card>
+        <v-card-title>{{ cardTitle }}</v-card-title>
+        <v-card-subtitle>{{ authSubTitle }}</v-card-subtitle>
         <v-container class="form__scroll">
           <v-subheader> 年度 </v-subheader>
           <v-form class="form__wrap">
@@ -103,13 +106,13 @@
               :rules="[nameRule.required, nameRule.checked]"
             />
             <v-text-field
-              ref="mail"
-              v-model="manual.mail"
-              name="mail"
+              ref="email"
+              v-model="manual.email"
+              name="email"
               label="メールアドレス"
               color="accent"
               prepend-icon="mdi-email"
-              :rules="[mailRule.required, mailRule.checked]"
+              :rules="[emailRule.required, emailRule.checked]"
             />
             <v-text-field
               ref="rank"
@@ -144,9 +147,10 @@
 </template>
 
 <script>
+import { httpsCallable } from 'firebase/functions'
 import XLSX from 'xlsx'
-import crypto from 'crypto-js'
 import { mapGetters } from 'vuex'
+import { functions } from '~/plugins/firebase'
 
 export default {
   name: 'AccountPlus',
@@ -163,8 +167,10 @@ export default {
       isExcelDialogOpen: false,
       isManualDialogOpen: false,
       validate: false,
+      loading: false,
       cardTitle: '学生の新規追加',
       cardSubTitle: 'Excelファイルからインポートするか手動で入力するかを選択してください。',
+      authSubTitle: 'ユーザの追加が完了するまでに10分ほどかかる可能性があります。',
       excel: {
         icon: 'mdi-file-excel',
         text: 'Excelファイルからインポート',
@@ -179,7 +185,7 @@ export default {
         name: '',
         rank: '',
         group: '',
-        mail: '',
+        email: '',
       },
       selectItems: ['1', '2', '3'],
       yearRule: {
@@ -198,7 +204,7 @@ export default {
         required: (value) => !!value || '入力してください',
         checked: (value) => this.$checkName(value) || '姓と名の間に半角スペースを1つ入力してください',
       },
-      mailRule: {
+      emailRule: {
         required: (value) => !!value || '入力してください',
         checked: (value) => this.$checkEmail(value) || '正しいメールアドレスを入力してください',
       },
@@ -228,7 +234,7 @@ export default {
         name: this.manual.name,
         rank: this.manual.rank,
         group: this.manual.group,
-        mail: this.manual.mail,
+        email: this.manual.email,
       }
     },
   },
@@ -257,6 +263,11 @@ export default {
     manualDialogClose() {
       this.isManualDialogOpen = false
     },
+    reset(form) {
+      Object.keys(form).forEach((f) => {
+        this.$refs[f].reset()
+      })
+    },
     loadFile(e) {
       this.excel.file = e
     },
@@ -269,32 +280,40 @@ export default {
         }
       })
       if (!this.validate) {
+        this.loading = true
         const reader = new FileReader()
-        reader.onload = (e) => {
+        const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
+        reader.onload = async (e) => {
           const workbook = XLSX.read(e.target.result)
           const excelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
-          this.studentData = []
           for (let i = 0; i < excelData.length; i = i + 1) {
-            const s = {
+            const student = {
               status: 'test',
               isActive: true,
               isPointAssigned: false,
               isGraduate: false,
               point: {},
             }
-            this.appendDataAsJsonByMap(s, excelData[i], this.$store.state.excel.keyMap)
+            this.appendDataAsJsonByMap(student, excelData[i], this.$store.state.excel.keyMap)
             this.appendPointAsJsonByList(
-              s.point,
+              student.point,
               this.teachers.map((obj) => obj.id)
             )
-            s.password = this.encryptPassword(this.generatePassword())
-            this.studentData.push(s)
+            student.year = this.excelForm.year
+            createUser(student).then((result) => {
+              if (result.statusCode === 400) {
+                alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
+                // eslint-disable-next-line no-console
+                console.log('email: ' + result.email + ' name:' + result.name)
+              }
+            })
+            await this.$sleep(500)
           }
-          // eslint-disable-next-line no-console
-          console.log(this.studentData)
+          this.loading = false
+          this.reset(this.excelForm)
+          this.excelDialogClose()
         }
         reader.readAsArrayBuffer(this.excel.file)
-        this.excelDialogClose()
       }
     },
     createUserByManual() {
@@ -306,26 +325,33 @@ export default {
         }
       })
       if (!this.validate) {
-        const s = {
+        const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
+        const student = {
           id: this.manualForm.id,
           name: this.manualForm.name,
           rank: this.manualForm.rank,
           group: this.manualForm.group,
-          mail: this.manualForm.mail,
+          email: this.manualForm.email,
           status: 'test',
           isActive: true,
           isPointAssigned: false,
           isGraduate: false,
           point: {},
+          year: this.manualForm.year,
         }
-        s.password = this.encryptPassword(this.generatePassword())
         this.appendPointAsJsonByList(
-          s.point,
+          student.point,
           this.teachers.map((obj) => obj.id)
         )
-        // eslint-disable-next-line no-console
-        console.log(s)
-        this.manualDialogClose()
+        createUser(student).then((result) => {
+          if (result.statusCode === 400) {
+            alert('入力した学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
+            // eslint-disable-next-line no-console
+            console.log('email: ' + result.email + ' name:' + result.name)
+          }
+          this.reset(this.manualForm)
+          this.manualDialogClose()
+        })
       }
     },
     appendDataAsJsonByMap(obj, data, map) {
@@ -337,17 +363,6 @@ export default {
       for (const key in list) {
         obj[list[key]] = 0
       }
-    },
-    generatePassword() {
-      const passwordLength = 10
-      const S = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-      const password = Array.from(window.crypto.getRandomValues(new Uint32Array(passwordLength)))
-        .map((n) => S[n % S.length])
-        .join('')
-      return password
-    },
-    encryptPassword(password) {
-      return crypto.AES.encrypt(password, process.env.CRYPT_JS_PASSPHRASE).toString()
     },
   },
 }

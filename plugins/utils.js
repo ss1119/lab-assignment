@@ -23,6 +23,10 @@ const checkRank = (value) => {
   return /^[1-9][0-9]?$/.test(value)
 }
 
+const sleep = async (millisec) => {
+  await new Promise((resolve) => setTimeout(resolve, millisec))
+}
+
 export default ({ value }, inject) => {
   inject('checkYear', checkYear)
   inject('checkID', checkID)
@@ -30,4 +34,5 @@ export default ({ value }, inject) => {
   inject('checkName', checkName)
   inject('checkExcel', checkExcel)
   inject('checkRank', checkRank)
+  inject('sleep', sleep)
 }

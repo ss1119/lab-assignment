@@ -4,7 +4,7 @@ const keyMap = {
   rank: '順位',
   group: 'グループ',
   password: 'パスワード',
-  mail: 'メールアドレス',
+  email: 'メールアドレス',
 }
 
 export const state = () => ({
