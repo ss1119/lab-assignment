@@ -307,7 +307,7 @@ export default {
                 console.log('email: ' + result.email + ' name:' + result.name)
               }
             })
-            await this.$sleep(500)
+            await this.$sleep(1000)
           }
           this.loading = false
           this.reset(this.excelForm)

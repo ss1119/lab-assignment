@@ -116,7 +116,7 @@ const generatePassword = () => {
   return crypto.randomBytes(n).toString('base64').substring(0, n)
 }
 
-// Excelから認証情報を追加
+// Excelから認証情報を追加し、DBにユーザ情報を保存
 // data: Object
 exports.createUserToAuthAndDB = functions.https.onCall((data, context) => {
   const db = admin.firestore()
@@ -163,4 +163,21 @@ exports.createUserToAuthAndDB = functions.https.onCall((data, context) => {
       res.statusCode = 400
       return res
     })
+})
+
+// ユーザをDBと認証情報から削除
+exports.deleteUsersInAuthAndDB = functions.https.onCall(async (data, context) => {
+  const db = admin.firestore()
+  const getAuth = admin.auth()
+  const res = {
+    year: data,
+  }
+
+  const usersByYear = await db.collection('users').where('year', '==', data).get()
+  usersByYear.forEach((user) => {
+    getAuth.deleteUser(user.id).then(async () => {
+      await db.collection('users').doc(user.id).delete()
+    })
+  })
+  return res
 })
