@@ -3,6 +3,9 @@ const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 const nodemailer = require('nodemailer')
 const cryptoJs = require('crypto-js')
+
+// Cloud Functionの環境変数
+const url = functions.config().url.domain
 const gmailEmail = functions.config().gmail.email
 const gmailPassword = functions.config().gmail.password
 const adminEmail = functions.config().admin.email
@@ -19,6 +22,19 @@ const mailTransport = nodemailer.createTransport({
     pass: gmailPassword,
   },
 })
+
+const encryptPassword = (password) => {
+  return cryptoJs.AES.encrypt(password, encryptKey).toString()
+}
+
+const decryptPassword = (encrypt) => {
+  return cryptoJs.AES.decrypt(encrypt, encryptKey).toString(cryptoJs.enc.Utf8)
+}
+
+const generatePassword = () => {
+  const n = 10
+  return crypto.randomBytes(n).toString('base64').substring(0, n)
+}
 
 // ユーザから問い合わせ時に管理者に送るメッセージ
 const adminInqueries = (data) => {
@@ -43,15 +59,14 @@ ${data.message}
 ・このメールに返信をしても、ユーザが確認することができません。
 ・問い合わせがあったユーザに、新規でメールを作成してください。
 
-------------------------------------------------------
+---------------
 同志社大学大学院 理工学研究科 情報工学専攻
 同志社大学 理工学部 情報システムデザイン学科
 研究室配属希望調査管理チーム
-------------------------------------------------------
+---------------
 `
 }
 
-// TODO: Corsでエラーになるため、次回解決
 // ユーザから問い合わせ時にユーザに送るメッセージ
 const userInqueries = (data) => {
   return `${data.name}さん
@@ -75,11 +90,40 @@ ${data.message}
 ・このメールに返信をしても、管理チームが確認することができません。
 ・管理チームからのメールが来るまで、しばらくお待ちください。
 
-------------------------------------------------------
+---------------
 同志社大学大学院 理工学研究科 情報工学専攻
 同志社大学 理工学部 情報システムデザイン学科
 研究室配属希望調査管理チーム
-------------------------------------------------------
+---------------
+`
+}
+
+// ユーザから問い合わせ時にユーザに送るメッセージ
+// statusは試行か本番と表記
+const userPasswordMail = (data) => {
+  return `${data.name}さん
+
+研究室希望配属調査管理チームでございます。
+研究室配属希望調査を行うサイトの詳細情報を記載しているため、ご確認お願いいたします。
+
+今回の目的: ${data.status}入力
+
+URL: ${url}
+
+メールアドレス: ${data.email}
+パスワード: ${data.password}
+
+パスワードに関しては、第三者に漏洩されないように、厳重に保管してください。
+
+** 注意事項 **
+・このメールは、研究室配属希望調査を経由して、自動的に送信されたメッセージになります。
+・このメールに返信をしても、管理チームが確認することができません。
+
+---------------
+同志社大学大学院 理工学研究科 情報工学専攻
+同志社大学 理工学部 情報システムデザイン学科
+研究室配属希望調査管理チーム
+---------------
 `
 }
 
@@ -107,17 +151,45 @@ exports.sendInqueries = functions.https.onCall(async (data, context) => {
   }
 })
 
-const encryptPassword = (password) => {
-  return cryptoJs.AES.encrypt(password, encryptKey).toString()
-}
+// ユーザにログイン情報を記載したメールを送信する
+exports.sendLoginDataBatch = functions.https.onCall(async (data, context) => {
+  const db = admin.firestore()
 
-const generatePassword = () => {
-  const n = 10
-  return crypto.randomBytes(n).toString('base64').substring(0, n)
-}
+  // ログイン権限があるユーザにのみ送信
+  const activeUsersByYear = await db.collection('users').where('year', '==', data).where('isActive', '==', true).get()
+  activeUsersByYear.forEach(async (user) => {
+    // eslint-disable-next-line
+    const pass = decryptPassword(user.data().password)
+
+    let entry = ''
+    if (user.data().status === 'test') {
+      entry = '試行'
+    } else if (user.data().status === 'prod') {
+      entry = '本番'
+    }
+    const userData = {
+      email: user.data().email,
+      name: user.data().name,
+      status: entry,
+      password: pass,
+    }
+
+    const email = {
+      from: gmailEmail,
+      to: user.data().email,
+      subject: '【研究室配属希望調査】ログイン情報について',
+      text: userPasswordMail(userData),
+    }
+
+    try {
+      await mailTransport.sendMail(email)
+    } catch (err) {
+      return err.message
+    }
+  })
+})
 
 // Excelから認証情報を追加し、DBにユーザ情報を保存
-// data: Object
 exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => {
   const db = admin.firestore()
   const getAuth = admin.auth()

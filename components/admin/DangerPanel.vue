@@ -35,8 +35,10 @@
         <v-card-title>{{ cardTitle }}</v-card-title>
 
         <v-card-text>
-          <p>{{ year }}年度の学生を削除します。</p>
-          <p>実行する場合は、下記フォームに「{{ confirmLabel }}」と入力してください。</p>
+          <p>
+            {{ year }}年度の学生にパスワードを送信します。<br />
+            実行する場合は、下記フォームに「{{ confirmLabel }}」と入力してください。
+          </p>
           <p>
             データの削除が完了するまで、しばらく時間がかかることがあります。<br />
             連続して実行しないでください。
@@ -104,11 +106,9 @@ export default {
     },
     deleteUsers() {
       this.loading = true
-      this.deleteDisabled = true
       const deleteUsers = httpsCallable(functions, 'deleteUsersInAuthAndDB')
       deleteUsers(this.year).then((res) => {
         this.loading = false
-        this.deleteDisabled = false
         this.close()
       })
     },
