@@ -118,12 +118,28 @@ const generatePassword = () => {
 
 // Excelから認証情報を追加し、DBにユーザ情報を保存
 // data: Object
-exports.createUserToAuthAndDB = functions.https.onCall((data, context) => {
+exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => {
   const db = admin.firestore()
   const getAuth = admin.auth()
   const res = {
     email: data.email,
     name: data.name,
+  }
+
+  // 暫定対応
+  // ユーザを追加できない場合があるので、Authのユーザがあれば一旦削除する
+  // Authenticationsは特に問題ないが、Cloud FireStoreに登録するデータが落ちるため、Authenticationのみを削除
+  try {
+    const usersById = await db.collection('users').where('id', '==', data.id).get()
+    if (usersById.docs[0] == null) {
+      const userRecord = await getAuth.getUserByEmail(data.email)
+      if (!userRecord.uid) {
+        await getAuth.deleteUser(userRecord.uid)
+      }
+    }
+  } catch (err) {
+    // eslint-disable-next-line
+    console.error(err)
   }
 
   const pass = generatePassword()
@@ -139,8 +155,6 @@ exports.createUserToAuthAndDB = functions.https.onCall((data, context) => {
     .then((userRecord) => {
       const usersRef = db.collection('users').doc(userRecord.uid)
       const encrypt = encryptPassword(pass)
-      // コールドスリープが原因かわからないが、一定時間経過後に、Cloudunctionを実行すると
-      // 追加ができないユーザが存在するため、ユーザが追加できない場合は、authUserを削除する処置が必要
       usersRef.set({
         id: data.id,
         name: data.name,
@@ -174,10 +188,9 @@ exports.deleteUsersInAuthAndDB = functions.https.onCall(async (data, context) =>
   }
 
   const usersByYear = await db.collection('users').where('year', '==', data).get()
-  usersByYear.forEach((user) => {
-    getAuth.deleteUser(user.id).then(async () => {
-      await db.collection('users').doc(user.id).delete()
-    })
+  usersByYear.forEach(async (user) => {
+    await getAuth.deleteUser(user.id)
+    await db.collection('users').doc(user.id).delete()
   })
   return res
 })

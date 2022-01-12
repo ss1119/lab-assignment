@@ -37,11 +37,14 @@
         <v-card-text>
           <p>{{ year }}年度の学生を削除します。</p>
           <p>実行する場合は、下記フォームに「{{ confirmLabel }}」と入力してください。</p>
-          <p>データの削除が完了するまで、しばらく時間がかかることがあります。</p>
+          <p>
+            データの削除が完了するまで、しばらく時間がかかることがあります。<br />
+            連続して実行しないでください。
+          </p>
         </v-card-text>
 
         <v-form class="form__wrap mx-10">
-          <v-text-field :value="value" label="確認しました" prepend-icon="mdi-alert" @input="confirmValue" />
+          <v-text-field v-model="value" label="確認しました" prepend-icon="mdi-alert" />
         </v-form>
 
         <v-card-actions>
@@ -68,7 +71,6 @@ export default {
       value: '',
       loading: false,
       confirmDialog: false,
-      deleteDisabled: true,
       confirmLabel: '確認しました',
     }
   },
@@ -83,17 +85,21 @@ export default {
         return false
       }
     },
-  },
-  methods: {
-    confirmValue(value) {
-      if (value === this.confirmLabel) {
-        this.deleteDisabled = false
+    deleteDisabled() {
+      if (this.value !== this.confirmLabel) {
+        return true
+      } else {
+        return false
       }
     },
+  },
+  methods: {
     confirmDialogOpen() {
       this.confirmDialog = true
     },
     close() {
+      this.value = ''
+      this.year = ''
       this.confirmDialog = false
     },
     deleteUsers() {
@@ -103,8 +109,6 @@ export default {
       deleteUsers(this.year).then((res) => {
         this.loading = false
         this.deleteDisabled = false
-        this.value = ''
-        this.year = ''
         this.close()
       })
     },

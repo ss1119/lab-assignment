@@ -23,7 +23,9 @@
     <v-dialog v-model="isExcelDialogOpen" max-width="600px">
       <v-card>
         <v-card-title>{{ cardTitle }}</v-card-title>
-        <v-card-subtitle>{{ authSubTitle }}</v-card-subtitle>
+        <v-card-subtitle>{{ authSubTitle1 }}</v-card-subtitle>
+        <v-card-subtitle>{{ authSubTitle2 }}</v-card-subtitle>
+
         <v-container class="form__scroll">
           <v-subheader> 年度 </v-subheader>
           <v-form class="form__wrap">
@@ -67,7 +69,9 @@
     <v-dialog v-model="isManualDialogOpen" max-width="600px">
       <v-card>
         <v-card-title>{{ cardTitle }}</v-card-title>
-        <v-card-subtitle>{{ authSubTitle }}</v-card-subtitle>
+        <v-card-subtitle>{{ authSubTitle1 }}</v-card-subtitle>
+        <v-card-subtitle>{{ authSubTitle2 }}</v-card-subtitle>
+
         <v-container class="form__scroll">
           <v-subheader> 年度 </v-subheader>
           <v-form class="form__wrap">
@@ -170,7 +174,8 @@ export default {
       loading: false,
       cardTitle: '学生の新規追加',
       cardSubTitle: 'Excelファイルからインポートするか手動で入力するかを選択してください。',
-      authSubTitle: 'ユーザの追加が完了するまでに10分ほどかかる可能性があります。',
+      authSubTitle1: 'ユーザの追加が完了するまでにしばらく時間がかかる可能性があります。連続して実行しないでください。',
+      authSubTitle2: 'ユーザを登録ができない場合は、再度ユーザを新規追加をするか、一度ユーザを削除してください。',
       excel: {
         icon: 'mdi-file-excel',
         text: 'Excelファイルからインポート',

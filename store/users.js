@@ -27,6 +27,9 @@ export const mutations = {
     })
     state.years.splice(0)
     state.years.push(...set)
+    // Adminのデータを削除できないようにする
+    const index = state.years.indexOf('9999')
+    state.years.splice(index, 1)
   },
   setUsersByYear(state, { users }) {
     const items = []
