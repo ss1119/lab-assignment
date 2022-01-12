@@ -15,20 +15,9 @@
                 <v-header>選択した年度の学生を削除する</v-header>
                 <v-container>
                   <v-row>
-                    <v-select
-                      ref="year"
-                      v-model="year"
-                      label="年度"
-                      outlined
-                      dense
-                      :items="selectItems"
-                      item-text="state"
-                      item-value="abbr"
-                      hide-details
-                      class="mr-auto mt-3 ml-1"
-                    />
+                    <v-select ref="year" v-model="year" label="年度" outlined dense :items="years" hide-details class="mr-auto mt-3 ml-1" />
                     <v-spacer />
-                    <v-btn color="error" depressed height="40px" class="ml-auto mt-3 mr-1">
+                    <v-btn color="error" depressed height="40px" :disabled="btnDisabled" class="ml-auto mt-3 mr-1" @click.stop="confirmDialogOpen">
                       <v-icon left> mdi-delete </v-icon>
                       削除する
                     </v-btn>
@@ -40,31 +29,89 @@
         </v-expansion-panels>
       </v-card>
     </v-row>
+
+    <v-dialog v-model="confirmDialog" max-width="600px">
+      <v-card>
+        <v-card-title>{{ cardTitle }}</v-card-title>
+
+        <v-card-text>
+          <p>{{ year }}年度の学生を削除します。</p>
+          <p>実行する場合は、下記フォームに「{{ confirmLabel }}」と入力してください。</p>
+          <p>
+            データの削除が完了するまで、しばらく時間がかかることがあります。<br />
+            連続して実行しないでください。
+          </p>
+        </v-card-text>
+
+        <v-form class="form__wrap mx-10">
+          <v-text-field v-model="value" label="確認しました" prepend-icon="mdi-alert" />
+        </v-form>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="close"> 閉じる </v-btn>
+          <v-btn color="error" text :loading="loading" :disabled="deleteDisabled" @click="deleteUsers"> 削除 </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { httpsCallable } from 'firebase/functions'
+import { functions } from '~/plugins/firebase'
+
 export default {
   name: 'DangerPanel',
   data() {
     return {
-      selectItems: [
-        {
-          state: '2020',
-          abbr: '2020',
-        },
-        {
-          state: '2021',
-          abbr: '2021',
-        },
-        {
-          state: '2022',
-          abbr: '2022',
-        },
-      ],
       year: '',
+      cardTitle: 'ユーザ削除の確認',
+      value: '',
+      loading: false,
       confirmDialog: false,
+      confirmLabel: '確認しました',
     }
+  },
+  computed: {
+    ...mapGetters({
+      years: 'users/years',
+    }),
+    btnDisabled() {
+      if (this.year === '') {
+        return true
+      } else {
+        return false
+      }
+    },
+    deleteDisabled() {
+      if (this.value !== this.confirmLabel) {
+        return true
+      } else {
+        return false
+      }
+    },
+  },
+  methods: {
+    confirmDialogOpen() {
+      this.confirmDialog = true
+    },
+    close() {
+      this.value = ''
+      this.year = ''
+      this.confirmDialog = false
+    },
+    deleteUsers() {
+      this.loading = true
+      this.deleteDisabled = true
+      const deleteUsers = httpsCallable(functions, 'deleteUsersInAuthAndDB')
+      deleteUsers(this.year).then((res) => {
+        this.loading = false
+        this.deleteDisabled = false
+        this.close()
+      })
+    },
   },
 }
 </script>
