@@ -7,7 +7,7 @@ export default ({ store, redirect, route }) => {
   const adminUrl = adminMenu.map((item) => item.url)
 
   // eslint-disable-next-line
-  console.log(isLoggined, isAdmin, loginUrl, adminUrl, loginUrl, adminUrl)
+  console.log(route.path)
 
   // ログアウト状態かつログインしている状態でしか見れないURLの場合
   if (!isLoggined && !isAdmin && (loginUrl.includes(route.path) || adminUrl.includes(route.path)) && route.path !== '/form') {
