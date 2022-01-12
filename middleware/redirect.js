@@ -8,6 +8,10 @@ export default ({ store, redirect, route }) => {
 
   // eslint-disable-next-line
   console.log(route.path)
+  // eslint-disable-next-line
+  console.log(loginUrl.includes(route.path))
+  // eslint-disable-next-line
+  console.log(adminUrl.includes(route.path))
 
   // ログアウト状態かつログインしている状態でしか見れないURLの場合
   if (!isLoggined && !isAdmin && (loginUrl.includes(route.path) || adminUrl.includes(route.path)) && route.path !== '/form') {
