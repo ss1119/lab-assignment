@@ -1,19 +1,12 @@
 <template>
   <v-card>
-    <v-card-title>一斉メール送信</v-card-title>
+    <v-card-title>{{ cardTitle }}</v-card-title>
+    <v-card-subtitle>ユーザに対して、ログイン情報を載せたメールを配信します。</v-card-subtitle>
+
     <v-container>
       <v-subheader>パスワードを配信する学生の年度を選択</v-subheader>
       <v-form ref="select" class="form__wrap">
-        <v-select
-          ref="year"
-          v-model="year"
-          label="年度"
-          :items="items"
-          item-text="state"
-          item-value="abbr"
-          color="accent"
-          :rules="[yearRule.required, yearRule.checked]"
-        />
+        <v-select ref="year" v-model="year" label="年度" :items="years" color="accent" />
       </v-form>
     </v-container>
 
@@ -23,16 +16,26 @@
       <v-btn color="accent" text @click.stop="toConfirm"> 確認画面へ </v-btn>
     </v-card-actions>
 
-    <v-dialog v-model="confirmDialog" max-width="600px" @input="closeConfirm">
+    <v-dialog v-model="confirmDialog" max-width="600px">
       <v-card>
-        <v-card-text class="pa-8">
-          {{ confirmText }} <br />
-          本当によろしいですか？
+        <v-card-title>{{ cardTitle }}</v-card-title>
+
+        <v-card-text>
+          <p>
+            {{ year }}年度の学生にログイン情報を送信します。<br />
+            実行する場合は、下記フォームに「{{ confirmLabel }}」と入力してください。
+          </p>
+          <p>メールを送信する対象はログインができる状態にユーザです。</p>
         </v-card-text>
+
+        <v-form class="form__wrap mx-10">
+          <v-text-field v-model="value" label="確認しました" prepend-icon="mdi-alert" />
+        </v-form>
+
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click.stop="closeConfirm"> 閉じる </v-btn>
-          <v-btn color="error" text @click.stop="closeConfirm"> 配信する </v-btn>
+          <v-btn text @click="closeConfirm"> 閉じる </v-btn>
+          <v-btn color="error" text :loading="loading" :disabled="disabled" @click="sendEmails"> 送信 </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -40,6 +43,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { httpsCallable } from 'firebase/functions'
+import { functions } from '~/plugins/firebase'
+
 export default {
   name: 'Email',
   props: {
@@ -51,37 +58,25 @@ export default {
   },
   data() {
     return {
+      cardTitle: '一斉メール送信',
       isOpen: false,
       year: '',
-      yearRule: {
-        required: (value) => !!value || '選択してください',
-        checked: (value) => this.$checkYear(value) || '適切な年度を選択してください',
-      },
+      value: '',
+      loading: false,
       confirmDialog: false,
-      items: [
-        {
-          state: '2020',
-          abbr: '2020',
-        },
-        {
-          state: '2021',
-          abbr: '2021',
-        },
-        {
-          state: '2022',
-          abbr: '2022',
-        },
-      ],
+      confirmLabel: '確認しました',
     }
   },
   computed: {
-    select() {
-      return {
-        year: this.year,
+    ...mapGetters({
+      years: 'users/years',
+    }),
+    disabled() {
+      if (this.value !== this.confirmLabel) {
+        return true
+      } else {
+        return false
       }
-    },
-    confirmText() {
-      return this.year + '年度の学生にパスワードをメール配信します。'
     },
   },
   mounted() {
@@ -93,25 +88,29 @@ export default {
       this.$emit('close', this.isOpen)
     },
     close() {
+      this.year = ''
       this.globalEscape()
     },
     toConfirm() {
-      let confirmFlag = true
-      Object.keys(this.select).forEach((f) => {
-        this.$refs[f].validate(true)
-
-        if (this.$refs[f].validationState === 'error') {
-          confirmFlag = false
-        }
-      })
-
-      if (confirmFlag) {
-        this.globalEscape()
-        this.confirmDialog = true
-      }
+      this.globalEscape()
+      this.confirmDialog = true
+    },
+    openConfirm() {
+      this.confirmDialog = true
     },
     closeConfirm() {
+      this.value = ''
+      this.year = ''
       this.confirmDialog = false
+    },
+    sendEmails() {
+      this.loading = true
+      const sendEmails = httpsCallable(functions, 'sendLoginDataBatch')
+      sendEmails(this.year).then((data) => {
+        console.log(data)
+        this.loading = false
+        this.closeConfirm()
+      })
     },
   },
 }
