@@ -189,8 +189,13 @@ exports.deleteUsersInAuthAndDB = functions.https.onCall(async (data, context) =>
 
   const usersByYear = await db.collection('users').where('year', '==', data).get()
   usersByYear.forEach(async (user) => {
-    await getAuth.deleteUser(user.id)
-    await db.collection('users').doc(user.id).delete()
+    try {
+      await getAuth.deleteUser(user.id)
+      await db.collection('users').doc(user.id).delete()
+    } catch (err) {
+      // eslint-disable-next-line
+      console.error(err)
+    }
   })
   return res
 })
