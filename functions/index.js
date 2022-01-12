@@ -150,6 +150,7 @@ exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => 
     emailVerified: true,
     disabled: false,
   }
+
   getAuth
     .createUser(authUser)
     .then((userRecord) => {
