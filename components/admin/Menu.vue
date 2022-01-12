@@ -120,7 +120,7 @@ export default {
     }
 
     &__width {
-      width: 600px;
+      width: 500px;
     }
   }
   &_items {
