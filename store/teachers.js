@@ -32,10 +32,14 @@ export const actions = {
     })
   },
 
-  async get({ commit }) {
+  get({ commit }) {
     const indexQuery = query(teachersRef, orderBy('id'))
-    const teachers = await getDocs(indexQuery)
-    commit('setTeachers', { teachers })
+    return new Promise((resolve, reject) => {
+      getDocs(indexQuery).then((teachers) => {
+        commit('setTeachers', { teachers })
+        resolve(teachers)
+      })
+    })
   },
 
   async update({ commit }, { id, name, lab }) {

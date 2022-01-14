@@ -13,6 +13,10 @@ export default async ({ store }) => {
         uid: user.claims.user_id,
         email: user.claims.email,
       })
+      await store.dispatch('users/getOne', {
+        uid: user.claims.user_id,
+      })
+      await store.dispatch('teachers/get')
     }
   }
 }

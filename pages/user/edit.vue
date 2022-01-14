@@ -111,16 +111,6 @@ export default {
           laboratory: '研究室2',
           point: '0',
         },
-        {
-          teacher: '先生1',
-          laboratory: '研究室1',
-          point: '0',
-        },
-        {
-          teacher: '先生2',
-          laboratory: '研究室1',
-          point: '0',
-        },
       ],
       pointRules: {
         required: (value) => !!value || '入力してください',

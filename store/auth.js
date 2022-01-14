@@ -27,12 +27,12 @@ export const mutations = {
 }
 
 export const actions = {
-  signIn({ commit }, { email, password }) {
+  signIn({ commit, dispatch }, { email, password }) {
     const auth = getAuth()
     signInWithEmailAndPassword(auth, email, password)
       .then((credential) => {
         // ログインしたユーザのロールを取得
-        credential.user.getIdTokenResult().then((idTokenResult) => {
+        credential.user.getIdTokenResult().then(async (idTokenResult) => {
           // adminなら管理者画面へ
           if (idTokenResult.claims.admin) {
             commit('setAdminState', {
@@ -45,6 +45,14 @@ export const actions = {
               uid: credential.user.uid,
               email: credential.user.email,
             })
+            await dispatch(
+              'users/getOne',
+              {
+                uid: credential.user.uid,
+              },
+              { root: true }
+            )
+            await dispatch('teachers/get', null, { root: true })
             this.$router.push('/user')
           }
         })

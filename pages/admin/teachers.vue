@@ -165,8 +165,8 @@ export default {
       }
     },
   },
-  created() {
-    this.$store.dispatch('teachers/get')
+  async created() {
+    await this.$store.dispatch('teachers/get')
   },
   mounted() {
     this.startListener()
