@@ -17,8 +17,8 @@
           <v-row>
             <v-col cols="7">
               <v-subheader class="black--text">
-                {{ item.laboratory }} / <br />
-                {{ item.teacher }}
+                {{ item.lab }} <br />
+                / {{ item.name }}
               </v-subheader>
               <v-subheader>以前の得点: {{ oldPoints[index] }}点</v-subheader>
             </v-col>
@@ -42,8 +42,9 @@
 </template>
 
 <script>
-// TODO 得点のValidationの設定とエラーメッセージ
+import { mapGetters } from 'vuex'
 import { CardTitle, CardButton } from '~/components/card/index'
+
 export default {
   name: 'UserEdit',
   components: {
@@ -60,72 +61,37 @@ export default {
       isNotMatched: false, // 合計点と一致しているか
       hasTwoZeros: false, // 0点が2つ以上存在していないか
       oldPoints: [],
-      items: [
-        {
-          teacher: '先生1',
-          laboratory: '研究室1',
-          point: '0',
-        },
-        {
-          teacher: '先生2',
-          laboratory: '研究室2',
-          point: '0',
-        },
-        {
-          teacher: '先生3',
-          laboratory: '研究室2',
-          point: '0',
-        },
-        {
-          teacher: '先生4',
-          laboratory: '研究室2',
-          point: '0',
-        },
-        {
-          teacher: '先生1',
-          laboratory: '研究室1',
-          point: '0',
-        },
-        {
-          teacher: '先生2',
-          laboratory: '研究室1',
-          point: '0',
-        },
-        {
-          teacher: '先生3',
-          laboratory: '研究室2',
-          point: '0',
-        },
-        {
-          teacher: '先生4',
-          laboratory: '研究室2',
-          point: '0',
-        },
-        {
-          teacher: '先生3',
-          laboratory: '研究室2',
-          point: '0',
-        },
-        {
-          teacher: '先生4',
-          laboratory: '研究室2',
-          point: '0',
-        },
-      ],
+      items: [],
       pointRules: {
         required: (value) => !!value || '入力してください',
         degit: (value) => this.validDigit(value) || '0以上' + String(100 - this.items.length + 2) + '以下の数値を入力してください',
         // eslint-disable-next-line prettier/prettier
-        over: (value) => ( this.totalPoint <= 100 || value === '0' ) || '合計で100点になるように入力してください',
+        over: (value) => this.totalPoint <= 100 || value === '0' || '合計で100点になるように入力してください',
       },
     }
   },
   computed: {
+    ...mapGetters({
+      user: 'users/item',
+      teachers: 'teachers/items',
+    }),
     totalPoint() {
       return this.items.reduce((sum, item) => sum + Number(item.point), 0)
     },
   },
   mounted() {
+    const userPoint = Object.keys(this.user.point)
+    this.teachers.forEach((teacher) => {
+      const item = {
+        name: teacher.name,
+        lab: teacher.lab,
+        point: 0,
+      }
+      if (userPoint.includes(teacher.id)) {
+        item.point = this.user.point[teacher.id]
+      }
+      this.items.push(item)
+    })
     this.setOldPoints()
   },
   methods: {

@@ -3,7 +3,7 @@
     <v-card class="point__card" outlined>
       <CardTitle :title="title" :subtitle="subtitle" />
 
-      <v-data-table :headers="headers" :items="items" class="my-8 mx-4" hide-default-footer />
+      <v-data-table items-per-page="20" :headers="headers" :items="items" class="my-8 mx-4" hide-default-footer />
 
       <CardButton :title="btnTitle" :icon="btnIcon" :submit="redirectEditPage" />
     </v-card>

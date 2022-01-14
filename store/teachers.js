@@ -33,7 +33,7 @@ export const actions = {
   },
 
   get({ commit }) {
-    const indexQuery = query(teachersRef, orderBy('id'))
+    const indexQuery = query(teachersRef, orderBy('lab'))
     return new Promise((resolve, reject) => {
       getDocs(indexQuery).then((teachers) => {
         commit('setTeachers', { teachers })
@@ -67,7 +67,7 @@ export const actions = {
   },
 
   startListener({ commit }) {
-    const indexQuery = query(teachersRef, orderBy('id'))
+    const indexQuery = query(teachersRef, orderBy('lab'))
     this.unsubscribe = onSnapshot(indexQuery, (teachers) => {
       commit('setTeachers', { teachers })
     })

@@ -4,24 +4,28 @@ export const state = () => ({
   loggedIn: false,
   admin: false,
   userId: '',
+  userName: '',
   userEmail: '',
 })
 
 export const mutations = {
-  setLoginState(state, { uid, email }) {
+  setLoginState(state, { uid, name, email }) {
     state.loggedIn = true
     state.userId = uid
+    state.userName = name
     state.userEmail = email
   },
-  setAdminState(state, { uid, email }) {
+  setAdminState(state, { uid, name, email }) {
     state.admin = true
     state.userId = uid
+    state.userName = name
     state.userEmail = email
   },
   setLogoutState(state) {
     state.loggedIn = false
     state.admin = false
     state.userId = ''
+    state.userName = ''
     state.userEmail = ''
   },
 }
@@ -37,12 +41,14 @@ export const actions = {
           if (idTokenResult.claims.admin) {
             commit('setAdminState', {
               uid: credential.user.uid,
+              name: credential.user.displayName,
               email: credential.user.email,
             })
             this.$router.push(process.env.ADMIN_ROOT_URL)
           } else {
             commit('setLoginState', {
               uid: credential.user.uid,
+              name: credential.user.displayName,
               email: credential.user.email,
             })
             await dispatch(
@@ -86,6 +92,10 @@ export const getters = {
 
   userEmail(state) {
     return state.userEmail
+  },
+
+  userName(state) {
+    return state.userName
   },
   // ユーザがログインされているかの判定
   isLoggined(state) {

@@ -11,6 +11,7 @@
             :search="search.value"
             :headers="headers"
             :items="teachers"
+            items-per-page="20"
             hide-default-footer
             logding-text="loading-text"
             locale="ja-jp"
