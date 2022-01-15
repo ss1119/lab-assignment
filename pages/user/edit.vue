@@ -199,7 +199,7 @@ export default {
     },
     validDigit(value) {
       const num = 10 - this.items.length + 2
-      // 研究室が20個以上になることはないだろうという希望的観測を持った実装
+      // 研究室数が2以上20以下になることを想定した実装
       // 20個以上できた時はValidationを出さない（その時は誰か実装頼みます）
       if (num < -10) {
         return true
@@ -219,8 +219,11 @@ export default {
 <style lang="scss" scoped>
 .point {
   &__card {
-    max-width: 1000px;
-    width: 80%;
+    width: 90%;
+    @include display_tab {
+      max-width: 1000px;
+      width: 80%;
+    }
   }
 }
 </style>

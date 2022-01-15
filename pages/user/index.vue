@@ -102,9 +102,11 @@ export default {
 <style lang="scss" scoped>
 .point {
   &__card {
-    max-width: 900px;
-    width: 70%;
-    min-width: 400px;
+    width: 90%;
+    @include display_tab {
+      max-width: 900px;
+      width: 70%;
+    }
   }
   &__container {
     width: 90%;
