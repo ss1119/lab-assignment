@@ -157,8 +157,10 @@ export default {
 <style lang="scss" scoped>
 .form {
   &__card {
-    min-width: 500px;
-    width: 60%;
+    width: 90%;
+    @include display_tab {
+      width: 50%;
+    }
   }
   &__wrap {
     width: 100%;
