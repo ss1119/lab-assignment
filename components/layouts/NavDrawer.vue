@@ -9,7 +9,7 @@
       </v-list-item>
       <v-list-item v-if="isLoggined || isAdmin">
         <v-list-content>
-          <v-list-item-title>ようこそ、{{ firstName }}さん</v-list-item-title>
+          <v-list-item-title>ようこそ、{{ userName }}さん</v-list-item-title>
           <v-list-item-subtitle class="grey--text">{{ userEmail }}</v-list-item-subtitle>
         </v-list-content>
       </v-list-item>
@@ -55,14 +55,13 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'NavDrawer',
   data() {
-    return {
-      firstName: 'Nakai',
-    }
+    return {}
   },
   computed: {
     ...mapGetters({
       isLoggined: 'auth/isLoggined',
       isAdmin: 'auth/isAdmin',
+      userName: 'auth/userName',
       userEmail: 'auth/userEmail',
     }),
     drawer: {

@@ -8,10 +8,10 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - lab-assignment',
+    titleTemplate: '研究室配属希望調査 | 情報システムデザイン学科',
     title: 'lab-assignment',
     htmlAttrs: {
-      lang: 'en',
+      lang: 'jp',
     },
     meta: [
       { charset: 'utf-8' },

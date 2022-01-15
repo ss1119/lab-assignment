@@ -243,10 +243,10 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
     this.isOpen = this.open
     if (this.teachers.length === 0) {
-      this.$store.dispatch('teachers/get')
+      await this.$store.dispatch('teachers/get')
     }
   },
   methods: {
