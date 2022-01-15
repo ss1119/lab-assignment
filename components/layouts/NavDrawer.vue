@@ -46,16 +46,24 @@
         </v-list-item>
       </v-list-item-group>
     </v-list>
+
+    <LogOutDialog :open="signOutConfirm" @close="signOutConfirmClose" />
   </v-navigation-drawer>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import LogOutDialog from './LogOutDialog'
 
 export default {
   name: 'NavDrawer',
+  components: {
+    LogOutDialog,
+  },
   data() {
-    return {}
+    return {
+      signOutConfirm: false,
+    }
   },
   computed: {
     ...mapGetters({
@@ -85,7 +93,7 @@ export default {
   methods: {
     redirectPage(path) {
       if (path === '/signout') {
-        this.$store.dispatch('auth/signOut')
+        this.signOutConfirm = true
       } else {
         this.$router.push({ path })
       }
@@ -93,6 +101,9 @@ export default {
     },
     close() {
       this.$store.commit('drawer/close')
+    },
+    signOutConfirmClose(e) {
+      this.signOutConfirm = e
     },
   },
 }
