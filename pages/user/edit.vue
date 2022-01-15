@@ -4,36 +4,62 @@
       <CardTitle :title="title" :subtitle="subtitle" />
 
       <v-row class="mt-2 my-6 mx-10">
-        <v-col cols="12">
-          <v-alert v-if="hasExceptVal || isNotMatched || hasTwoZeros" prominent type="error" outlined dense border="left" class="mx-auto">
-            <ul>
-              <li v-if="hasExceptVal">与えられた数値を入力してください</li>
-              <li v-if="isNotMatched">合計得点が 100 点になるように入力してください</li>
-              <li v-if="hasTwoZeros">0 点が 2 つ以上にならないように入力してください</li>
-            </ul>
-          </v-alert>
-        </v-col>
-        <v-col v-for="(item, index) in items" :key="index" cols="12" lg="6">
-          <v-row>
-            <v-col cols="7">
-              <v-subheader class="black--text">
-                {{ item.lab }} <br />
-                / {{ item.name }}
-              </v-subheader>
-              <v-subheader>以前の得点: {{ oldPoints[index] }}点</v-subheader>
-            </v-col>
-            <v-col cols="5">
-              <v-text-field
-                v-model="item.point"
-                suffix="点"
-                color="accent"
-                prepend-icon="mdi-calculator"
-                :rules="[pointRules.required, pointRules.degit, pointRules.over]"
-                :value="item.point"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </v-col>
+        <v-row>
+          <v-col cols="12">
+            <v-alert v-if="hasExceptVal || isNotMatched || hasTwoZeros" prominent type="error" outlined dense border="left" class="mx-auto">
+              <ul>
+                <li v-if="hasExceptVal">与えられた数値を入力してください</li>
+                <li v-if="isNotMatched">合計得点が 100 点になるように入力してください</li>
+                <li v-if="hasTwoZeros">0 点が 2 つ以上にならないように入力してください</li>
+              </ul>
+            </v-alert>
+          </v-col>
+
+          <v-col cols="12" class="mt-n4 mx-n3">
+            <p class="ml-4 mb-n4">{{ subheader1 }}</p>
+            <v-subheader>合計: {{ totalPoint }} 点</v-subheader>
+            <v-divider />
+          </v-col>
+
+          <v-col v-for="(item, index) in items" :key="index" cols="12" lg="6">
+            <v-row>
+              <v-col cols="7">
+                <v-subheader class="black--text">
+                  {{ item.lab }} <br />
+                  / {{ item.name }}
+                </v-subheader>
+                <v-subheader>以前の得点: {{ oldPoints[index] }}点</v-subheader>
+              </v-col>
+              <v-col cols="5">
+                <v-text-field
+                  :ref="item.id"
+                  v-model="item.point"
+                  suffix="点"
+                  color="accent"
+                  prepend-icon="mdi-calculator"
+                  :rules="[pointRules.required, pointRules.degit, pointRules.over]"
+                  :value="item.point"
+                />
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+
+        <v-row class="mt-8">
+          <v-col cols="12" class="mx-n3">
+            <p class="ml-4">{{ subheader2 }}</p>
+            <v-divider />
+          </v-col>
+
+          <v-col cols="12" lg="5">
+            <v-subheader class="">以前の結果: {{ oldIsGraduate }}</v-subheader>
+          </v-col>
+          <v-col cols="12" lg="7">
+            <v-form class="form__wrap">
+              <v-select v-model="selected" :items="selectItems" label="大学院進学の希望調査" color="accent" return-object single-line />
+            </v-form>
+          </v-col>
+        </v-row>
       </v-row>
 
       <CardButton :title="btnTitle" :icon="btnIcon" :submit="postPoints" />
@@ -53,51 +79,74 @@ export default {
   },
   data() {
     return {
-      title: '得点の編集',
-      subtitle: '希望研究室への得点を設定できます',
-      btnTitle: '得点を保存する',
+      title: '得点の編集と大学院進学希望の調査',
+      subtitle: '希望研究室への得点と大学院進学の希望を設定できます',
+      subheader1: '得点の編集',
+      subheader2: '大学院進学希望の調査',
+      btnTitle: '保存する',
       btnIcon: 'mdi-pencil',
       hasExceptVal: false, // 入力フォームに与えられた数値が入力されているか
       isNotMatched: false, // 合計点と一致しているか
       hasTwoZeros: false, // 0点が2つ以上存在していないか
       oldPoints: [],
+      oldIsGraduate: '希望しない',
       items: [],
       pointRules: {
-        required: (value) => !!value || '入力してください',
+        required: (value) => !!value || value === 0 || '入力してください',
         degit: (value) => this.validDigit(value) || '0以上' + String(100 - this.items.length + 2) + '以下の数値を入力してください',
-        // eslint-disable-next-line prettier/prettier
-        over: (value) => this.totalPoint <= 100 || value === '0' || '合計で100点になるように入力してください',
+        over: (value) => this.totalPoint <= 100 || value === 0 || '合計で100点になるように入力してください',
       },
+      selected: '',
+      selectItems: ['希望しない', '希望する'],
     }
   },
   computed: {
     ...mapGetters({
+      uid: 'auth/userId',
       user: 'users/item',
       teachers: 'teachers/items',
     }),
     totalPoint() {
-      return this.items.reduce((sum, item) => sum + Number(item.point), 0)
+      const total = this.items.reduce((sum, item) => sum + Number(item.point), 0)
+      if (total === 100) {
+        this.teachers.forEach((teacher) => {
+          if (this.$refs[teacher.id] != null) {
+            this.$refs[teacher.id][0].resetValidation()
+          }
+        })
+      }
+      return total
     },
   },
   mounted() {
     const userPoint = Object.keys(this.user.point)
     this.teachers.forEach((teacher) => {
       const item = {
+        id: teacher.id,
         name: teacher.name,
         lab: teacher.lab,
         point: 0,
       }
       if (userPoint.includes(teacher.id)) {
-        item.point = this.user.point[teacher.id]
+        item.point = Number(this.user.point[teacher.id])
       }
       this.items.push(item)
     })
     this.setOldPoints()
+    this.setOldIsGraduate()
   },
   methods: {
     setOldPoints() {
-      const points = this.items.map((item) => item.point)
+      const points = this.items.map((item) => Number(item.point))
       this.oldPoints = points.slice()
+    },
+    setOldIsGraduate() {
+      if (this.user.isGraduate) {
+        this.oldIsGraduate = '希望する'
+        this.selected = '希望する'
+      } else {
+        this.selected = '希望しない'
+      }
     },
     postPoints() {
       let cnt = 0
@@ -112,7 +161,7 @@ export default {
           this.hasExceptVal = true
         }
 
-        if (item.point === '0') {
+        if (Number(item.point) === 0) {
           cnt++
         }
 
@@ -130,6 +179,19 @@ export default {
       }
 
       if (!this.hasExceptVal && !this.isNotMatched && !this.hasTwoZeros) {
+        const points = {}
+        this.items.forEach((item) => {
+          points[item.id] = Number(item.point)
+        })
+        let selected = false
+        if (this.selected === '希望する') {
+          selected = true
+        }
+        this.$store.dispatch('users/update', {
+          uid: this.uid,
+          point: points,
+          isGraduate: selected,
+        })
         this.$router.push('/user')
       } else {
         window.scrollTo(0, 0)

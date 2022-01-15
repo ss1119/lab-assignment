@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, updateDoc, onSnapshot, query, where } from 'firebase/firestore'
 import { db } from '~/plugins/firebase'
 
 const usersRef = collection(db, 'users')
@@ -66,6 +66,23 @@ export const actions = {
     const yearQuery = query(usersRef, where('year', '==', year))
     const usersByYear = await getDocs(yearQuery)
     commit('setUsersByYear', { usersByYear })
+  },
+
+  update({ commit }, { uid, point, isGraduate }) {
+    const userDoc = doc(db, 'users', uid)
+    return new Promise((resolve, reject) => {
+      updateDoc(userDoc, {
+        point,
+        isGraduate,
+        isPointAssigned: true,
+      })
+        .then(() => {
+          resolve()
+        })
+        .catch((err) => {
+          reject(err.message)
+        })
+    })
   },
 
   startListener({ commit }) {
