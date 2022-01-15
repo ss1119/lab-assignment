@@ -11,6 +11,7 @@
             :search="search.value"
             :headers="headers"
             :items="teachers"
+            items-per-page="20"
             hide-default-footer
             logding-text="loading-text"
             locale="ja-jp"
@@ -165,8 +166,8 @@ export default {
       }
     },
   },
-  created() {
-    this.$store.dispatch('teachers/get')
+  async created() {
+    await this.$store.dispatch('teachers/get')
   },
   mounted() {
     this.startListener()

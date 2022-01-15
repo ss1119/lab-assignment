@@ -100,7 +100,7 @@ ${data.message}
 
 // ユーザから問い合わせ時にユーザに送るメッセージ
 // statusは試行か本番と表記
-const userPasswordMail = (data) => {
+const userLoginDataMail = (data) => {
   return `${data.name}さん
 
 研究室希望配属調査管理チームでございます。
@@ -178,7 +178,7 @@ exports.sendLoginDataBatch = functions.https.onCall(async (data, context) => {
       from: gmailEmail,
       to: user.data().email,
       subject: '【研究室配属希望調査】ログイン情報について',
-      text: userPasswordMail(userData),
+      text: userLoginDataMail(userData),
     }
 
     try {

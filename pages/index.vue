@@ -36,7 +36,7 @@
               ></v-text-field>
             </div>
             <div class="pb-8 pt-4">
-              <v-btn color="accent" depressed height="48" @click="signIn">
+              <v-btn color="accent" depressed height="48" :loading="loading" :disabled="loading" @click="signIn">
                 <v-icon left> mdi-login </v-icon>
                 ログイン
               </v-btn>
@@ -71,6 +71,7 @@ export default {
       passwordRules: {
         required: (value) => !!value || 'パスワードは必須です',
       },
+      loading: false,
     }
   },
   computed: {
@@ -91,10 +92,12 @@ export default {
         }
       })
       if (!this.validate) {
+        this.loading = true
         this.$store.dispatch('auth/signIn', {
           email: this.email,
           password: this.password,
         })
+        this.loading = false
       }
     },
   },

@@ -26,7 +26,7 @@
     <v-spacer />
 
     <div v-if="isLoggined || isAdmin" class="appbar__profile mr-3">
-      <v-list-item-title>ようこそ、{{ firstName }}さん</v-list-item-title>
+      <v-list-item-title>ようこそ、{{ userName }}さん</v-list-item-title>
       <v-list-item-subtitle class="grey--text">{{ userEmail }}</v-list-item-subtitle>
     </div>
   </v-app-bar>
@@ -38,14 +38,13 @@ import { mapMutations, mapGetters } from 'vuex'
 export default {
   name: 'Header',
   data() {
-    return {
-      firstName: 'Nakai',
-    }
+    return {}
   },
   computed: {
     ...mapGetters({
       isLoggined: 'auth/isLoggined',
       isAdmin: 'auth/isAdmin',
+      userName: 'auth/userName',
       userEmail: 'auth/userEmail',
     }),
     drawer() {
