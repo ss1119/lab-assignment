@@ -249,7 +249,10 @@ export default {
 }
 .table {
   &__card {
-    width: 60%;
+    width: 90%;
+    @include display_tab {
+      width: 60%;
+    }
   }
 }
 

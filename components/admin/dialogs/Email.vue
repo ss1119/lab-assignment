@@ -106,8 +106,7 @@ export default {
     sendEmails() {
       this.loading = true
       const sendEmails = httpsCallable(functions, 'sendLoginDataBatch')
-      sendEmails(this.year).then((data) => {
-        console.log(data)
+      sendEmails(this.year).then(() => {
         this.loading = false
         this.closeConfirm()
       })

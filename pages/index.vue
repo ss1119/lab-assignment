@@ -107,11 +107,13 @@ export default {
 <style lang="scss" scoped>
 .login {
   &__card {
-    max-width: 740px;
-    min-width: 500px;
+    width: 90%;
+    @include display_tab {
+      width: 500px;
+    }
   }
   &__wrap {
-    max-width: 344px;
+    width: 90%;
   }
 }
 </style>

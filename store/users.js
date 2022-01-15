@@ -62,10 +62,14 @@ export const actions = {
     commit('setYears', { users })
   },
 
-  async getUsersByYear({ commit }, { year }) {
+  getUsersByYear({ commit }, { year }) {
     const yearQuery = query(usersRef, where('year', '==', year))
-    const usersByYear = await getDocs(yearQuery)
-    commit('setUsersByYear', { usersByYear })
+    return new Promise((resolve) => {
+      getDocs(yearQuery).then((users) => {
+        commit('setUsersByYear', { users })
+        resolve(users)
+      })
+    })
   },
 
   update({ commit }, { uid, point, isGraduate }) {
@@ -108,6 +112,6 @@ export const getters = {
     return state.years
   },
   itemsByYear(state) {
-    return state.users
+    return state.usersByYear
   },
 }

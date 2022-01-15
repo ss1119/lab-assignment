@@ -4,7 +4,7 @@
     <v-container>
       <v-subheader>出力する学生の年度</v-subheader>
       <v-form class="form__wrap">
-        <v-select label="年度" :items="items" item-text="state" item-value="abbr" color="accent" :value="year" @change="fetchYear" />
+        <v-select v-model="year" label="年度" :items="years" color="accent" />
       </v-form>
     </v-container>
 
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import XLSX from 'xlsx'
 import crypto from 'crypto-js'
 
@@ -33,80 +34,20 @@ export default {
     return {
       isOpen: false,
       year: '',
-      items: [
-        {
-          state: '2020',
-          abbr: '2020',
-        },
-        {
-          state: '2021',
-          abbr: '2021',
-        },
-        {
-          state: '2022',
-          abbr: '2022',
-        },
-      ],
-      studentData: {
-        2022: [
-          {
-            id: '1316200127',
-            name: '中井綾一',
-            mail: 'ctwf0127@mail4.doshisha.ac.jp',
-            password: 'U2FsdGVkX1+tx56qGBkqZ0nq4LM2xL96j+qUPVV9c/s=',
-            status: 'test',
-            isActive: true,
-            isPointAssigned: false,
-            group: 1,
-            rank: 39,
-            isGraduate: true,
-            point: {
-              0: 1,
-              1: 2,
-              2: 3,
-              3: 4,
-              4: 5,
-              5: 6,
-              6: 7,
-              7: 8,
-              8: 9,
-              9: 10,
-              10: 11,
-            },
-          },
-        ],
-        2021: [
-          {
-            id: '1316200127',
-            name: '中井綾一',
-            mail: 'ctwf0127@mail4.doshisha.ac.jp',
-            password: 'U2FsdGVkX1+tx56qGBkqZ0nq4LM2xL96j+qUPVV9c/s=',
-            status: 'test',
-            isActive: true,
-            isPointAssigned: false,
-            group: 1,
-            rank: 39,
-            isGraduate: false,
-            point: {
-              0: 2,
-              1: 4,
-              2: 6,
-              3: 8,
-              4: 10,
-              5: 12,
-              6: 14,
-              7: 16,
-              8: 18,
-              9: 20,
-              10: 22,
-            },
-          },
-        ],
-      },
     }
   },
-  mounted() {
+  computed: {
+    ...mapGetters({
+      years: 'users/years',
+      users: 'users/itemsByYear',
+      teachers: 'teachers/items',
+    }),
+  },
+  async mounted() {
     this.isOpen = this.open
+    if (this.teachers.length === 0) {
+      await this.$store.dispatch('teachers/get')
+    }
   },
   methods: {
     globalEscape() {
@@ -116,29 +57,28 @@ export default {
     close() {
       this.globalEscape()
     },
-    fetchYear(e) {
-      this.year = e
-    },
-    downloadExcel() {
+    async downloadExcel() {
       const wb = XLSX.utils.book_new()
-      const selectedYearData = this.$data.studentData[this.year]
+      const users = await this.$store.dispatch('users/getUsersByYear', {
+        year: this.year,
+      })
       const excelData = []
-      for (let i = 0; i < selectedYearData.length; i = i + 1) {
-        const s = {}
-        selectedYearData[i].password = this.decryptPassword(selectedYearData[i].password)
-        this.appendDataAsExcelByMap(s, selectedYearData[i], this.$excelKeyMap)
-        this.appendDataAsExcelByMap(s, selectedYearData[i].point, this.$teacherUidMap)
-        if (s['進学希望の確認'] === true) {
-          delete s['進学希望の確認']
-          s['進学希望の確認'] = '希望する'
+      users.forEach((user) => {
+        const student = {}
+        this.appendDataAsExcelByMap(student, user.data(), this.$store.state.excel.keyMap)
+        student['パスワード'] = this.decryptPassword(user.data().password)
+        this.teachers.forEach((teacher) => {
+          student[teacher.lab + '/' + teacher.name] = user.data().point[teacher.id]
+        })
+        if (user.data().isGraduate) {
+          student['進学希望の確認'] = '希望する'
         } else {
-          delete s['進学希望の確認']
-          s['進学希望の確認'] = '希望しない'
+          student['進学希望の確認'] = '希望しない'
         }
-        excelData.push(s)
-      }
+        excelData.push(student)
+      })
       const sheet = XLSX.utils.json_to_sheet(excelData)
-      const filename = this.year + '年度.xlsx'
+      const filename = this.year + '年度-結果.xlsx'
       XLSX.utils.book_append_sheet(wb, sheet, this.year + '年度')
       XLSX.writeFile(wb, filename)
       this.globalEscape()
