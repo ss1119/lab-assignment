@@ -195,16 +195,12 @@ exports.sendLoginDataBatch = functions.https.onCall(async (data, context) => {
   })
 
   // メール送信の実行
-  sgMail
-    .send(messages)
-    .then(() => {
-      // eslint-disable-next-line
-      console.log('Email sent')
-    })
-    .catch((err) => {
-      // eslint-disable-next-line
-      console.log(err)
-    })
+  try {
+    await sgMail.send(messages)
+  } catch (err) {
+    // eslint-disable-next-line
+    console.log(err)
+  }
 })
 
 // Excelから認証情報を追加し、DBにユーザ情報を保存
