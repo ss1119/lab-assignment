@@ -305,6 +305,15 @@ export default {
               student.point,
               this.teachers.map((obj) => obj.id)
             )
+            if (student.rank == null) {
+              student.rank = 0
+            }
+            if (student.group == null) {
+              student.group = 0
+            }
+            if (student.password == null) {
+              student.password = ''
+            }
             createUser(student).then((result) => {
               if (result.statusCode === 400) {
                 alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
