@@ -29,16 +29,24 @@
       <v-list-item-title>ようこそ、{{ userName }}さん</v-list-item-title>
       <v-list-item-subtitle class="grey--text">{{ userEmail }}</v-list-item-subtitle>
     </div>
+
+    <LogOutDialog :open="signOutConfirm" @close="close" />
   </v-app-bar>
 </template>
 
 <script>
 import { mapMutations, mapGetters } from 'vuex'
+import LogOutDialog from './LogOutDialog'
 
 export default {
   name: 'Header',
+  components: {
+    LogOutDialog,
+  },
   data() {
-    return {}
+    return {
+      signOutConfirm: false,
+    }
   },
   computed: {
     ...mapGetters({
@@ -61,16 +69,19 @@ export default {
     },
   },
   methods: {
+    ...mapMutations({
+      toggle: 'drawer/toggle',
+    }),
     redirectPage(path) {
       if (path === '/signout') {
-        this.$store.dispatch('auth/signOut')
+        this.signOutConfirm = true
       } else {
         this.$router.push({ path })
       }
     },
-    ...mapMutations({
-      toggle: 'drawer/toggle',
-    }),
+    close(e) {
+      this.signOutConfirm = e
+    },
   },
 }
 </script>
