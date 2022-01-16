@@ -17,6 +17,8 @@ admin.initializeApp()
 // SMTPサーバーの設定
 const mailTransport = nodemailer.createTransport({
   service: 'gmail',
+  secure: true,
+  port: 465,
   auth: {
     user: gmailEmail,
     pass: gmailPassword,
@@ -158,10 +160,11 @@ exports.sendInqueries = functions.https.onCall(async (data, context) => {
 // ユーザにログイン情報を記載したメールを送信する
 exports.sendLoginDataBatch = functions.https.onCall(async (data, context) => {
   const db = admin.firestore()
+  const mailArray = []
 
   // ログイン権限があるユーザにのみ送信
   const activeUsersByYear = await db.collection('users').where('year', '==', data).where('isActive', '==', true).get()
-  activeUsersByYear.forEach(async (user) => {
+  activeUsersByYear.forEach((user) => {
     // eslint-disable-next-line
     const pass = decryptPassword(user.data().password)
 
@@ -185,16 +188,19 @@ exports.sendLoginDataBatch = functions.https.onCall(async (data, context) => {
       text: userLoginDataMail(userData),
     }
 
-    try {
-      await mailTransport.sendMail(email)
-    } catch (err) {
-      return err.message
-    }
-
-    // 暫定対応
-    // データ数が100件ほどになると、処理が落ちることがあるため、sleepさせる
-    sleep(1500)
+    mailArray.push(mailTransport.sendMail(email))
   })
+
+  // メール送信の実行
+  Promise.all(mailArray)
+    .then((res) => {
+      // eslint-disable-next-line
+      console.log(res)
+    })
+    .catch((err) => {
+      // eslint-disable-next-line
+      console.log(err)
+    })
 })
 
 // Excelから認証情報を追加し、DBにユーザ情報を保存
@@ -279,7 +285,7 @@ exports.deleteUsersInAuthAndDB = functions.https.onCall(async (data, context) =>
     }
     // 暫定対応
     // データ数が100件ほどになると、処理が落ちることがあるため、sleepさせる
-    sleep(1500)
+    sleep(1000)
   })
   return res
 })
