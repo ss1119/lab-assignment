@@ -193,7 +193,7 @@ exports.sendLoginDataBatch = functions.https.onCall(async (data, context) => {
 
     // 暫定対応
     // データ数が100件ほどになると、処理が落ちることがあるため、sleepさせる
-    sleep(1000)
+    sleep(1500)
   })
 })
 
@@ -279,7 +279,7 @@ exports.deleteUsersInAuthAndDB = functions.https.onCall(async (data, context) =>
     }
     // 暫定対応
     // データ数が100件ほどになると、処理が落ちることがあるため、sleepさせる
-    sleep(1000)
+    sleep(1500)
   })
   return res
 })
