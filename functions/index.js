@@ -36,6 +36,10 @@ const generatePassword = () => {
   return crypto.randomBytes(n).toString('base64').substring(0, n)
 }
 
+const sleep = async (millisec) => {
+  await new Promise((resolve) => setTimeout(resolve, millisec))
+}
+
 // ユーザから問い合わせ時に管理者に送るメッセージ
 const adminInqueries = (data) => {
   return `お問い合わせがありました。
@@ -186,6 +190,10 @@ exports.sendLoginDataBatch = functions.https.onCall(async (data, context) => {
     } catch (err) {
       return err.message
     }
+
+    // 暫定対応
+    // データ数が100件ほどになると、処理が落ちることがあるため、sleepさせる
+    sleep(1000)
   })
 })
 
@@ -269,6 +277,9 @@ exports.deleteUsersInAuthAndDB = functions.https.onCall(async (data, context) =>
       // eslint-disable-next-line
       console.error(err)
     }
+    // 暫定対応
+    // データ数が100件ほどになると、処理が落ちることがあるため、sleepさせる
+    sleep(1000)
   })
   return res
 })
