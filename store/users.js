@@ -63,7 +63,7 @@ export const actions = {
   },
 
   getUsersByYear({ commit }, { year }) {
-    const yearQuery = query(usersRef, where('year', '==', year))
+    const yearQuery = query(usersRef, where('year', '==', year), where('isActive', '==', true))
     return new Promise((resolve) => {
       getDocs(yearQuery).then((users) => {
         commit('setUsersByYear', { users })
