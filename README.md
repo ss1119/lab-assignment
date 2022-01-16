@@ -15,6 +15,7 @@ We have created a new website for the survey of lab assignment preferences.
   - Deployed when the pull request for **develop** branch is closed
   
 - **Production env**
+  - <https://assign.nislab.io/>
   - <https://lab-assignment-prod.web.app/>
   - Deployed when the pull request for **main** branch is closed
 
