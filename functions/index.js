@@ -1,8 +1,9 @@
 const crypto = require('crypto')
+const cryptoJs = require('crypto-js')
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
+const sgMail = require('@sendgrid/mail')
 const nodemailer = require('nodemailer')
-const cryptoJs = require('crypto-js')
 
 // Cloud Functionの環境変数
 const url = functions.config().url.domain
@@ -10,9 +11,13 @@ const gmailEmail = functions.config().gmail.email
 const gmailPassword = functions.config().gmail.password
 const adminEmail = functions.config().admin.email
 const encryptKey = functions.config().crypto.key
+const sgApiKey = functions.config().sg.key
 
 // Adminの初期化
 admin.initializeApp()
+
+// sendGridの初期化
+sgMail.setApiKey(sgApiKey)
 
 // SMTPサーバーの設定
 const mailTransport = nodemailer.createTransport({
@@ -160,7 +165,7 @@ exports.sendInqueries = functions.https.onCall(async (data, context) => {
 // ユーザにログイン情報を記載したメールを送信する
 exports.sendLoginDataBatch = functions.https.onCall(async (data, context) => {
   const db = admin.firestore()
-  const mailArray = []
+  const messages = []
 
   // ログイン権限があるユーザにのみ送信
   const activeUsersByYear = await db.collection('users').where('year', '==', data).where('isActive', '==', true).get()
@@ -181,21 +186,20 @@ exports.sendLoginDataBatch = functions.https.onCall(async (data, context) => {
       password: pass,
     }
 
-    const email = {
-      from: gmailEmail,
+    messages.push({
       to: user.data().email,
+      from: gmailEmail,
       subject: '【研究室配属希望調査】ログイン情報について',
       text: userLoginDataMail(userData),
-    }
-
-    mailArray.push(mailTransport.sendMail(email))
+    })
   })
 
   // メール送信の実行
-  Promise.all(mailArray)
-    .then((res) => {
+  sgMail
+    .send(messages)
+    .then(() => {
       // eslint-disable-next-line
-      console.log(res)
+      console.log('Email sent')
     })
     .catch((err) => {
       // eslint-disable-next-line
