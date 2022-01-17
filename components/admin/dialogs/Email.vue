@@ -4,7 +4,7 @@
     <v-card-subtitle>ユーザに対して、ログイン情報を載せたメールを配信します。</v-card-subtitle>
 
     <v-container>
-      <v-subheader>パスワードを配信する学生の年度を選択</v-subheader>
+      <v-subheader>ログイン情報を配信する学生の年度を選択</v-subheader>
       <v-form ref="select" class="form__wrap">
         <v-select ref="year" v-model="year" label="年度" :items="years" color="accent" />
       </v-form>

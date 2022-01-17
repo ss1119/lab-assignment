@@ -29,7 +29,7 @@
             dense
             outlined
             name="name"
-            label="お名前（半角スペースあり）"
+            label="お名前（スペースあり）"
             color="accent"
             :rules="[nameRules.required, nameRules.checked]"
           />
@@ -93,7 +93,7 @@ export default {
       },
       nameRules: {
         required: (value) => !!value || '姓名は必須です',
-        checked: (value) => this.$checkName(value) || '姓と名の間に半角スペースを1つ入力してください',
+        checked: (value) => this.$checkName(value) || '姓と名の間にスペースを1つ入力してください',
       },
       subjectRules: {
         required: (value) => !!value || '件名は必須です',
