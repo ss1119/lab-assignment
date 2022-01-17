@@ -12,7 +12,7 @@ const checkEmail = (value) => {
 }
 
 const checkName = (value) => {
-  return /^(\S+?)( \S+)$/.test(value)
+  return /^(\S+?)([\s]\S+)$/.test(value)
 }
 
 const checkExcel = (value) => {

@@ -104,7 +104,7 @@
               ref="name"
               v-model="manual.name"
               name="name"
-              label="名前（半角スペースあり）"
+              label="名前（スペースあり）"
               color="accent"
               prepend-icon="mdi-account-arrow-left"
               :rules="[nameRule.required, nameRule.checked]"
@@ -207,7 +207,7 @@ export default {
       },
       nameRule: {
         required: (value) => !!value || '入力してください',
-        checked: (value) => this.$checkName(value) || '姓と名の間に半角スペースを1つ入力してください',
+        checked: (value) => this.$checkName(value) || '姓と名の間にスペースを1つ入力してください',
       },
       emailRule: {
         required: (value) => !!value || '入力してください',
@@ -367,9 +367,9 @@ export default {
             // eslint-disable-next-line no-console
             console.log('email: ' + result.email + ' name:' + result.name)
           }
-          this.reset(this.manualForm)
-          this.manualDialogClose()
         })
+        this.reset(this.manualForm)
+        this.manualDialogClose()
       }
     },
     appendDataAsJsonByMap(obj, data, map) {
