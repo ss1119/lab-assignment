@@ -97,7 +97,7 @@ node -v
 npm -v
 ```
 
-#### 3. yarnのインスール
+### yarnのインスール
 
 - 今回の開発では，`npm`ではなく，`yarn`でパッケージ管理を行った
 - npmとyarnの違いは[こちら](https://qiita.com/Hai-dozo/items/90b852ac29b79a7ea02b)から
@@ -113,7 +113,7 @@ npm install -g yarn
 yarn -v
 ```
 
-#### 4. Firebase Toolsのインストール
+### Firebase Toolsのインストール
 
 - Firebaseを使用した開発ではほぼ必須のCLIなので，こちらもインストール
 - このパッケージをインストールすると，Firebaseの操作用コマンドが使用できる
@@ -122,13 +122,17 @@ yarn -v
 npm install -g firebase-tools
 ```
 
-#### 5. ローカルホストでの立ち上げ
+### ローカルホストでの立ち上げ
+
+#### 1. リポジトリのクローン
 
 - `git`にて，リポジトリのクローンを行う
 
 ```bash
 git clone <このリポジトリのSSH URL>
 ```
+
+#### 2. 開発環境の用意
 
 - `yarn`にて，今回使用するパッケージのインスール
 
@@ -164,7 +168,7 @@ ADMIN_SUB_URL='xxxx'
 CRYPT_JS_PASSPHRASE='xxxx'
 ```
 
-- Firebaseプロジェクトの選択
+- 開発環境のFirebaseプロジェクトの選択
   - Firebaseのプロジェクトに関しては，後述
 
 ```bash
@@ -175,23 +179,27 @@ firebase login
 firebase use lab-assignment-dev
 ```
 
-- ローカルホストの起動
-  - 起動できたら，ブラウザにて`localhost:3000`にアクセス
+#### 3. ローカルホストを起動
+
+- 起動できたら，ブラウザにて`localhost:3000`にアクセス
 
 ```bash
 # このコマンドでローカルホストの起動ができる
 yarn dev
+
+# 停止したい場合は以下を押下
+control + C
 ```
 
 - 以下の画面が出てこれば完了！
 
-  ![image](https://user-images.githubusercontent.com/49640294/150631310-09a23a79-2f52-4403-aa20-65d58efbe601.png)
+![image](https://user-images.githubusercontent.com/49640294/150631310-09a23a79-2f52-4403-aa20-65d58efbe601.png)
 
 ## Firebaseプロジェクトの管理
 
 ### Firebaseとは?
 
-- Googleが提供しているモバイル・Webアプリケーション向けのプラットフォーム。  
+- Googleが提供しているモバイル・Webアプリケーション向けのプラットフォーム
 - 全ての機能がGoogleのインフラ技術に支えられており、簡単にアプリケーションの開発を行うことができる
 
 ### プロジェクトの管理
@@ -207,102 +215,27 @@ yarn dev
 
 ### 今回使用したサービスの説明
 
-#### Authentication
+#### [Authentication](https://firebase.google.com/docs/auth?hl=ja)
 
-- [公式ドキュメント](https://firebase.google.com/docs/auth?hl=ja)
 - 認証/認可を行うサービス
 - 今回はメールアドレス認証のみを有効にした（プロバイダによる認可は未実装というか必要なし）
 
-#### FireStore
+#### [FireStore](https://firebase.google.com/docs/firestore?hl=ja)
 
-- [公式ドキュメント](https://firebase.google.com/docs/firestore?hl=ja)
 - Firebaseにおけるデータベース用のサービス
-- NoSQLで，操作に若干の癖がある（中井の所感）
+- NoSQLであり，コレクションとドキュメントという概念でDBを管理
 - インデックスやセキュリティルール(権限)の設定も可能
   - 詳しくは公式ドキュメントにて
-- 今回の開発で使用したテーブル設計(Firebaseの世界ではCollections)は以下の通り
 
-  <details>
-    <summary>users</summary>
-    <br/>
+#### [Hosting](https://firebase.google.com/docs/hosting)
 
-    ```json
-    "users": {
-      "docmentID": {
-        "id": "1316200127",
-        "name": "中井",
-        "mail": "ctwf0127@mail4.doshisha.ac.jp",
-        "password": "pass",
-        "status": "test" or "prod",
-        "isActive": true,
-        "isPointAssigned": false,
-        "group": 1,
-        "rank": 39,
-        "isGraduate": true,
-        "point": {
-          "ksato": "3",
-          "tkoita": "1" ...
-        },
-        "year": "2022",
-      },
-      "docmentID": {
-        "id": "1316200149",
-        "name": "田中",
-        "mail": "ctwf0149@mail4.doshisha.ac.jp",
-        "password": "pass",
-        "status": "test" or "prod",
-        "isActive": true,
-        "isPointAssigned": false,
-        "group": 1,
-        "rank": 1,
-        "isGraduate": true,
-        "point": {
-          "ksato": "3",
-          "tkoita": "1" ...
-        },
-        "year": "2022",
-      },
-      ...
-    }
-    ```
-
-  </details>
-  <details>
-    <summary>teachers</summary>
-    <br/>
-
-    ```json
-    "teachers": {
-      "docmentID": {
-        "id": "ksato",
-        "name": "佐藤 健哉",
-        "lab": "ネットワーク情報システム研究室",
-      },
-      "docmentID": {
-        "id": "tkoita",
-        "name": "小板 隆浩",
-        "lab": "ネットワーク情報システム研究室",
-      },
-      ...
-    }
-    ```
-
-  </details>
-
-> documentIDはFirebaseにデータを追加した際，自動的に付与されるID  
-> teachersの`id`に関しては，運用ルール(Notion参照)に従って保存すること
-
-#### **Hosting**
-
-- [公式ドキュメント](https://firebase.google.com/docs/hosting)
 - 研究室配属希望調査のデプロイ先
 - デプロイは`Github Actions`が担当しているので，気にしなくて良い
 - URLの末尾スラッシュの設定をオフにしている
   - 例：<https://assign.nislab.io/user>
 
-#### **Cloud Functions**
+#### [Cloud Functions](https://firebase.google.com/docs/functions)
 
-- [公式ドキュメント](https://firebase.google.com/docs/functions)
 - Firebaseで使用されるサーバレスのバックエンドフレームワーク
 - クライアントからHTTPリクエストを呼ぶことで，呼び出すことが可能
 - 主にメールの送信と，ユーザの作成・削除にて使用
@@ -317,6 +250,86 @@ firebase deploy --only functions
 ```
 
 ## gitの操作
+
+### 運用図
+
+![image](https://user-images.githubusercontent.com/49640294/150639343-f035a79f-0ad7-4fef-b40f-cb3cb5b93bc8.png)
+
+### ブランチの種類と運用ルール
+
+#### `main`
+
+- 本番環境用のブランチ
+- `develop`からのみマージされるように運用すること
+  - **`feature`からマージしないように**
+
+#### `develop`
+
+- 開発環境用のブランチ
+- `feature`ブランチからのみマージされるように運用すること
+
+#### `feature/#(チケット番号)`
+
+- 開発者がコードの修正・追加を行うブランチ
+- **必ず`develop`ブランチから切るようにすること**
+- PRを投げる際に，`develop`に向けるように注意すること
+  - デフォルトは`main`のため
+- チケット番号はIssueの番号を参照にすること
+
+### 開発時の流れ
+
+#### 1. `main`ブランチにて，pullを行い最新のリポジトリを取得
+
+```bash
+# mainにチェックアウト
+git checkout main
+
+# mainの最新状態を取得
+git pull origin main
+```
+
+#### 2. `develop`ブランチにて，pullを行い最新のリポジトリを取得
+
+```bash
+# developにチェックアウト
+git checkout develop
+
+# developの最新状態を取得
+git pull origin develop
+```
+
+#### 3. `develop`ブランチから`feature`ブランチを切り，作業を開始
+
+```bash
+# developにチェックアウト
+git checkout -b feature/#(チケット番号)
+
+# 作業を開始
+```
+
+#### 4. 作業が終了したら，作業内容をリモートリポジトリにpush
+
+```bash
+# 作業が終了した場合
+git add .
+git commit -m "#(チケット番号) 修正内容のコメントを記述"
+git push origin feature/#(チケット番号)
+```
+
+#### 5. PRを投げる
+
+- Githubの「Pull Request」にて，自身が開発を行なった`feature`ブランチから`develop`ブランチに向けて，PRを投げる
+- その後，すぐに「Merge Pull Request」を押さないようにする
+  - Github Actionsが走るまで，ライムラグがあるため
+- Github Actionsが終われば，レビューとテストを実施
+- 問題がなければ，「Merge Pull Request」を押下し，`develop`にマージ
+- その後，Github Actionsが走り，開発環境にデプロイを行う
+
+#### 6. 本番反映
+
+- Githubの「Pull Request」にて，`develop`ブランチから`main`ブランチに向けて，PRを投げる
+- 問題がなければ，「Merge Pull Request」を押下し，`main`にマージ
+- その後，Github Actionsが走り，本番環境にデプロイを行う
 
 ## Github Actions
 
@@ -345,3 +358,79 @@ firebase deploy --only functions
 |  /form  |  GET  |  Contact Page  |
 |  /user  |  GET  |  Confirm Score Page  |
 |  /user/edit  |  GET  |  Score Edit Page  |
+
+### FireStoreのコレクション設計
+
+作成したテーブルは以下の2つ
+
+<details>
+  <summary>users</summary>
+
+  ```json
+  "users": {
+    "docmentID": {
+      "id": "1316200127",
+      "name": "中井",
+      "mail": "ctwf0127@mail4.doshisha.ac.jp",
+      "password": "pass",
+      "status": "test",
+      "isActive": true,
+      "isPointAssigned": false,
+      "group": 1,
+      "rank": 39,
+      "isGraduate": true,
+      "point": {
+        "ksato": "3",
+        "tkoita": "1",
+        ...
+      },
+      "year": "2022",
+    },
+    "docmentID": {
+      "id": "1316200149",
+      "name": "田中",
+      "mail": "ctwf0149@mail4.doshisha.ac.jp",
+      "password": "pass",
+      "status": "prod",
+      "isActive": true,
+      "isPointAssigned": false,
+      "group": 1,
+      "rank": 1,
+      "isGraduate": true,
+      "point": {
+        "ksato": "3",
+        "tkoita": "1",
+        ...
+      },
+      "year": "2022",
+    },
+    ...
+  }
+  ```
+
+</details>
+<details>
+  <summary>teachers</summary>
+
+  ```json
+  "teachers": {
+    "docmentID": {
+      "id": "ksato",
+      "name": "佐藤 健哉",
+      "lab": "ネットワーク情報システム研究室",
+    },
+    "docmentID": {
+      "id": "tkoita",
+      "name": "小板 隆浩",
+      "lab": "ネットワーク情報システム研究室",
+    },
+    ...
+  }
+  ```
+
+</details>
+
+<br />
+
+> documentIDはFirebaseにデータを追加した際，自動的に付与されるID  
+> teachersの`id`に関しては，運用ルール(Notion参照)に従って保存すること
