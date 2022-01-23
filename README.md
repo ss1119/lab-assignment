@@ -540,7 +540,7 @@ git push origin feature/#(チケット番号)
   - 開発環境へデプロイ
   - プレビュー環境の削除
 
-- `main`ブランチに投げたPRをく
+- `main`ブランチに投げたPRをクローズした際（マージした際）
   - `deploy_on_prod.yml`
   - 本番環境へデプロイ
 
