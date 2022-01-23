@@ -1,8 +1,29 @@
-# lab-assignment
+# <p align="center">研究室配属希望調査</p>
 
-B3の学生が行う研究室配属希望調査のサイト開発
+<div align="center">
+<a href="https://github.com/RyoichiNakai/lab-assignment/blob/main/LICENSE"><img src="https://img.shields.io/github/license/RyoichiNakai/lab-assignment" alt="license"></a>
+<a href="https://github.com/RyoichiNakai/lab-assignment/network/members"><img src="https://img.shields.io/github/forks/RyoichiNakai/lab-assignment?style=social" alt="forks"></a>
+<a href="https://github.com/RyoichiNakai/lab-assignment/stargazers"><img src="https://img.shields.io/github/stars/RyoichiNakai/lab-assignment?style=social" alt="stars"></a>
+</div>
 
-## 環境構築(macOS向け)
+## <p align="center"><a href="https://github.com/RyoichiNakai/lab-assignment/graphs/contributors">Contributors</a></p>
+
+<div align="center">
+<a href="https://github.com/RyoichiNakai/lab-assignment/graphs/contributors"><img src="https://img.shields.io/github/contributors/RyoichiNakai/lab-assignment" alt="contributors"></a>
+</div>
+
+<div align="center">
+<a href="https://github.com/RyoichiNakai"><img src="https://avatars.githubusercontent.com/u/49640294?v=4" alt="RyoichiNakai" height="120px"></a>
+<a href="https://github.com/Riki-Okunishi"><img src="https://avatars.githubusercontent.com/u/49511161?v=4" alt="Ricky" height="120px"></a>
+</div>
+
+## <p align="center">Architecture</p>
+
+![architecture](https://user-images.githubusercontent.com/49640294/150682715-6c9286be-cdaf-4396-aa5d-6e32ddd34ca1.png)
+
+---
+
+## 環境構築
 
 ### 使用したパッケージとそのバージョン
 
@@ -220,7 +241,7 @@ control + C
 - 認証/認可を行うサービス
 - 今回はメールアドレス認証のみを有効にした（プロバイダによる認可は未実装というか必要なし）
 
-#### [FireStore](https://firebase.google.com/docs/firestore?hl=ja)
+#### [Firestore](https://firebase.google.com/docs/firestore?hl=ja)
 
 - Firebaseにおけるデータベース用のサービス
 - NoSQLであり，コレクションとドキュメントという概念でDBを管理
@@ -249,117 +270,91 @@ firebase use lab-assignment-dev
 firebase deploy --only functions
 ```
 
-## gitの操作
-
-### 運用図
-
-![image](https://user-images.githubusercontent.com/49640294/150639343-f035a79f-0ad7-4fef-b40f-cb3cb5b93bc8.png)
-
-### ブランチの種類と運用ルール
-
-#### `main`
-
-- 本番環境用のブランチ
-- `develop`からのみマージされるように運用すること
-  - **`feature`からマージしないように**
-
-#### `develop`
-
-- 開発環境用のブランチ
-- `feature`ブランチからのみマージされるように運用すること
-
-#### `feature/#(チケット番号)`
-
-- 開発者がコードの修正・追加を行うブランチ
-- **必ず`develop`ブランチから切るようにすること**
-- PRを投げる際に，`develop`に向けるように注意すること
-  - デフォルトは`main`のため
-- チケット番号はIssueの番号を参照にすること
-
-### 開発時の流れ
-
-#### 1. `main`ブランチにて，pullを行い最新のリポジトリを取得
-
-```bash
-# mainにチェックアウト
-git checkout main
-
-# mainの最新状態を取得
-git pull origin main
-```
-
-#### 2. `develop`ブランチにて，pullを行い最新のリポジトリを取得
-
-```bash
-# developにチェックアウト
-git checkout develop
-
-# developの最新状態を取得
-git pull origin develop
-```
-
-#### 3. `develop`ブランチから`feature`ブランチを切り，作業を開始
-
-```bash
-# developにチェックアウト
-git checkout -b feature/#(チケット番号)
-
-# 作業を開始
-```
-
-#### 4. 作業が終了したら，作業内容をリモートリポジトリにpush
-
-```bash
-# 作業が終了した場合
-git add .
-git commit -m "#(チケット番号) 修正内容のコメントを記述"
-git push origin feature/#(チケット番号)
-```
-
-#### 5. PRを投げる
-
-- Githubの「Pull Request」にて，自身が開発を行なった`feature`ブランチから`develop`ブランチに向けて，PRを投げる
-- その後，すぐに「Merge Pull Request」を押さないようにする
-  - Github Actionsが走るまで，ライムラグがあるため
-- Github Actionsが終われば，レビューとテストを実施
-- 問題がなければ，「Merge Pull Request」を押下し，`develop`にマージ
-- その後，Github Actionsが走り，開発環境にデプロイを行う
-
-#### 6. 本番反映
-
-- Githubの「Pull Request」にて，`develop`ブランチから`main`ブランチに向けて，PRを投げる
-- 問題がなければ，「Merge Pull Request」を押下し，`main`にマージ
-- その後，Github Actionsが走り，本番環境にデプロイを行う
-
-## Github Actions
+---
 
 ## 研究室配属希望調査の開発
 
-### ファイル構造
+### Nuxt.jsについて
+
+- Vue.jsのフレームワーク
+  - Vue.jsは[ライフサイクル](https://jp.vuejs.org/v2/guide/instance.html#%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AB%E3%83%80%E3%82%A4%E3%82%A2%E3%82%B0%E3%83%A9%E3%83%A0)の考え方が開発をする上で，非常に重要なので理解をすること
+- 基本的には，Vue.jsと同じだが，一部Nuxt.jsの方が使いやすくなっているイメージ
+- 今回は`SPA(Single Page Application)`にて開発を行なった
+
+### UIフレームワーク
+
+- 本開発では，**Vuetify**を使用
+  - [公式ドキュメント](https://vuetifyjs.com/ja/getting-started/installation/)
+  - Vue.jsのマテリアルデザインのコンポーネントを提供
+- よく使用したコンポーネント
+  - [v-card](https://vuetifyjs.com/ja/components/cards/)
+  - [v-data-table](https://vuetifyjs.com/ja/components/data-tables/#footer-props)
 
 ### URL構造
 
-> This is a temporary URL and the domain will be changed upon release.
+- URL構造は`pages`のディレクトリ構造と一致しているため，編集したいページのコードは対応するファイルから探すようにすること
 
-- **Develop env**
-  - <https://lab-assignment-dev.web.app/>
-  - Deployed when the pull request for **develop** branch is closed
-  
-- **Production env**
-  - <https://assign.nislab.io/>
-  - <https://lab-assignment-prod.web.app/>
-  - Deployed when the pull request for **main** branch is closed
+|  URL  |  備考  |
+| ---- | ---- |
+|  /  |  トップとログインページ  |
+|  /form  |  学生が問い合わせを行うページ  |
+|  /user  |  各学生の研究室の得点や進路希望の調査結果を表示するページ  |
+|  /user/edit  |  各学生の研究室の得点や進路希望を編集するページ  |
+|  /admin/users  |  管理者画面・学生のデータを管理するページ  |
+|  /admin/teachers  |  管理者画面・教授のデータを管理するページ  |
 
-### Routing
+### ディレクトリ構造
 
-|  Resource  |  HTTP Method  |  Notes  |
-| ---- | ---- | ---- |
-|  /  |  GET  |  Top and Login Page  |
-|  /form  |  GET  |  Contact Page  |
-|  /user  |  GET  |  Confirm Score Page  |
-|  /user/edit  |  GET  |  Score Edit Page  |
+```bash
+.
+├── assets               # CSSの設定等
+├── components
+│   ├── admin            # 管理画面に使用するコンポーネント
+│   ├── card             # カードの汎用コンポーネント
+│   └── layouts          # 汎用コンポーネント
+├── firebase.json        # Firebase Hostingの設定を行う
+├── firestore.rules      # Firestoreのセキュリティルールを設定 
+├── functions
+│   ├── index.js         # Cloud Functionsのソースコード
+├── layouts              # レイアウトの表示
+├── middleware
+│   ├── auth.js          # 認証情報の取得
+│   └── redirect.js      # リダイレクト設定
+├── nuxt.config.js
+├── package.json         # yarnでのパッケージの管理
+├── pages                # URL構造と対応
+│   ├── admin
+│   │   ├── teachers.vue # /admin/teacher
+│   │   └── users.vue    # /admin/users
+│   ├── form.vue         # /form
+│   ├── index.vue        # /
+│   └── user             
+│       ├── edit.vue     # /user/edit
+│       └── index.vue    # /user 
+├── plugins
+│   ├── firebase.js      # Firebaseの初期化
+│   └── utils.js         # 汎用関数の設定
+├── static               # ファビコンの設定等
+├── store
+│   ├── auth.js          # 認証情報の状態を管理
+│   ├── drawer.js       
+│   ├── excel.js
+│   ├── menu.js
+│   ├── teachers.js      # 教授データの状態を管理
+│   └── users.js         # 学生データの状態を管理
+└── yarn.lock
 
-### FireStoreのコレクション設計
+```
+
+- Nuxt.jsのディレクトリ構造の詳細は[こちら](https://nuxtjs.org/ja/docs/get-started/directory-structure)を参照すること
+- ページロード時の実行順番
+  - `plugins` → `middlewares` → `layouts` → `pages` → `components`
+- `Vuex`について
+  - Vue.jsの状態管理ライブラリ
+    - 詳細は[こちら](https://vuex.vuejs.org/ja/)
+  - `store`ディレクトリに，状態管理を行うためのファイルを格納
+
+### Firestoreのコレクション設計
 
 作成したテーブルは以下の2つ
 
@@ -434,3 +429,121 @@ git push origin feature/#(チケット番号)
 
 > documentIDはFirebaseにデータを追加した際，自動的に付与されるID  
 > teachersの`id`に関しては，運用ルール(Notion参照)に従って保存すること
+
+---
+
+## gitの操作
+
+### 運用図
+
+![image](https://user-images.githubusercontent.com/49640294/150639343-f035a79f-0ad7-4fef-b40f-cb3cb5b93bc8.png)
+
+### ブランチの種類と運用ルール
+
+#### `main`
+
+- 本番環境用のブランチ
+- `develop`からのみマージされるように運用すること
+  - **`feature`からマージしないように**
+
+#### `develop`
+
+- 開発環境用のブランチ
+- `feature`ブランチからのみマージされるように運用すること
+
+#### `feature/#(チケット番号)`
+
+- 開発者がコードの修正・追加を行うブランチ
+- **必ず`develop`ブランチから切るようにすること**
+- PRを投げる際に，`develop`に向けるように注意すること
+  - デフォルトは`main`のため
+- チケット番号はIssueの番号を参照にすること
+
+### 開発時の流れ
+
+#### 1. `main`ブランチにて，pullを行い最新のリポジトリを取得
+
+```bash
+# mainにチェックアウト
+git checkout main
+
+# mainの最新状態を取得
+git pull origin main
+```
+
+#### 2. `develop`ブランチにて，pullを行い最新のリポジトリを取得
+
+```bash
+# developにチェックアウト
+git checkout develop
+
+# developの最新状態を取得
+git pull origin develop
+```
+
+#### 3. `develop`ブランチから`feature`ブランチを切り，作業を開始
+
+```bash
+# featureブランチを作成
+git checkout -b feature/#(チケット番号)
+
+# 作業を開始
+```
+
+#### 4. 作業が終了したら，作業内容をリモートリポジトリにpush
+
+```bash
+# 作業が終了した場合
+git add .
+git commit -m "#(チケット番号) 修正内容のコメントを記述"
+git push origin feature/#(チケット番号)
+```
+
+#### 5. PRを投げる
+
+- Githubの「Pull Request」にて，自身が開発を行なった`feature`ブランチから`develop`ブランチに向けて，PRを投げる
+- その後，すぐに「Merge Pull Request」を押さないようにする
+  - Github Actionsが走るまで，ライムラグがあるため
+- Github Actionsが終われば，レビューとテストを実施
+- 問題がなければ，「Merge Pull Request」を押下し，`develop`にマージ
+- その後，Github Actionsが走り，開発環境にデプロイを行う
+
+#### 6. 本番反映
+
+- Githubの「Pull Request」にて，`develop`ブランチから`main`ブランチに向けて，PRを投げる
+- 問題がなければ，「Merge Pull Request」を押下し，`main`にマージ
+- その後，Github Actionsが走り，本番環境にデプロイを行う
+
+---
+
+## Github Actions
+
+`.github/workflow`に設定ファイルを格納
+
+### 発火タイミングと詳細
+
+- `feature`ブランチへpushした際
+  - `ci.yml`
+  - 構文チェック
+
+- `develop`ブランチにPRを投げた際
+  - `deploy_on_dev_preview.yml`
+  - プレビュー環境へのデプロイ
+  - 成功すれば，以下のコメントが出力される
+
+    ![image](https://user-images.githubusercontent.com/49640294/150668915-b1e81226-918f-40d8-bb8b-a1a2880b969d.png)
+
+- `develop`ブランチに投げたPRをクローズした際（マージした際）
+  - `deploy_on_dev.yml`
+  - 開発環境へデプロイ
+  - プレビュー環境の削除
+
+- `main`ブランチに投げたPRをく
+  - `deploy_on_prod.yml`
+  - 本番環境へデプロイ
+
+---
+
+## 最後に
+
+かなり急いで開発をしたので，リファクタリングやパフォーマンスチューニング等大募集しています！
