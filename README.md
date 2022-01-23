@@ -525,23 +525,23 @@ git push origin feature/#(チケット番号)
 ### 発火タイミングと詳細
 
 - `feature`ブランチへpushした際
-  - `ci.yml`
+  - ファイル名：`ci.yml`
   - 構文チェック
 
 - `develop`ブランチにPRを投げた際
-  - `deploy_on_dev_preview.yml`
+  - ファイル名：`deploy_on_dev_preview.yml`
   - プレビュー環境へのデプロイ
   - 成功すれば，以下のコメントが出力される
 
     ![image](https://user-images.githubusercontent.com/49640294/150668915-b1e81226-918f-40d8-bb8b-a1a2880b969d.png)
 
 - `develop`ブランチに投げたPRをクローズした際（マージした際）
-  - `deploy_on_dev.yml`
+  - ファイル名：`deploy_on_dev.yml`
   - 開発環境へデプロイ
   - プレビュー環境の削除
 
 - `main`ブランチに投げたPRをクローズした際（マージした際）
-  - `deploy_on_prod.yml`
+  - ファイル名：`deploy_on_prod.yml`
   - 本番環境へデプロイ
 
 ---
