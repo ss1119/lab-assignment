@@ -216,6 +216,8 @@ control + C
 
 ![image](https://user-images.githubusercontent.com/49640294/150631310-09a23a79-2f52-4403-aa20-65d58efbe601.png)
 
+---
+
 ## Firebaseプロジェクトの管理
 
 ### Firebaseとは?
