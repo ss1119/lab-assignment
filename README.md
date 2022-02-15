@@ -15,7 +15,7 @@
 <div align="center">
 <a href="https://github.com/RyoichiNakai"><img src="https://avatars.githubusercontent.com/u/49640294?v=4" alt="RyoichiNakai" height="120px"></a>
 <a href="https://github.com/Riki-Okunishi"><img src="https://avatars.githubusercontent.com/u/49511161?v=4" alt="Ricky" height="120px"></a>
-<a href="https://github.com/ss1119"><img src="https://avatars.githubusercontent.com/u/67626951?v=4" alt="ss1119" height="120px"></a>
+<a href="https://github.com/ss1119"><img src="https://avatars.githubusercontent.com/u/67626951?v=4" alt="sss1119" height="120px"></a>
 </div>
 
 ## <p align="center">Architecture</p>
