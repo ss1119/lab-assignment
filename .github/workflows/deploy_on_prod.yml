@@ -55,4 +55,27 @@ jobs:
           channelId: live
           projectId: lab-assignment-prod
 
+  deploy_to_functions:
+    runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install npm packages
+        run: |
+          cd functions
+          npm install
+
+      - name: Choose firebase project
+        run: firebase use lab-assignment-prod
+
+      - name: Deploy to Cloud Functions
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
