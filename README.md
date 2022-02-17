@@ -108,7 +108,8 @@ nodebrew setup
 nodebrew ls-remote
 
 # Nodeのインストール
-nodebrew install-binary v12.22.17
+nodebrew install-binary v12.22.7
+nodebrew compile v12.22.7 # M1の場合はこちら
 
 # インストールしたバージョンの確認
 nodebrew ls
@@ -151,9 +152,10 @@ npm install -g firebase-tools
 #### 1. リポジトリのクローン
 
 - `git`にて，リポジトリのクローンを行う
+  - GitHubにssh接続ができるように設定しておきましょう
 
 ```bash
-git clone <このリポジトリのSSH URL>
+git clone git@github.com:Kenny-NISLab/lab-assignment.git
 ```
 
 #### 2. 開発環境の用意
@@ -218,6 +220,14 @@ control + C
 - 以下の画面が出てこれば完了！
 
 ![image](https://user-images.githubusercontent.com/49640294/150631310-09a23a79-2f52-4403-aa20-65d58efbe601.png)
+
+#### 4. VSCodeで開発に必要な拡張ツール
+
+開発するにあたり，以下の拡張ツールをインストールしておいてください
+
+- ESLint
+- Vetur
+- Prettier
 
 ---
 
