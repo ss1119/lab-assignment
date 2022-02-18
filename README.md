@@ -152,7 +152,7 @@ npm install -g firebase-tools
 #### 1. リポジトリのクローン
 
 - `git`にて，リポジトリのクローンを行う
-  - GitHubにssh接続ができるように設定しておきましょう
+  - GitHub に ssh 接続ができるように設定しておきましょう
 
 ```bash
 git clone git@github.com:Kenny-NISLab/lab-assignment.git
@@ -221,7 +221,7 @@ control + C
 
 ![image](https://user-images.githubusercontent.com/49640294/150631310-09a23a79-2f52-4403-aa20-65d58efbe601.png)
 
-#### 4. VSCodeで開発に必要な拡張ツール
+#### 4. VSCode で開発に必要な拡張ツール
 
 開発するにあたり，以下の拡張ツールをインストールしておいてください
 
@@ -554,11 +554,13 @@ git push origin feature/#(チケット番号)
 
   - ファイル名：`deploy_on_dev.yml`
   - 開発環境へデプロイ
+  - 開発環境に Cloud Functions をデプロイ
   - プレビュー環境の削除
 
 - `main`ブランチに投げた PR をクローズした際（マージした際）
   - ファイル名：`deploy_on_prod.yml`
   - 本番環境へデプロイ
+  - 本番環境に Cloud Functions をデプロイ
 
 ---
 
