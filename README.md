@@ -32,8 +32,8 @@
 
 | パッケージ | バージョン |
 | ---------- | ---------- |
-| `yarn`     | 1.22.10    |
-| `node`     | v12.22.7   |
+| `yarn`     | 1.22.17    |
+| `node`     | v15.14.0   |
 | `firebase` | 9.6.1      |
 
 > `firebase`に関しては，8 系と 9 系でコードの書き方が大きく異なるので，注意すること
@@ -108,14 +108,14 @@ nodebrew setup
 nodebrew ls-remote
 
 # Nodeのインストール
-nodebrew install-binary v12.22.7
-nodebrew compile v12.22.7 # M1の場合はこちら
+nodebrew install-binary v15.14.0
+nodebrew compile v15.14.0 # M1の場合はこちら
 
 # インストールしたバージョンの確認
 nodebrew ls
 
 # 使いたいバージョンを指定
-nodebrew use v12.22.7
+nodebrew use v15.14.0
 
 # nodeのバージョンを確認
 node -v
@@ -152,7 +152,7 @@ npm install -g firebase-tools
 #### 1. リポジトリのクローン
 
 - `git`にて，リポジトリのクローンを行う
-  - GitHubにssh接続ができるように設定しておきましょう
+  - GitHub に ssh 接続ができるように設定しておきましょう
 
 ```bash
 git clone git@github.com:Kenny-NISLab/lab-assignment.git
@@ -221,7 +221,7 @@ control + C
 
 ![image](https://user-images.githubusercontent.com/49640294/150631310-09a23a79-2f52-4403-aa20-65d58efbe601.png)
 
-#### 4. VSCodeで開発に必要な拡張ツール
+#### 4. VSCode で開発に必要な拡張ツール
 
 開発するにあたり，以下の拡張ツールをインストールしておいてください
 
@@ -554,11 +554,13 @@ git push origin feature/#(チケット番号)
 
   - ファイル名：`deploy_on_dev.yml`
   - 開発環境へデプロイ
+  - 開発環境に Cloud Functions をデプロイ
   - プレビュー環境の削除
 
 - `main`ブランチに投げた PR をクローズした際（マージした際）
   - ファイル名：`deploy_on_prod.yml`
   - 本番環境へデプロイ
+  - 本番環境に Cloud Functions をデプロイ
 
 ---
 
