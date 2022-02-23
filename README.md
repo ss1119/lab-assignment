@@ -32,8 +32,8 @@
 
 | パッケージ | バージョン |
 | ---------- | ---------- |
-| `yarn`     | 1.22.10    |
-| `node`     | v12.22.7   |
+| `yarn`     | 1.22.17    |
+| `node`     | v15.14.0   |
 | `firebase` | 9.6.1      |
 
 > `firebase`に関しては，8 系と 9 系でコードの書き方が大きく異なるので，注意すること
@@ -108,14 +108,14 @@ nodebrew setup
 nodebrew ls-remote
 
 # Nodeのインストール
-nodebrew install-binary v12.22.7
-nodebrew compile v12.22.7 # M1の場合はこちら
+nodebrew install-binary v15.14.0
+nodebrew compile v15.14.0 # M1の場合はこちら
 
 # インストールしたバージョンの確認
 nodebrew ls
 
 # 使いたいバージョンを指定
-nodebrew use v12.22.7
+nodebrew use v15.14.0
 
 # nodeのバージョンを確認
 node -v
