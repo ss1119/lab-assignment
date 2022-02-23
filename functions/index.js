@@ -9,8 +9,6 @@ const url = functions.config().url.domain
 const gmailEmail = functions.config().gmail.email
 const ksatoEmail = functions.config().ksato.email
 const mokuboEmail = functions.config().mokubo.email
-// const gmailPassword = functions.config().gmail.password
-// const adminEmail = functions.config().admin.email
 const encryptKey = functions.config().crypto.key
 const sgApiKey = functions.config().sg.key
 
