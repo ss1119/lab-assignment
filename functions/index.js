@@ -3,13 +3,12 @@ const cryptoJs = require('crypto-js')
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 const sgMail = require('@sendgrid/mail')
-const nodemailer = require('nodemailer')
 
 // Cloud Functionの環境変数
 const url = functions.config().url.domain
 const gmailEmail = functions.config().gmail.email
-const gmailPassword = functions.config().gmail.password
-const adminEmail = functions.config().admin.email
+const ksatoEmail = functions.config().ksato.email
+const mokuboEmail = functions.config().mokubo.email
 const encryptKey = functions.config().crypto.key
 const sgApiKey = functions.config().sg.key
 
@@ -18,17 +17,6 @@ admin.initializeApp()
 
 // sendGridの初期化
 sgMail.setApiKey(sgApiKey)
-
-// SMTPサーバーの設定
-const mailTransport = nodemailer.createTransport({
-  service: 'gmail',
-  secure: true,
-  port: 465,
-  auth: {
-    user: gmailEmail,
-    pass: gmailPassword,
-  },
-})
 
 const encryptPassword = (password) => {
   return cryptoJs.AES.encrypt(password, encryptKey).toString()
@@ -142,7 +130,8 @@ URL: ${url}
 exports.sendInqueries = functions.https.onCall(async (data, context) => {
   const admin = {
     from: gmailEmail,
-    to: adminEmail,
+    to: gmailEmail,
+    cc: [ksatoEmail, mokuboEmail],
     subject: '研究室配属希望調査のお問い合わせ【' + data.name + 'さん】',
     text: adminInqueries(data),
   }
@@ -155,10 +144,11 @@ exports.sendInqueries = functions.https.onCall(async (data, context) => {
   }
 
   try {
-    await mailTransport.sendMail(admin)
-    await mailTransport.sendMail(user)
+    await sgMail.send(admin)
+    await sgMail.send(user)
   } catch (err) {
-    return err.message
+    // eslint-disable-next-line
+    console.log(err)
   }
 })
 
@@ -188,7 +178,8 @@ exports.sendLoginDataBatch = functions.https.onCall(async (data, context) => {
 
     messages.push({
       to: user.data().email,
-      from: gmailEmail,
+      from: mokuboEmail,
+      cc: mokuboEmail,
       subject: '【研究室配属希望調査】ログイン情報について',
       text: userLoginDataMail(userData),
     })
