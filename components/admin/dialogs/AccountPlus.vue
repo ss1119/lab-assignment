@@ -5,26 +5,57 @@
 
     <v-list>
       <v-list-item-group>
-        <v-list-item @click="excelDialogOpen">
+        <v-list-item @click="selectTest">
           <v-list-item-icon>
-            <v-icon v-text="excel.icon" />
+            <v-icon v-text="test.icon" />
           </v-list-item-icon>
-          <v-list-item-content v-text="excel.text" />
+          <v-list-item-content v-text="test.text" />
         </v-list-item>
-        <v-list-item @click="manualDialogOpen">
+        <v-list-item @click="selectPerformance">
           <v-list-item-icon>
-            <v-icon v-text="manual.icon" />
+            <v-icon v-text="performance.icon" />
           </v-list-item-icon>
-          <v-list-item-content v-text="manual.text" />
+          <v-list-item-content v-text="performance.text" />
         </v-list-item>
       </v-list-item-group>
     </v-list>
 
+    <v-dialog v-model="isSelectDialogOpen" max-width="600px">
+      <v-card>
+        <v-card-title>{{ isTestUser ? test.title : performance.title }}</v-card-title>
+        <v-card-subtitle>{{ authSubTitle1 }}</v-card-subtitle>
+
+        <v-container class="form__scroll">
+          <v-list>
+            <v-list-item-group>
+              <v-list-item @click="excelDialogOpen">
+                <v-list-item-icon>
+                  <v-icon v-text="excel.icon" />
+                </v-list-item-icon>
+                <v-list-item-content v-text="excel.text" />
+              </v-list-item>
+              <v-list-item @click="manualDialogOpen">
+                <v-list-item-icon>
+                  <v-icon v-text="manual.icon" />
+                </v-list-item-icon>
+                <v-list-item-content v-text="manual.text" />
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-container>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click.stop="selectDialogClose"> 閉じる </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-dialog v-model="isExcelDialogOpen" max-width="600px">
       <v-card>
-        <v-card-title>{{ cardTitle }}</v-card-title>
-        <v-card-subtitle>{{ authSubTitle1 }}</v-card-subtitle>
+        <v-card-title>{{ isTestUser ? test.title : performance.title }}</v-card-title>
         <v-card-subtitle>{{ authSubTitle2 }}</v-card-subtitle>
+        <v-card-subtitle>{{ authSubTitle3 }}</v-card-subtitle>
 
         <v-container class="form__scroll">
           <v-subheader> 年度 </v-subheader>
@@ -68,9 +99,9 @@
 
     <v-dialog v-model="isManualDialogOpen" max-width="600px">
       <v-card>
-        <v-card-title>{{ cardTitle }}</v-card-title>
-        <v-card-subtitle>{{ authSubTitle1 }}</v-card-subtitle>
+        <v-card-title>{{ isTestUser ? test.title : performance.title }}</v-card-title>
         <v-card-subtitle>{{ authSubTitle2 }}</v-card-subtitle>
+        <v-card-subtitle>{{ authSubTitle3 }}</v-card-subtitle>
 
         <v-container class="form__scroll">
           <v-subheader> 年度 </v-subheader>
@@ -168,14 +199,27 @@ export default {
   data() {
     return {
       isOpen: false,
+      isTestUser: false,
+      isSelectDialogOpen: false,
       isExcelDialogOpen: false,
       isManualDialogOpen: false,
       validate: false,
       loading: false,
       cardTitle: '学生の新規追加',
-      cardSubTitle: 'Excelファイルからインポートするか手動で入力するかを選択してください。',
-      authSubTitle1: 'ユーザの追加が完了するまでにしばらく時間がかかる可能性があります。連続して実行しないでください。',
-      authSubTitle2: 'ユーザを登録ができない場合は、再度ユーザを新規追加をするか、一度ユーザを削除してください。',
+      cardSubTitle: 'テスト用データか本番用データかを選択してください。',
+      authSubTitle1: 'Excelファイルからインポートするか手動で入力するかを選択してください。',
+      authSubTitle2: 'ユーザの追加が完了するまでにしばらく時間がかかる可能性があります。連続して実行しないでください。',
+      authSubTitle3: 'ユーザを登録ができない場合は、再度ユーザを新規追加をするか、一度ユーザを削除してください。',
+      test: {
+        title: '学生の新規追加(テスト用データ)',
+        icon: 'mdi-file-excel',
+        text: 'テスト用データ',
+      },
+      performance: {
+        title: '学生の新規追加(本番用データ)',
+        icon: 'mdi-file-excel',
+        text: '本番用データ',
+      },
       excel: {
         icon: 'mdi-file-excel',
         text: 'Excelファイルからインポート',
@@ -254,19 +298,36 @@ export default {
       this.isOpen = false
       this.$emit('close', this.isOpen)
     },
+    selectDialogOpen() {
+      this.globalEscape()
+      this.isSelectDialogOpen = true
+    },
     excelDialogOpen() {
       this.globalEscape()
+      this.isSelectDialogOpen = false
       this.isExcelDialogOpen = true
     },
     manualDialogOpen() {
       this.globalEscape()
+      this.isSelectDialogOpen = false
       this.isManualDialogOpen = true
+    },
+    selectDialogClose() {
+      this.isSelectDialogOpen = false
     },
     excelDialogClose() {
       this.isExcelDialogOpen = false
     },
     manualDialogClose() {
       this.isManualDialogOpen = false
+    },
+    selectTest() {
+      this.isTestUser = true
+      this.selectDialogOpen()
+    },
+    selectPerformance() {
+      this.isTestUser = false
+      this.selectDialogOpen()
     },
     reset(form) {
       Object.keys(form).forEach((f) => {
