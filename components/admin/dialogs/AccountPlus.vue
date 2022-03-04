@@ -212,12 +212,12 @@ export default {
       authSubTitle3: 'ユーザを登録ができない場合は、再度ユーザを新規追加をするか、一度ユーザを削除してください。',
       test: {
         title: '学生の新規追加(テスト用データ)',
-        icon: 'mdi-file-excel',
+        icon: 'mdi-account-plus-outline',
         text: 'テスト用データ',
       },
       performance: {
         title: '学生の新規追加(本番用データ)',
-        icon: 'mdi-file-excel',
+        icon: 'mdi-account-plus',
         text: '本番用データ',
       },
       excel: {
@@ -227,7 +227,7 @@ export default {
         file: {},
       },
       manual: {
-        icon: 'mdi-account-plus',
+        icon: 'mdi-gesture-double-tap',
         text: '手動で入力',
         year: '',
         id: '',
