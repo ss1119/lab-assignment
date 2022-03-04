@@ -352,17 +352,20 @@ exports.deleteTestData = functions.https.onCall(async (students, context) => {
     .get()
     .then((snapshot) => {
       snapshot.docs.forEach(async (doc) => {
+        let isExistProdData = false
         students.forEach((student) => {
           if (doc.data().id === student.id && doc.data().email === student.email) {
-            return
+            isExistProdData = true
           }
         })
-        doc.ref.update({ isActive: false })
-        try {
-          await getAuth.updateUser(doc.data().id, { disabled: true })
-        } catch (err) {
-          // eslint-disable-next-line
-          console.error(err)
+        if (!isExistProdData) {
+          doc.ref.update({ isActive: false })
+          try {
+            await getAuth.updateUser(doc.id, { disabled: true })
+          } catch (err) {
+            // eslint-disable-next-line
+            console.error(err)
+          }
         }
       })
     })
