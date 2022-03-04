@@ -280,3 +280,90 @@ exports.deleteUsersInAuthAndDB = functions.https.onCall(async (data, context) =>
   })
   return res
 })
+
+// 本番用データの登録
+exports.registerProdData = functions.https.onCall(async (data, context) => {
+  const db = admin.firestore()
+  const getAuth = admin.auth()
+  const res = { email: data.email, name: data.name }
+
+  await db
+    .collection('users')
+    .where('status', '==', 'test')
+    .get()
+    .then((snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        // 本番用データにあって、テスト用データにある場合
+        if (doc.data().id === data.id && doc.data().email === data.email) {
+          const pass = generatePassword()
+          const encrypt = encryptPassword(pass)
+          doc.ref.update({ status: data.status, password: encrypt })
+          res.statusCode = 200
+          return res
+        }
+      })
+    })
+  // 本番用データにあって、テスト用データにない場合
+  const pass = generatePassword()
+  const authUser = {
+    email: data.email,
+    password: pass,
+    displayName: data.name,
+    emailVerified: true,
+    disabled: false,
+  }
+  getAuth
+    .createUser(authUser)
+    .then((userRecord) => {
+      const usersRef = db.collection('users').doc(userRecord.uid)
+      const encrypt = encryptPassword(pass)
+      usersRef.set({
+        id: data.id,
+        name: data.name,
+        rank: data.rank,
+        group: data.group,
+        email: data.email,
+        password: encrypt,
+        status: data.status,
+        isActive: data.isActive,
+        isPointAssigned: data.isPointAssigned,
+        isGraduate: data.isGraduate,
+        point: data.point,
+        year: data.year,
+      })
+      res.statusCode = 200
+      return res
+    })
+    .catch((error) => {
+      res.message = error.message
+      res.statusCode = 400
+      return res
+    })
+})
+
+// テスト用データにあって本番用データにないユーザを論理削除
+exports.deleteTestData = functions.https.onCall(async (students, context) => {
+  const db = admin.firestore()
+  const getAuth = admin.auth()
+
+  await db
+    .collection('users')
+    .where('status', '==', 'test')
+    .get()
+    .then((snapshot) => {
+      snapshot.docs.forEach(async (doc) => {
+        students.forEach((student) => {
+          if (doc.data().id === student.id && doc.data().email === student.email) {
+            return
+          }
+        })
+        doc.ref.update({ isActive: false })
+        try {
+          await getAuth.updateUser(doc.data().id, { disabled: true })
+        } catch (err) {
+          // eslint-disable-next-line
+          console.error(err)
+        }
+      })
+    })
+})
