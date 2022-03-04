@@ -349,12 +349,14 @@ export default {
         this.loading = true
         const reader = new FileReader()
         const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
+        const registerProdData = httpsCallable(functions, 'registerProdData')
+        const deleteTestData = httpsCallable(functions, 'deleteTestData')
+        const students = []
         reader.onload = async (e) => {
           const workbook = XLSX.read(e.target.result)
           const excelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
           for (let i = 0; i < excelData.length; i = i + 1) {
             const student = {
-              status: 'test',
               isActive: true,
               isPointAssigned: false,
               isGraduate: false,
@@ -379,15 +381,34 @@ export default {
             if (student.password == null) {
               student.password = ''
             }
-            createUser(student).then((result) => {
-              if (result.statusCode === 400) {
-                alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
-                // eslint-disable-next-line no-console
-                console.log('email: ' + result.email + ' name:' + result.name)
-              }
-            })
-            await this.$sleep(1000)
+            // テスト用データの場合
+            if (this.isTestUser) {
+              student.status = 'test'
+              createUser(student).then((result) => {
+                if (result.statusCode === 400) {
+                  alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
+                  // eslint-disable-next-line no-console
+                  console.log('email: ' + result.email + ' name:' + result.name)
+                }
+              })
+              await this.$sleep(1000)
+            }
+            // 本番用データの場合
+            else {
+              student.status = 'prod'
+              registerProdData(student).then((result) => {
+                if (result.statusCode === 400) {
+                  alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
+                  // eslint-disable-next-line no-console
+                  console.log('email: ' + result.email + ' name:' + result.name)
+                }
+              })
+              await this.$sleep(1000)
+            }
+            students.push(student)
           }
+          // テスト用データにあって本番用データにないユーザを削除
+          deleteTestData(students)
           this.loading = false
           this.reset(this.excelForm)
           this.excelDialogClose()
@@ -405,13 +426,14 @@ export default {
       })
       if (!this.validate) {
         const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
+        const registerProdData = httpsCallable(functions, 'registerProdData')
+        // const deleteTestData = httpsCallable(functions, 'deleteTestData')
         const student = {
           id: this.manualForm.id.toString(),
           name: this.manualForm.name,
           rank: Number(this.manualForm.rank),
           group: Number(this.manualForm.group),
           email: this.manualForm.email,
-          status: 'test',
           isActive: true,
           isPointAssigned: false,
           isGraduate: false,
@@ -422,13 +444,28 @@ export default {
           student.point,
           this.teachers.map((obj) => obj.id)
         )
-        createUser(student).then((result) => {
-          if (result.statusCode === 400) {
-            alert('入力した学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
-            // eslint-disable-next-line no-console
-            console.log('email: ' + result.email + ' name:' + result.name)
-          }
-        })
+        // テスト用データの場合
+        if (this.isTestUser) {
+          student.status = 'test'
+          createUser(student).then((result) => {
+            if (result.statusCode === 400) {
+              alert('入力した学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
+              // eslint-disable-next-line no-console
+              console.log('email: ' + result.email + ' name:' + result.name)
+            }
+          })
+        }
+        // 本番用データの場合
+        else {
+          student.status = 'prod'
+          registerProdData(student).then((result) => {
+            if (result.statusCode === 400) {
+              alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
+              // eslint-disable-next-line no-console
+              console.log('email: ' + result.email + ' name:' + result.name)
+            }
+          })
+        }
         this.reset(this.manualForm)
         this.manualDialogClose()
       }
