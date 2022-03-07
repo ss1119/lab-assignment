@@ -408,7 +408,9 @@ export default {
             students.push(student)
           }
           // テスト用データにあって本番用データにないユーザを削除
-          deleteTestData(students)
+          if (!this.isTestUser) {
+            deleteTestData(students)
+          }
           this.loading = false
           this.reset(this.excelForm)
           this.excelDialogClose()
