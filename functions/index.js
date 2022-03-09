@@ -31,8 +31,8 @@ const generatePassword = () => {
   return crypto.randomBytes(n).toString('base64').substring(0, n)
 }
 
-const sleep = async (millisec) => {
-  await new Promise((resolve) => setTimeout(resolve, millisec))
+const sleep = (millisec) => {
+  return new Promise((resolve) => setTimeout(resolve, millisec))
 }
 
 // ユーザから問い合わせ時に管理者に送るメッセージ
