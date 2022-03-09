@@ -51,6 +51,9 @@
         <v-card-title>{{ isTestUser ? test.title : performance.title }}</v-card-title>
         <v-card-subtitle>{{ authSubTitle2 }}</v-card-subtitle>
         <v-card-subtitle>{{ authSubTitle3 }}</v-card-subtitle>
+        <v-card-subtitle v-if="!isTestUser">{{ excelDescription1 }}</v-card-subtitle>
+        <v-card-subtitle v-if="!isTestUser">{{ excelDescription2 }}</v-card-subtitle>
+        <v-card-subtitle v-if="!isTestUser">{{ excelDescription3 }}</v-card-subtitle>
 
         <v-container class="form__scroll">
           <v-subheader> 年度 </v-subheader>
@@ -97,6 +100,8 @@
         <v-card-title>{{ isTestUser ? test.title : performance.title }}</v-card-title>
         <v-card-subtitle>{{ authSubTitle2 }}</v-card-subtitle>
         <v-card-subtitle>{{ authSubTitle3 }}</v-card-subtitle>
+        <v-card-subtitle v-if="!isTestUser">{{ manualDescription1 }}</v-card-subtitle>
+        <v-card-subtitle v-if="!isTestUser">{{ manualDescription2 }}</v-card-subtitle>
 
         <v-container class="form__scroll">
           <v-subheader> 年度 </v-subheader>
@@ -205,6 +210,11 @@ export default {
       authSubTitle1: 'Excelファイルからインポートするか手動で入力するかを選択してください。',
       authSubTitle2: 'ユーザの追加が完了するまでにしばらく時間がかかる可能性があります。連続して実行しないでください。',
       authSubTitle3: 'ユーザを登録ができない場合は、再度ユーザを新規追加をするか、一度ユーザを削除してください。',
+      excelDescription1: '本番用データにあって、テスト用データにあるユーザは、パスワードが更新されます。',
+      excelDescription2: '本番用データにあって、テスト用データにないユーザは、新規作成されます。',
+      excelDescription3: 'テスト用データにあって、本番用データにないユーザは、論理削除されます。',
+      manualDescription1: '本番用データにあって、テスト用データにあるユーザは、パスワードが更新されます。',
+      manualDescription2: '本番用データにあって、テスト用データにないユーザは、新規作成されます。',
       test: {
         title: '学生の新規追加(テスト用データ)',
         icon: 'mdi-account-plus-outline',
