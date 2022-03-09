@@ -11,7 +11,7 @@
           </v-list-item-icon>
           <v-list-item-content v-text="test.text" />
         </v-list-item>
-        <v-list-item @click="selectPerformance">
+        <v-list-item @click="selectProduction">
           <v-list-item-icon>
             <v-icon v-text="performance.icon" />
           </v-list-item-icon>
@@ -325,7 +325,7 @@ export default {
       this.isTestUser = true
       this.selectDialogOpen()
     },
-    selectPerformance() {
+    selectProduction() {
       this.isTestUser = false
       this.selectDialogOpen()
     },
@@ -348,9 +348,6 @@ export default {
       if (!this.validate) {
         this.loading = true
         const reader = new FileReader()
-        const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
-        const registerProdData = httpsCallable(functions, 'registerProdData')
-        const deleteTestData = httpsCallable(functions, 'deleteTestData')
         const students = []
         reader.onload = async (e) => {
           const workbook = XLSX.read(e.target.result)
@@ -383,6 +380,7 @@ export default {
             }
             // テスト用データの場合
             if (this.isTestUser) {
+              const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
               student.status = 'test'
               createUser(student).then((result) => {
                 if (result.statusCode === 400) {
@@ -395,6 +393,7 @@ export default {
             }
             // 本番用データの場合
             else {
+              const registerProdData = httpsCallable(functions, 'registerProdData')
               student.status = 'prod'
               registerProdData(student).then((result) => {
                 if (result.statusCode === 400) {
@@ -409,6 +408,7 @@ export default {
           }
           // テスト用データにあって本番用データにないユーザを削除
           if (!this.isTestUser) {
+            const deleteTestData = httpsCallable(functions, 'deleteTestData')
             deleteTestData(students)
           }
           this.loading = false
@@ -427,9 +427,6 @@ export default {
         }
       })
       if (!this.validate) {
-        const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
-        const registerProdData = httpsCallable(functions, 'registerProdData')
-        // const deleteTestData = httpsCallable(functions, 'deleteTestData')
         const student = {
           id: this.manualForm.id.toString(),
           name: this.manualForm.name,
@@ -448,6 +445,7 @@ export default {
         )
         // テスト用データの場合
         if (this.isTestUser) {
+          const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
           student.status = 'test'
           createUser(student).then((result) => {
             if (result.statusCode === 400) {
@@ -459,6 +457,7 @@ export default {
         }
         // 本番用データの場合
         else {
+          const registerProdData = httpsCallable(functions, 'registerProdData')
           student.status = 'prod'
           registerProdData(student).then((result) => {
             if (result.statusCode === 400) {
