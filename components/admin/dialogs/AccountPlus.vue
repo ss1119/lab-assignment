@@ -102,6 +102,7 @@
         <v-card-subtitle>{{ authSubTitle3 }}</v-card-subtitle>
         <v-card-subtitle v-if="!isTestUser">{{ manualDescription1 }}</v-card-subtitle>
         <v-card-subtitle v-if="!isTestUser">{{ manualDescription2 }}</v-card-subtitle>
+        <v-card-subtitle v-if="!isTestUser">{{ manualDescription3 }}</v-card-subtitle>
 
         <v-container class="form__scroll">
           <v-subheader> 年度 </v-subheader>
@@ -215,6 +216,7 @@ export default {
       excelDescription3: 'テスト用データにあって、本番用データにないユーザは、論理削除されます。',
       manualDescription1: '本番用データにあって、テスト用データにあるユーザは、パスワードが更新されます。',
       manualDescription2: '本番用データにあって、テスト用データにないユーザは、新規作成されます。',
+      manualDescription3: '論理削除されているユーザを入力すると、元に戻します。',
       test: {
         title: '学生の新規追加(テスト用データ)',
         icon: 'mdi-account-plus-outline',

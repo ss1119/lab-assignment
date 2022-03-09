@@ -292,7 +292,7 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
     .where('status', '==', 'test')
     .get()
     .then((snapshot) => {
-      snapshot.docs.forEach((doc) => {
+      snapshot.docs.forEach(async (doc) => {
         // 3項目中2つ以上一致で同一人物とみなす
         let sameItem = 0
         if (doc.data().id === data.id) sameItem++
@@ -300,9 +300,22 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
         if (doc.data().name === data.name) sameItem++
         // 本番用データにあって、テスト用データにある場合
         if (sameItem >= 2) {
-          const pass = generatePassword()
-          const encrypt = encryptPassword(pass)
-          doc.ref.update({ status: data.status, password: encrypt })
+          // 論理削除されていた場合は元に戻す
+          if (doc.data().isActive === false) {
+            doc.ref.update({ status: data.status, isActive: true })
+            try {
+              await getAuth.updateUser(doc.id, { disabled: false })
+            } catch (err) {
+              // eslint-disable-next-line
+              console.error(err)
+            }
+          }
+          // 論理削除されていない場合はパスワード更新
+          else {
+            const pass = generatePassword()
+            const encrypt = encryptPassword(pass)
+            doc.ref.update({ status: data.status, password: encrypt })
+          }
           res.statusCode = 200
           return res
         }
