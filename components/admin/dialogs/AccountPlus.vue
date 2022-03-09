@@ -43,11 +43,6 @@
             </v-list-item-group>
           </v-list>
         </v-container>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text @click.stop="selectDialogClose"> 閉じる </v-btn>
-        </v-card-actions>
       </v-card>
     </v-dialog>
 
@@ -311,9 +306,6 @@ export default {
       this.globalEscape()
       this.isSelectDialogOpen = false
       this.isManualDialogOpen = true
-    },
-    selectDialogClose() {
-      this.isSelectDialogOpen = false
     },
     excelDialogClose() {
       this.isExcelDialogOpen = false
