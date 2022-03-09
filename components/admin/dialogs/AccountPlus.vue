@@ -13,16 +13,16 @@
         </v-list-item>
         <v-list-item @click="selectProduction">
           <v-list-item-icon>
-            <v-icon v-text="performance.icon" />
+            <v-icon v-text="production.icon" />
           </v-list-item-icon>
-          <v-list-item-content v-text="performance.text" />
+          <v-list-item-content v-text="production.text" />
         </v-list-item>
       </v-list-item-group>
     </v-list>
 
     <v-dialog v-model="isSelectDialogOpen" max-width="600px">
       <v-card>
-        <v-card-title>{{ isTestUser ? test.title : performance.title }}</v-card-title>
+        <v-card-title>{{ isTestUser ? test.title : production.title }}</v-card-title>
         <v-card-subtitle>{{ authSubTitle1 }}</v-card-subtitle>
 
         <v-container class="form__scroll">
@@ -48,7 +48,7 @@
 
     <v-dialog v-model="isExcelDialogOpen" max-width="600px">
       <v-card>
-        <v-card-title>{{ isTestUser ? test.title : performance.title }}</v-card-title>
+        <v-card-title>{{ isTestUser ? test.title : production.title }}</v-card-title>
         <v-card-subtitle>{{ authSubTitle2 }}</v-card-subtitle>
         <v-card-subtitle>{{ authSubTitle3 }}</v-card-subtitle>
         <v-card-subtitle v-if="!isTestUser">{{ excelDescription1 }}</v-card-subtitle>
@@ -97,7 +97,7 @@
 
     <v-dialog v-model="isManualDialogOpen" max-width="600px">
       <v-card>
-        <v-card-title>{{ isTestUser ? test.title : performance.title }}</v-card-title>
+        <v-card-title>{{ isTestUser ? test.title : production.title }}</v-card-title>
         <v-card-subtitle>{{ authSubTitle2 }}</v-card-subtitle>
         <v-card-subtitle>{{ authSubTitle3 }}</v-card-subtitle>
         <v-card-subtitle v-if="!isTestUser">{{ manualDescription1 }}</v-card-subtitle>
@@ -220,7 +220,7 @@ export default {
         icon: 'mdi-account-plus-outline',
         text: 'テスト用データ',
       },
-      performance: {
+      production: {
         title: '学生の新規追加(本番用データ)',
         icon: 'mdi-account-plus',
         text: '本番用データ',
