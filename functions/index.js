@@ -293,8 +293,13 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
     .get()
     .then((snapshot) => {
       snapshot.docs.forEach((doc) => {
+        // 3項目中2つ以上一致で同一人物とみなす
+        let sameItem = 0
+        if (doc.data().id === data.id) sameItem++
+        if (doc.data().email === data.email) sameItem++
+        if (doc.data().name === data.name) sameItem++
         // 本番用データにあって、テスト用データにある場合
-        if (doc.data().id === data.id && doc.data().email === data.email) {
+        if (sameItem >= 2) {
           const pass = generatePassword()
           const encrypt = encryptPassword(pass)
           doc.ref.update({ status: data.status, password: encrypt })
@@ -354,7 +359,12 @@ exports.deleteTestData = functions.https.onCall(async (students, context) => {
       snapshot.docs.forEach(async (doc) => {
         let isExistProdData = false
         students.forEach((student) => {
-          if (doc.data().id === student.id && doc.data().email === student.email) {
+          // 3項目中2つ以上一致で同一人物とみなす
+          let sameItem = 0
+          if (doc.data().id === student.id) sameItem++
+          if (doc.data().email === student.email) sameItem++
+          if (doc.data().name === student.name) sameItem++
+          if (sameItem >= 2) {
             isExistProdData = true
           }
         })
