@@ -290,6 +290,7 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
   await db
     .collection('users')
     .where('status', '==', 'test')
+    .where('year', '==', data.year)
     .get()
     .then((snapshot) => {
       snapshot.docs.forEach(async (doc) => {
@@ -300,22 +301,9 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
         if (doc.data().name === data.name) sameItem++
         // 本番用データにあって、テスト用データにある場合
         if (sameItem >= 2) {
-          // 論理削除されていた場合は元に戻す
-          if (doc.data().isActive === false) {
-            doc.ref.update({ status: data.status, isActive: true })
-            try {
-              await getAuth.updateUser(doc.id, { disabled: false })
-            } catch (err) {
-              // eslint-disable-next-line
-              console.error(err)
-            }
-          }
-          // 論理削除されていない場合はパスワード更新
-          else {
-            const pass = generatePassword()
-            const encrypt = encryptPassword(pass)
-            doc.ref.update({ status: data.status, password: encrypt })
-          }
+          const pass = generatePassword()
+          const encrypt = encryptPassword(pass)
+          doc.ref.update({ status: data.status, password: encrypt })
           res.statusCode = 200
           return res
         }
@@ -362,6 +350,7 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
 // 論理削除されているユーザかどうかを判別
 exports.isDeletedUser = functions.https.onCall(async (data, context) => {
   const db = admin.firestore()
+  let isDeletedUser = false
 
   await db
     .collection('users')
@@ -378,14 +367,14 @@ exports.isDeletedUser = functions.https.onCall(async (data, context) => {
         if (sameItem >= 2) {
           // 論理削除されていた場合
           if (doc.data().isActive === false) {
-            return true
+            isDeletedUser = true
           } else {
-            return false
+            isDeletedUser = false
           }
         }
       })
     })
-  return false
+  return isDeletedUser
 })
 
 // 論理削除されているユーザを元に戻す
