@@ -368,7 +368,7 @@ exports.isDeletedUser = functions.https.onCall(async (data, context) => {
     .where('status', '==', 'test')
     .get()
     .then((snapshot) => {
-      snapshot.docs.forEach(async (doc) => {
+      snapshot.docs.forEach((doc) => {
         // 3項目中2つ以上一致で同一人物とみなす
         let sameItem = 0
         if (doc.data().id === data.id) sameItem++
@@ -412,7 +412,6 @@ exports.restoreUser = functions.https.onCall(async (data, context) => {
             // eslint-disable-next-line
             console.error(err)
           }
-          return
         }
       })
     })
