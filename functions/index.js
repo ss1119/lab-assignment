@@ -198,7 +198,7 @@ exports.sendLoginDataBatch = functions.https.onCall(async (data, context) => {
 exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => {
   const db = admin.firestore()
   const getAuth = admin.auth()
-  const res = {
+  let res = {
     email: data.email,
     name: data.name,
   }
@@ -228,7 +228,7 @@ exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => 
     disabled: false,
   }
 
-  getAuth
+  return await getAuth
     .createUser(authUser)
     .then((userRecord) => {
       const usersRef = db.collection('users').doc(userRecord.uid)
@@ -285,7 +285,8 @@ exports.deleteUsersInAuthAndDB = functions.https.onCall(async (data, context) =>
 exports.registerProdData = functions.https.onCall(async (data, context) => {
   const db = admin.firestore()
   const getAuth = admin.auth()
-  const res = { email: data.email, name: data.name }
+  let res = { email: data.email, name: data.name }
+  let isExistTestUser = false
 
   await db
     .collection('users')
@@ -305,46 +306,47 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
           const encrypt = encryptPassword(pass)
           doc.ref.update({ status: data.status, password: encrypt })
           res.statusCode = 200
-          return res
+          isExistTestUser = true
         }
       })
     })
   // 本番用データにあって、テスト用データにない場合
-  const pass = generatePassword()
-  const authUser = {
-    email: data.email,
-    password: pass,
-    displayName: data.name,
-    emailVerified: true,
-    disabled: false,
-  }
-  getAuth
-    .createUser(authUser)
-    .then((userRecord) => {
-      const usersRef = db.collection('users').doc(userRecord.uid)
-      const encrypt = encryptPassword(pass)
-      usersRef.set({
-        id: data.id,
-        name: data.name,
-        rank: data.rank,
-        group: data.group,
-        email: data.email,
-        password: encrypt,
-        status: data.status,
-        isActive: data.isActive,
-        isPointAssigned: data.isPointAssigned,
-        isGraduate: data.isGraduate,
-        point: data.point,
-        year: data.year,
+  if (!isExistTestUser) {
+    const pass = generatePassword()
+    const authUser = {
+      email: data.email,
+      password: pass,
+      displayName: data.name,
+      emailVerified: true,
+      disabled: false,
+    }
+    await getAuth
+      .createUser(authUser)
+      .then((userRecord) => {
+        const usersRef = db.collection('users').doc(userRecord.uid)
+        const encrypt = encryptPassword(pass)
+        usersRef.set({
+          id: data.id,
+          name: data.name,
+          rank: data.rank,
+          group: data.group,
+          email: data.email,
+          password: encrypt,
+          status: data.status,
+          isActive: data.isActive,
+          isPointAssigned: data.isPointAssigned,
+          isGraduate: data.isGraduate,
+          point: data.point,
+          year: data.year,
+        })
+        res.statusCode = 200
       })
-      res.statusCode = 200
-      return res
-    })
-    .catch((error) => {
-      res.message = error.message
-      res.statusCode = 400
-      return res
-    })
+      .catch((error) => {
+        res.message = error.message
+        res.statusCode = 400
+      })
+  }
+  return res
 })
 
 // 論理削除されているユーザかどうかを判別

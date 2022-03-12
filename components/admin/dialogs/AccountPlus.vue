@@ -387,10 +387,10 @@ export default {
               const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
               student.status = 'test'
               createUser(student).then((result) => {
-                if (result.statusCode === 400) {
-                  alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
+                if (result.data.statusCode === 400) {
                   // eslint-disable-next-line no-console
-                  console.log('email: ' + result.email + ' name:' + result.name)
+                  console.log('email:' + result.data.email + '\nname:' + result.data.name + '\nmessage:' + result.data.message)
+                  alert('以下の学生の登録に失敗しました。\nemail: ' + result.data.email + '\nname:' + result.data.name)
                 }
               })
               await this.$sleep(1000)
@@ -400,10 +400,10 @@ export default {
               const registerProdData = httpsCallable(functions, 'registerProdData')
               student.status = 'prod'
               registerProdData(student).then((result) => {
-                if (result.statusCode === 400) {
-                  alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
+                if (result.data.statusCode === 400) {
                   // eslint-disable-next-line no-console
-                  console.log('email: ' + result.email + ' name:' + result.name)
+                  console.log('email:' + result.data.email + '\nname:' + result.data.name + '\nmessage:' + result.data.message)
+                  alert('以下の学生の登録に失敗しました。\nemail: ' + result.data.email + '\nname:' + result.data.name)
                 }
               })
               await this.$sleep(1000)
@@ -452,10 +452,10 @@ export default {
           const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
           student.status = 'test'
           createUser(student).then((result) => {
-            if (result.statusCode === 400) {
-              alert('入力した学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
+            if (result.data.statusCode === 400) {
               // eslint-disable-next-line no-console
-              console.log('email: ' + result.email + ' name:' + result.name)
+              console.log('email:' + result.data.email + '\nname:' + result.data.name + '\nmessage:' + result.data.message)
+              alert('入力した学生の登録に失敗しました。\nemail: ' + result.data.email + '\nname:' + result.data.name)
             }
           })
         }
@@ -470,10 +470,10 @@ export default {
               restoreUser(student)
             } else {
               registerProdData(student).then((result) => {
-                if (result.statusCode === 400) {
-                  alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
+                if (result.data.statusCode === 400) {
                   // eslint-disable-next-line no-console
-                  console.log('email: ' + result.email + ' name:' + result.name)
+                  console.log('email:' + result.data.email + '\nname:' + result.data.name + '\nmessage:' + result.data.message)
+                  alert('以下の学生の登録に失敗しました。\nemail: ' + result.data.email + '\nname:' + result.data.name)
                 }
               })
             }
