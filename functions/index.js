@@ -198,7 +198,7 @@ exports.sendLoginDataBatch = functions.https.onCall(async (data, context) => {
 exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => {
   const db = admin.firestore()
   const getAuth = admin.auth()
-  let res = {
+  const res = {
     email: data.email,
     name: data.name,
   }
@@ -285,7 +285,7 @@ exports.deleteUsersInAuthAndDB = functions.https.onCall(async (data, context) =>
 exports.registerProdData = functions.https.onCall(async (data, context) => {
   const db = admin.firestore()
   const getAuth = admin.auth()
-  let res = { email: data.email, name: data.name }
+  const res = { email: data.email, name: data.name }
   let isExistTestUser = false
 
   await db
