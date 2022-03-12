@@ -25,7 +25,7 @@
         <v-card-title>{{ isTestUser ? test.title : production.title }}</v-card-title>
         <v-card-subtitle>{{ authSubTitle1 }}</v-card-subtitle>
 
-        <v-container class="form__scroll">
+        <v-container class="form__scroll pa-0">
           <v-list>
             <v-list-item-group>
               <v-list-item @click="excelDialogOpen">
