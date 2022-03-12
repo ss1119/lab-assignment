@@ -462,12 +462,20 @@ export default {
         // 本番用データの場合
         else {
           const registerProdData = httpsCallable(functions, 'registerProdData')
+          const isDeletedUser = httpsCallable(functions, 'isDeletedUser')
+          const restoreUser = httpsCallable(functions, 'restoreUser')
           student.status = 'prod'
-          registerProdData(student).then((result) => {
-            if (result.statusCode === 400) {
-              alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
-              // eslint-disable-next-line no-console
-              console.log('email: ' + result.email + ' name:' + result.name)
+          isDeletedUser(student).then((result) => {
+            if (result.data) {
+              restoreUser(student)
+            } else {
+              registerProdData(student).then((result) => {
+                if (result.statusCode === 400) {
+                  alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
+                  // eslint-disable-next-line no-console
+                  console.log('email: ' + result.email + ' name:' + result.name)
+                }
+              })
             }
           })
         }

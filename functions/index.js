@@ -359,6 +359,65 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
     })
 })
 
+// 論理削除されているユーザかどうかを判別
+exports.isDeletedUser = functions.https.onCall(async (data, context) => {
+  const db = admin.firestore()
+
+  await db
+    .collection('users')
+    .where('status', '==', 'test')
+    .get()
+    .then((snapshot) => {
+      snapshot.docs.forEach(async (doc) => {
+        // 3項目中2つ以上一致で同一人物とみなす
+        let sameItem = 0
+        if (doc.data().id === data.id) sameItem++
+        if (doc.data().email === data.email) sameItem++
+        if (doc.data().name === data.name) sameItem++
+        // テスト用データがある場合
+        if (sameItem >= 2) {
+          // 論理削除されていた場合
+          if (doc.data().isActive === false) {
+            return true
+          } else {
+            return false
+          }
+        }
+      })
+    })
+  return false
+})
+
+// 論理削除されているユーザを元に戻す
+exports.restoreUser = functions.https.onCall(async (data, context) => {
+  const db = admin.firestore()
+  const getAuth = admin.auth()
+
+  await db
+    .collection('users')
+    .where('status', '==', 'test')
+    .get()
+    .then((snapshot) => {
+      snapshot.docs.forEach(async (doc) => {
+        // 3項目中2つ以上一致で同一人物とみなす
+        let sameItem = 0
+        if (doc.data().id === data.id) sameItem++
+        if (doc.data().email === data.email) sameItem++
+        if (doc.data().name === data.name) sameItem++
+        if (sameItem >= 2) {
+          doc.ref.update({ status: data.status, isActive: true })
+          try {
+            await getAuth.updateUser(doc.id, { disabled: false })
+          } catch (err) {
+            // eslint-disable-next-line
+            console.error(err)
+          }
+          return
+        }
+      })
+    })
+})
+
 // テスト用データにあって本番用データにないユーザを論理削除
 exports.deleteTestData = functions.https.onCall(async (students, context) => {
   const db = admin.firestore()
