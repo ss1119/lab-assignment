@@ -213,10 +213,10 @@ export default {
       authSubTitle3: 'ユーザを登録ができない場合は、再度ユーザを新規追加をするか、一度ユーザを削除してください。',
       excelDescription1: '本番用データにあって、テスト用データにあるユーザは、パスワードが更新されます。',
       excelDescription2: '本番用データにあって、テスト用データにないユーザは、新規作成されます。',
-      excelDescription3: 'テスト用データにあって、本番用データにないユーザは、論理削除されます。',
+      excelDescription3: 'テスト用データにあって、本番用データにないユーザは、ログインできなくなります。',
       manualDescription1: '本番用データにあって、テスト用データにあるユーザは、パスワードが更新されます。',
       manualDescription2: '本番用データにあって、テスト用データにないユーザは、新規作成されます。',
-      manualDescription3: '論理削除されているユーザを入力すると、元に戻します。',
+      manualDescription3: 'ログインできないユーザを入力すると、再度ログインができるようになります。',
       test: {
         title: '学生の新規追加(テスト用データ)',
         icon: 'mdi-account-plus-outline',
