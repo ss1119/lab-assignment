@@ -58,7 +58,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="closeConfirm"> 閉じる </v-btn>
-          <v-btn color="error" text :loading="loading" :disabled="disabled" @click="sendEmails"> 送信 </v-btn>
+          <v-btn color="error" text :loading="loading" :disabled="sendDisabled" @click="sendEmails"> 送信 </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -115,7 +115,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="closeConfirm"> 閉じる </v-btn>
-          <v-btn color="error" text :loading="loading" :disabled="disabled" @click="sendManualEmails"> 送信 </v-btn>
+          <v-btn color="error" text :loading="loading" :disabled="sendDisabled" @click="sendManualEmails"> 送信 </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -183,7 +183,7 @@ export default {
         return false
       }
     },
-    disabled() {
+    sendDisabled() {
       if (this.value !== this.confirmLabel) {
         return true
       } else {
@@ -227,7 +227,6 @@ export default {
     closeConfirm() {
       this.value = ''
       this.year = ''
-      this.manualSend.studentId = ''
       this.confirmDialog = false
       this.manualConfirmDialog = false
       this.resetForm()

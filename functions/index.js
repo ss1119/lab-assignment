@@ -203,7 +203,6 @@ exports.sendPersonLoginDataBatch = functions.https.onCall(async (data, context) 
   for (let i = 0; i < data.ids.length; i++) {
     const activeUserById = await db.collection('users').where('id', '==', data.ids[i]).where('isActive', '==', true).get()
     activeUserById.forEach((user) => {
-      // eslint-disable-next-line
       const pass = decryptPassword(user.data().password)
 
       let entry = ''
