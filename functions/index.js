@@ -203,21 +203,25 @@ exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => 
     name: data.name,
   }
 
-  // 暫定対応
-  // ユーザを追加できない場合があるので、Authのユーザがあれば一旦削除する
-  // Authenticationsは特に問題ないが、Cloud FireStoreに登録するデータが落ちるため、Authenticationのみを削除
-  try {
-    const usersById = await db.collection('users').where('id', '==', data.id).get()
-    if (usersById.docs[0] == null) {
-      const userRecord = await getAuth.getUserByEmail(data.email)
-      if (!userRecord.uid) {
-        await getAuth.deleteUser(userRecord.uid)
+  // Authのユーザがあれば削除
+  await db
+    .collection('users')
+    .where('id', '==', data.id)
+    .get()
+    .then(async (snapshot) => {
+      if (snapshot !== null) {
+        await getAuth
+          .getUserByEmail(data.email)
+          .then(async (userRecord) => {
+            await getAuth.deleteUser(userRecord.uid)
+            db.collection('users').doc('userRecord.uid').delete()
+          })
+          .catch((error) => {
+            res.message = error.message
+            res.statusCode = 400
+          })
       }
-    }
-  } catch (err) {
-    // eslint-disable-next-line
-    console.error(err)
-  }
+    })
 
   const pass = generatePassword()
   const authUser = {
@@ -228,7 +232,7 @@ exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => 
     disabled: false,
   }
 
-  return await getAuth
+  await getAuth
     .createUser(authUser)
     .then((userRecord) => {
       const usersRef = db.collection('users').doc(userRecord.uid)
@@ -248,13 +252,12 @@ exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => 
         year: data.year,
       })
       res.statusCode = 200
-      return res
     })
     .catch((error) => {
       res.message = error.message
       res.statusCode = 400
-      return res
     })
+  return res
 })
 
 // ユーザをDBと認証情報から削除
@@ -312,6 +315,25 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
     })
   // 本番用データにあって、テスト用データにない場合
   if (!isExistTestUser) {
+    // Authのユーザがあれば削除
+    await db
+      .collection('users')
+      .where('id', '==', data.id)
+      .get()
+      .then(async (snapshot) => {
+        if (snapshot !== null) {
+          await getAuth
+            .getUserByEmail(data.email)
+            .then(async (userRecord) => {
+              await getAuth.deleteUser(userRecord.uid)
+              db.collection('users').doc('userRecord.uid').delete()
+            })
+            .catch((error) => {
+              res.message = error.message
+              res.statusCode = 400
+            })
+        }
+      })
     const pass = generatePassword()
     const authUser = {
       email: data.email,
@@ -357,6 +379,7 @@ exports.isDeletedUser = functions.https.onCall(async (data, context) => {
   await db
     .collection('users')
     .where('status', '==', 'test')
+    .where('year', '==', data.year)
     .get()
     .then((snapshot) => {
       snapshot.docs.forEach((doc) => {
@@ -387,6 +410,7 @@ exports.restoreUser = functions.https.onCall(async (data, context) => {
   await db
     .collection('users')
     .where('status', '==', 'test')
+    .where('year', '==', data.year)
     .get()
     .then((snapshot) => {
       snapshot.docs.forEach(async (doc) => {
@@ -416,6 +440,7 @@ exports.deleteTestData = functions.https.onCall(async (students, context) => {
   await db
     .collection('users')
     .where('status', '==', 'test')
+    .where('year', '==', students[0].year)
     .get()
     .then((snapshot) => {
       snapshot.docs.forEach(async (doc) => {
