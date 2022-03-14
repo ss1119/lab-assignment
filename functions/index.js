@@ -214,7 +214,7 @@ exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => 
           .getUserByEmail(data.email)
           .then(async (userRecord) => {
             await getAuth.deleteUser(userRecord.uid)
-            db.collection('users').doc(userRecord.uid).delete()
+            await db.collection('users').doc(userRecord.uid).delete()
           })
           .catch((error) => {
             res.message = error.message
@@ -326,7 +326,7 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
             .getUserByEmail(data.email)
             .then(async (userRecord) => {
               await getAuth.deleteUser(userRecord.uid)
-              db.collection('users').doc(userRecord.uid).delete()
+              await db.collection('users').doc(userRecord.uid).delete()
             })
             .catch((error) => {
               res.message = error.message
