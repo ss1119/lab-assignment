@@ -31,8 +31,8 @@ const generatePassword = () => {
   return crypto.randomBytes(n).toString('base64').substring(0, n)
 }
 
-const sleep = async (millisec) => {
-  await new Promise((resolve) => setTimeout(resolve, millisec))
+const sleep = (millisec) => {
+  return new Promise((resolve) => setTimeout(resolve, millisec))
 }
 
 // ユーザから問い合わせ時に管理者に送るメッセージ
@@ -244,21 +244,25 @@ exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => 
     name: data.name,
   }
 
-  // 暫定対応
-  // ユーザを追加できない場合があるので、Authのユーザがあれば一旦削除する
-  // Authenticationsは特に問題ないが、Cloud FireStoreに登録するデータが落ちるため、Authenticationのみを削除
-  try {
-    const usersById = await db.collection('users').where('id', '==', data.id).get()
-    if (usersById.docs[0] == null) {
-      const userRecord = await getAuth.getUserByEmail(data.email)
-      if (!userRecord.uid) {
-        await getAuth.deleteUser(userRecord.uid)
+  // Authのユーザがあれば削除
+  await db
+    .collection('users')
+    .where('id', '==', data.id)
+    .get()
+    .then(async (snapshot) => {
+      if (snapshot !== null) {
+        await getAuth
+          .getUserByEmail(data.email)
+          .then(async (userRecord) => {
+            await getAuth.deleteUser(userRecord.uid)
+            await db.collection('users').doc(userRecord.uid).delete()
+          })
+          .catch((error) => {
+            res.message = error.message
+            res.statusCode = 400
+          })
       }
-    }
-  } catch (err) {
-    // eslint-disable-next-line
-    console.error(err)
-  }
+    })
 
   const pass = generatePassword()
   const authUser = {
@@ -269,7 +273,7 @@ exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => 
     disabled: false,
   }
 
-  getAuth
+  await getAuth
     .createUser(authUser)
     .then((userRecord) => {
       const usersRef = db.collection('users').doc(userRecord.uid)
@@ -289,13 +293,12 @@ exports.createUserToAuthAndDB = functions.https.onCall(async (data, context) => 
         year: data.year,
       })
       res.statusCode = 200
-      return res
     })
     .catch((error) => {
       res.message = error.message
       res.statusCode = 400
-      return res
     })
+  return res
 })
 
 // ユーザをDBと認証情報から削除
@@ -317,7 +320,191 @@ exports.deleteUsersInAuthAndDB = functions.https.onCall(async (data, context) =>
     }
     // 暫定対応
     // データ数が100件ほどになると、処理が落ちることがあるため、sleepさせる
-    sleep(1000)
+    await sleep(1000)
   })
   return res
+})
+
+// 本番用データの登録
+exports.registerProdData = functions.https.onCall(async (data, context) => {
+  const db = admin.firestore()
+  const getAuth = admin.auth()
+  const res = { email: data.email, name: data.name }
+  let isExistTestUser = false
+
+  await db
+    .collection('users')
+    .where('status', '==', 'test')
+    .where('year', '==', data.year)
+    .get()
+    .then((snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        // 3項目中2つ以上一致で同一人物とみなす
+        let sameItem = 0
+        if (doc.data().id === data.id) sameItem++
+        if (doc.data().email === data.email) sameItem++
+        if (doc.data().name === data.name) sameItem++
+        // 本番用データにあって、テスト用データにある場合
+        if (sameItem >= 2) {
+          const pass = generatePassword()
+          const encrypt = encryptPassword(pass)
+          doc.ref.update({ status: data.status, password: encrypt })
+          res.statusCode = 200
+          isExistTestUser = true
+        }
+      })
+    })
+  // 本番用データにあって、テスト用データにない場合
+  if (!isExistTestUser) {
+    // Authのユーザがあれば削除
+    await db
+      .collection('users')
+      .where('id', '==', data.id)
+      .get()
+      .then(async (snapshot) => {
+        if (snapshot !== null) {
+          await getAuth
+            .getUserByEmail(data.email)
+            .then(async (userRecord) => {
+              await getAuth.deleteUser(userRecord.uid)
+              await db.collection('users').doc(userRecord.uid).delete()
+            })
+            .catch((error) => {
+              res.message = error.message
+              res.statusCode = 400
+            })
+        }
+      })
+    const pass = generatePassword()
+    const authUser = {
+      email: data.email,
+      password: pass,
+      displayName: data.name,
+      emailVerified: true,
+      disabled: false,
+    }
+    await getAuth
+      .createUser(authUser)
+      .then((userRecord) => {
+        const usersRef = db.collection('users').doc(userRecord.uid)
+        const encrypt = encryptPassword(pass)
+        usersRef.set({
+          id: data.id,
+          name: data.name,
+          rank: data.rank,
+          group: data.group,
+          email: data.email,
+          password: encrypt,
+          status: data.status,
+          isActive: data.isActive,
+          isPointAssigned: data.isPointAssigned,
+          isGraduate: data.isGraduate,
+          point: data.point,
+          year: data.year,
+        })
+        res.statusCode = 200
+      })
+      .catch((error) => {
+        res.message = error.message
+        res.statusCode = 400
+      })
+  }
+  return res
+})
+
+// 論理削除されているユーザかどうかを判別
+exports.isDeletedUser = functions.https.onCall(async (data, context) => {
+  const db = admin.firestore()
+  let isDeletedUser = false
+
+  await db
+    .collection('users')
+    .where('status', '==', 'test')
+    .where('year', '==', data.year)
+    .get()
+    .then((snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        // 3項目中2つ以上一致で同一人物とみなす
+        let sameItem = 0
+        if (doc.data().id === data.id) sameItem++
+        if (doc.data().email === data.email) sameItem++
+        if (doc.data().name === data.name) sameItem++
+        // テスト用データがある場合
+        if (sameItem >= 2) {
+          // 論理削除されていた場合
+          if (doc.data().isActive === false) {
+            isDeletedUser = true
+          } else {
+            isDeletedUser = false
+          }
+        }
+      })
+    })
+  return isDeletedUser
+})
+
+// 論理削除されているユーザを元に戻す
+exports.restoreUser = functions.https.onCall(async (data, context) => {
+  const db = admin.firestore()
+  const getAuth = admin.auth()
+
+  await db
+    .collection('users')
+    .where('status', '==', 'test')
+    .where('year', '==', data.year)
+    .get()
+    .then((snapshot) => {
+      snapshot.docs.forEach(async (doc) => {
+        // 3項目中2つ以上一致で同一人物とみなす
+        let sameItem = 0
+        if (doc.data().id === data.id) sameItem++
+        if (doc.data().email === data.email) sameItem++
+        if (doc.data().name === data.name) sameItem++
+        if (sameItem >= 2) {
+          doc.ref.update({ status: data.status, isActive: true })
+          try {
+            await getAuth.updateUser(doc.id, { disabled: false })
+          } catch (err) {
+            // eslint-disable-next-line
+            console.error(err)
+          }
+        }
+      })
+    })
+})
+
+// テスト用データにあって本番用データにないユーザを論理削除
+exports.deleteTestData = functions.https.onCall(async (students, context) => {
+  const db = admin.firestore()
+  const getAuth = admin.auth()
+
+  await db
+    .collection('users')
+    .where('status', '==', 'test')
+    .where('year', '==', students[0].year)
+    .get()
+    .then((snapshot) => {
+      snapshot.docs.forEach(async (doc) => {
+        let isExistProdData = false
+        students.forEach((student) => {
+          // 3項目中2つ以上一致で同一人物とみなす
+          let sameItem = 0
+          if (doc.data().id === student.id) sameItem++
+          if (doc.data().email === student.email) sameItem++
+          if (doc.data().name === student.name) sameItem++
+          if (sameItem >= 2) {
+            isExistProdData = true
+          }
+        })
+        if (!isExistProdData) {
+          doc.ref.update({ isActive: false })
+          try {
+            await getAuth.updateUser(doc.id, { disabled: true })
+          } catch (err) {
+            // eslint-disable-next-line
+            console.error(err)
+          }
+        }
+      })
+    })
 })

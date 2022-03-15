@@ -5,26 +5,55 @@
 
     <v-list>
       <v-list-item-group>
-        <v-list-item @click="excelDialogOpen">
+        <v-list-item @click="selectTest">
           <v-list-item-icon>
-            <v-icon v-text="excel.icon" />
+            <v-icon v-text="test.icon" />
           </v-list-item-icon>
-          <v-list-item-content v-text="excel.text" />
+          <v-list-item-content v-text="test.text" />
         </v-list-item>
-        <v-list-item @click="manualDialogOpen">
+        <v-list-item @click="selectProduction">
           <v-list-item-icon>
-            <v-icon v-text="manual.icon" />
+            <v-icon v-text="production.icon" />
           </v-list-item-icon>
-          <v-list-item-content v-text="manual.text" />
+          <v-list-item-content v-text="production.text" />
         </v-list-item>
       </v-list-item-group>
     </v-list>
 
+    <v-dialog v-model="isSelectDialogOpen" max-width="600px">
+      <v-card>
+        <v-card-title>{{ isTestUser ? test.title : production.title }}</v-card-title>
+        <v-card-subtitle>{{ authSubTitle1 }}</v-card-subtitle>
+
+        <v-container class="form__scroll pa-0">
+          <v-list>
+            <v-list-item-group>
+              <v-list-item @click="excelDialogOpen">
+                <v-list-item-icon>
+                  <v-icon v-text="excel.icon" />
+                </v-list-item-icon>
+                <v-list-item-content v-text="excel.text" />
+              </v-list-item>
+              <v-list-item @click="manualDialogOpen">
+                <v-list-item-icon>
+                  <v-icon v-text="manual.icon" />
+                </v-list-item-icon>
+                <v-list-item-content v-text="manual.text" />
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-container>
+      </v-card>
+    </v-dialog>
+
     <v-dialog v-model="isExcelDialogOpen" max-width="600px">
       <v-card>
-        <v-card-title>{{ cardTitle }}</v-card-title>
-        <v-card-subtitle>{{ authSubTitle1 }}</v-card-subtitle>
+        <v-card-title>{{ isTestUser ? test.title : production.title }}</v-card-title>
         <v-card-subtitle>{{ authSubTitle2 }}</v-card-subtitle>
+        <v-card-subtitle>{{ authSubTitle3 }}</v-card-subtitle>
+        <v-card-subtitle v-if="!isTestUser">{{ excelDescription1 }}</v-card-subtitle>
+        <v-card-subtitle v-if="!isTestUser">{{ excelDescription2 }}</v-card-subtitle>
+        <v-card-subtitle v-if="!isTestUser">{{ excelDescription3 }}</v-card-subtitle>
 
         <v-container class="form__scroll">
           <v-subheader> 年度 </v-subheader>
@@ -68,9 +97,12 @@
 
     <v-dialog v-model="isManualDialogOpen" max-width="600px">
       <v-card>
-        <v-card-title>{{ cardTitle }}</v-card-title>
-        <v-card-subtitle>{{ authSubTitle1 }}</v-card-subtitle>
+        <v-card-title>{{ isTestUser ? test.title : production.title }}</v-card-title>
         <v-card-subtitle>{{ authSubTitle2 }}</v-card-subtitle>
+        <v-card-subtitle>{{ authSubTitle3 }}</v-card-subtitle>
+        <v-card-subtitle v-if="!isTestUser">{{ manualDescription1 }}</v-card-subtitle>
+        <v-card-subtitle v-if="!isTestUser">{{ manualDescription2 }}</v-card-subtitle>
+        <v-card-subtitle v-if="!isTestUser">{{ manualDescription3 }}</v-card-subtitle>
 
         <v-container class="form__scroll">
           <v-subheader> 年度 </v-subheader>
@@ -168,14 +200,33 @@ export default {
   data() {
     return {
       isOpen: false,
+      isTestUser: false,
+      isSelectDialogOpen: false,
       isExcelDialogOpen: false,
       isManualDialogOpen: false,
       validate: false,
       loading: false,
       cardTitle: '学生の新規追加',
-      cardSubTitle: 'Excelファイルからインポートするか手動で入力するかを選択してください。',
-      authSubTitle1: 'ユーザの追加が完了するまでにしばらく時間がかかる可能性があります。連続して実行しないでください。',
-      authSubTitle2: 'ユーザを登録ができない場合は、再度ユーザを新規追加をするか、一度ユーザを削除してください。',
+      cardSubTitle: 'テスト用データか本番用データかを選択してください。',
+      authSubTitle1: 'Excelファイルからインポートするか手動で入力するかを選択してください。',
+      authSubTitle2: 'ユーザの追加が完了するまでにしばらく時間がかかる可能性があります。連続して実行しないでください。',
+      authSubTitle3: 'ユーザを登録ができない場合は、再度ユーザを新規追加をするか、一度ユーザを削除してください。',
+      excelDescription1: '本番用データにあって、テスト用データにあるユーザは、パスワードが更新されます。',
+      excelDescription2: '本番用データにあって、テスト用データにないユーザは、新規作成されます。',
+      excelDescription3: 'テスト用データにあって、本番用データにないユーザは、ログインできなくなります。',
+      manualDescription1: '本番用データにあって、テスト用データにあるユーザは、パスワードが更新されます。',
+      manualDescription2: '本番用データにあって、テスト用データにないユーザは、新規作成されます。',
+      manualDescription3: 'ログインできないユーザを入力すると、再度ログインができるようになります。',
+      test: {
+        title: '学生の新規追加(テスト用データ)',
+        icon: 'mdi-account-plus-outline',
+        text: 'テスト用データ',
+      },
+      production: {
+        title: '学生の新規追加(本番用データ)',
+        icon: 'mdi-account-plus',
+        text: '本番用データ',
+      },
       excel: {
         icon: 'mdi-file-excel',
         text: 'Excelファイルからインポート',
@@ -183,7 +234,7 @@ export default {
         file: {},
       },
       manual: {
-        icon: 'mdi-account-plus',
+        icon: 'mdi-gesture-double-tap',
         text: '手動で入力',
         year: '',
         id: '',
@@ -254,12 +305,18 @@ export default {
       this.isOpen = false
       this.$emit('close', this.isOpen)
     },
+    selectDialogOpen() {
+      this.globalEscape()
+      this.isSelectDialogOpen = true
+    },
     excelDialogOpen() {
       this.globalEscape()
+      this.isSelectDialogOpen = false
       this.isExcelDialogOpen = true
     },
     manualDialogOpen() {
       this.globalEscape()
+      this.isSelectDialogOpen = false
       this.isManualDialogOpen = true
     },
     excelDialogClose() {
@@ -267,6 +324,14 @@ export default {
     },
     manualDialogClose() {
       this.isManualDialogOpen = false
+    },
+    selectTest() {
+      this.isTestUser = true
+      this.selectDialogOpen()
+    },
+    selectProduction() {
+      this.isTestUser = false
+      this.selectDialogOpen()
     },
     reset(form) {
       Object.keys(form).forEach((f) => {
@@ -287,13 +352,12 @@ export default {
       if (!this.validate) {
         this.loading = true
         const reader = new FileReader()
-        const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
+        const students = []
         reader.onload = async (e) => {
           const workbook = XLSX.read(e.target.result)
           const excelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
           for (let i = 0; i < excelData.length; i = i + 1) {
             const student = {
-              status: 'test',
               isActive: true,
               isPointAssigned: false,
               isGraduate: false,
@@ -318,14 +382,38 @@ export default {
             if (student.password == null) {
               student.password = ''
             }
-            createUser(student).then((result) => {
-              if (result.statusCode === 400) {
-                alert('以下の学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
-                // eslint-disable-next-line no-console
-                console.log('email: ' + result.email + ' name:' + result.name)
-              }
-            })
-            await this.$sleep(1000)
+            // テスト用データの場合
+            if (this.isTestUser) {
+              const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
+              student.status = 'test'
+              createUser(student).then((result) => {
+                if (result.data.statusCode === 400) {
+                  // eslint-disable-next-line no-console
+                  console.log('email:' + result.data.email + '\nname:' + result.data.name + '\nmessage:' + result.data.message)
+                  alert('以下の学生の登録に失敗しました。\nemail: ' + result.data.email + '\nname:' + result.data.name)
+                }
+              })
+              await this.$sleep(1000)
+            }
+            // 本番用データの場合
+            else {
+              const registerProdData = httpsCallable(functions, 'registerProdData')
+              student.status = 'prod'
+              registerProdData(student).then((result) => {
+                if (result.data.statusCode === 400) {
+                  // eslint-disable-next-line no-console
+                  console.log('email:' + result.data.email + '\nname:' + result.data.name + '\nmessage:' + result.data.message)
+                  alert('以下の学生の登録に失敗しました。\nemail: ' + result.data.email + '\nname:' + result.data.name)
+                }
+              })
+              await this.$sleep(1000)
+            }
+            students.push(student)
+          }
+          // テスト用データにあって本番用データにないユーザを削除
+          if (!this.isTestUser) {
+            const deleteTestData = httpsCallable(functions, 'deleteTestData')
+            deleteTestData(students)
           }
           this.loading = false
           this.reset(this.excelForm)
@@ -343,14 +431,12 @@ export default {
         }
       })
       if (!this.validate) {
-        const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
         const student = {
           id: this.manualForm.id.toString(),
           name: this.manualForm.name,
           rank: Number(this.manualForm.rank),
           group: Number(this.manualForm.group),
           email: this.manualForm.email,
-          status: 'test',
           isActive: true,
           isPointAssigned: false,
           isGraduate: false,
@@ -361,13 +447,38 @@ export default {
           student.point,
           this.teachers.map((obj) => obj.id)
         )
-        createUser(student).then((result) => {
-          if (result.statusCode === 400) {
-            alert('入力した学生の登録に失敗しました。\nemail: ' + result.email + '\nname:' + result.name)
-            // eslint-disable-next-line no-console
-            console.log('email: ' + result.email + ' name:' + result.name)
-          }
-        })
+        // テスト用データの場合
+        if (this.isTestUser) {
+          const createUser = httpsCallable(functions, 'createUserToAuthAndDB')
+          student.status = 'test'
+          createUser(student).then((result) => {
+            if (result.data.statusCode === 400) {
+              // eslint-disable-next-line no-console
+              console.log('email:' + result.data.email + '\nname:' + result.data.name + '\nmessage:' + result.data.message)
+              alert('入力した学生の登録に失敗しました。\nemail: ' + result.data.email + '\nname:' + result.data.name)
+            }
+          })
+        }
+        // 本番用データの場合
+        else {
+          const registerProdData = httpsCallable(functions, 'registerProdData')
+          const isDeletedUser = httpsCallable(functions, 'isDeletedUser')
+          const restoreUser = httpsCallable(functions, 'restoreUser')
+          student.status = 'prod'
+          isDeletedUser(student).then((result) => {
+            if (result.data) {
+              restoreUser(student)
+            } else {
+              registerProdData(student).then((result) => {
+                if (result.data.statusCode === 400) {
+                  // eslint-disable-next-line no-console
+                  console.log('email:' + result.data.email + '\nname:' + result.data.name + '\nmessage:' + result.data.message)
+                  alert('以下の学生の登録に失敗しました。\nemail: ' + result.data.email + '\nname:' + result.data.name)
+                }
+              })
+            }
+          })
+        }
         this.reset(this.manualForm)
         this.manualDialogClose()
       }
