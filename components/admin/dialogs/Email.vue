@@ -58,6 +58,7 @@
         <v-card-text>
           <p>
             {{ year }}年度の学生にログイン情報を送信します。<br />
+            学生の入力期間は{{ dateRangeText }}です。<br />
             実行する場合は、下記フォームに「{{ confirmLabel }}」と入力してください。
           </p>
           <p>ログインができるユーザに対して、メールが送信されます。</p>
@@ -99,6 +100,7 @@
         </v-container>
 
         <v-card-actions>
+          <v-spacer></v-spacer>
           <v-btn text @click="addForm"> フォームを追加 </v-btn>
         </v-card-actions>
 
@@ -131,6 +133,7 @@
             {{ manualSend.studentId[index] }}
           </div>
           の学生にログイン情報を送信します。<br />
+          学生の入力期間は{{ dateRangeText }}です。<br />
           実行する場合は、下記フォームに「{{ confirmLabel }}」と入力してください。
           <p>ログインができるユーザに対して、メールが送信されます。</p>
         </v-card-text>
@@ -198,6 +201,9 @@ export default {
     ...mapGetters({
       years: 'users/years',
     }),
+    dateRangeText() {
+      return this.dates.join(' ~ ')
+    },
     entireConfirmDisabled() {
       if (this.year === '') {
         return true
@@ -264,7 +270,12 @@ export default {
     sendEmails() {
       this.loading = true
       const sendEmails = httpsCallable(functions, 'sendLoginDataBatch')
-      sendEmails(this.year).then(() => {
+      const data = {
+        year: this.year,
+        begin: this.dates[0],
+        end: this.dates[1],
+      }
+      sendEmails(data).then(() => {
         this.loading = false
         this.closeConfirm()
       })
@@ -274,6 +285,8 @@ export default {
       const sendEmails = httpsCallable(functions, 'sendPersonLoginDataBatch')
       const students = {
         ids: this.manualSend.studentId,
+        begin: this.dates[0],
+        end: this.dates[1],
       }
       sendEmails(students).then(() => {
         this.loading = false
