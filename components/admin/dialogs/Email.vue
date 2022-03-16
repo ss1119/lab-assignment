@@ -35,7 +35,9 @@
           <v-subheader>学生の入力期間を選択</v-subheader>
           <v-menu ref="menu" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
             <template #activator="{ on, attrs }">
-              <v-text-field v-model="dateRangeText" label="入力期間" prepend-icon="mdi-calender" readonly v-bind="attrs" v-on="on"></v-text-field>
+              <v-form class="form__wrap">
+                <v-text-field v-model="dateRangeText" label="入力期間" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"></v-text-field>
+              </v-form>
             </template>
             <v-date-picker v-model="dates" range no-title @input="menu = false"> </v-date-picker>
           </v-menu>
@@ -106,7 +108,9 @@
           <v-subheader>学生の入力期間を選択</v-subheader>
           <v-menu ref="menu" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
             <template #activator="{ on, attrs }">
-              <v-text-field v-model="dateRangeText" label="入力期間" prepend-icon="mdi-calender" readonly v-bind="attrs" v-on="on"></v-text-field>
+              <v-form class="form__wrap">
+                <v-text-field v-model="dateRangeText" label="入力期間" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"></v-text-field>
+              </v-form>
             </template>
             <v-date-picker v-model="dates" range no-title @input="menu = false"> </v-date-picker>
           </v-menu>
@@ -172,7 +176,7 @@ export default {
       year: '',
       value: '',
       menu: false,
-      dates: ['', ''],
+      dates: [],
       loading: false,
       confirmDialog: false,
       confirmLabel: '確認しました',
@@ -242,6 +246,7 @@ export default {
       this.year = ''
       this.isEntireSendDialogOpen = false
       this.isManualSendDialogOpen = false
+      this.dates = []
       this.resetForm()
     },
     toEntireConfirm() {
