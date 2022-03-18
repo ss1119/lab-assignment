@@ -16,6 +16,8 @@
           </v-col>
 
           <v-col cols="12" class="mt-n4 mx-n3">
+            <p class="ml-4 mb-n4">順位</p>
+            <v-subheader>あなたは {{ user.rank }}位 {{ user.group }}グループ です</v-subheader>
             <p class="ml-4 mb-n4">{{ subheader1 }}</p>
             <v-subheader>合計: {{ totalPoint }} 点</v-subheader>
             <v-divider />

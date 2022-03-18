@@ -6,6 +6,10 @@
       <v-container class="point__container">
         <v-row>
           <v-col cols="12" class="mb-n4 mx-n3">
+            <p class="ml-4">順位</p>
+            <v-subheader class="mt-n3">あなたは {{ user.rank }}位 {{ user.group }}グループ です</v-subheader>
+          </v-col>
+          <v-col cols="12" class="mb-n4 mx-n3">
             <p class="ml-4">{{ subheader1 }}</p>
           </v-col>
           <v-col cols="12" class="mt-n4">
