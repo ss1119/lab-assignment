@@ -5,7 +5,15 @@
 
       <v-container class="point__container">
         <v-row>
-          <v-col cols="12" class="mb-n4 mx-n3">
+          <v-col cols="12" class="mt-4 mb-n4 mx-n3">
+            <p class="ml-4">順位</p>
+          </v-col>
+          <v-col cols="12" class="mt-n4">
+            <v-subheader>あなたは {{ user.rank }}位 {{ user.group }}グループ です</v-subheader>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" class="mt-4 mb-n4 mx-n3">
             <p class="ml-4">{{ subheader1 }}</p>
           </v-col>
           <v-col cols="12" class="mt-n4">
@@ -40,7 +48,7 @@ export default {
   data() {
     return {
       title: '研究室配属希望状況の確認',
-      subtitle: 'ご自身得点や大学院進学希望状況の確認と編集ができます',
+      subtitle: 'ご自身の得点や大学院進学希望状況の確認と編集ができます',
       subheader1: '得点状況',
       subheader2: '大学院進学希望状況',
       btnTitle: '得点を編集する',
