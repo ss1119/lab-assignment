@@ -23,8 +23,8 @@ const checkRank = (value) => {
   return /^[1-9][0-9]?$/.test(value)
 }
 
-const sleep = async (millisec) => {
-  await new Promise((resolve) => setTimeout(resolve, millisec))
+const sleep = (millisec) => {
+  return new Promise((resolve) => setTimeout(resolve, millisec))
 }
 
 export default ({ value }, inject) => {
