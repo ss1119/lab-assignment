@@ -363,6 +363,12 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
         if (sameItem >= 2) {
           const pass = generatePassword()
           const encrypt = encryptPassword(pass)
+          doc.ref.update({
+            rank: data.rank,
+            group: data.group,
+            password: encrypt,
+            status: data.status,
+          })
           try {
             await getAuth.updateUser(doc.id, { password: encrypt })
           } catch (err) {
