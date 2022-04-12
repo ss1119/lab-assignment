@@ -353,7 +353,7 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
     .where('year', '==', data.year)
     .get()
     .then((snapshot) => {
-      snapshot.docs.forEach((doc) => {
+      snapshot.docs.forEach(async (doc) => {
         // 3項目中2つ以上一致で同一人物とみなす
         let sameItem = 0
         if (doc.data().id === data.id) sameItem++
@@ -363,7 +363,17 @@ exports.registerProdData = functions.https.onCall(async (data, context) => {
         if (sameItem >= 2) {
           const pass = generatePassword()
           const encrypt = encryptPassword(pass)
-          doc.ref.update({ status: data.status, password: encrypt })
+          doc.ref.update({
+            rank: data.rank,
+            group: data.group,
+            password: encrypt,
+            status: data.status,
+          })
+          try {
+            await getAuth.updateUser(doc.id, { password: encrypt })
+          } catch (err) {
+            console.error(err)
+          }
           res.statusCode = 200
           isExistTestUser = true
         }
