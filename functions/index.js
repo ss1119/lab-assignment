@@ -123,7 +123,7 @@ URL: ${url}
 ・このメールに返信をしても、管理チームが確認することができません。
 ・推奨ブラウザ以外（旧バージョン含む）でご利用になられると正常に表示および動作しない恐れがございます。
 ・配属結果については3月27日に下記のURLにて発表します。また、研究室の集合日についても同じURLの別ファイルに記載しますので注意してください。
- ・${'https://webdisk.doshisha.ac.jp/public/oRIVwN0Kdj9rvuWj2MMnvjcP1jXYczPJVzgFp2GOf4b7'}
+https://webdisk.doshisha.ac.jp/public/oRIVwN0Kdj9rvuWj2MMnvjcP1jXYczPJVzgFp2GOf4b7
 
 ---------------
 同志社大学大学院 理工学研究科 情報工学専攻
